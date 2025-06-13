@@ -5,9 +5,9 @@ import "github.com/MingPV/clean-go-template/internal/entities"
 // From entity.User to UserResponse
 func ToUserResponse(user *entities.User) *UserResponse {
 	return &UserResponse{
-		ID:    user.ID,
-		Email: user.Email,
-		Name:  user.Name,
+		ID:       user.ID,
+		Email:    user.Email,
+		Username: user.Username,
 	}
 }
 
@@ -24,6 +24,6 @@ func ToUserEntity(req *RegisterRequest) *entities.User {
 	return &entities.User{
 		Email:    req.Email,
 		Password: req.Password,
-		Name:     req.Name,
+		Username: req.Username,
 	}
 }

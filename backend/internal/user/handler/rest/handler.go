@@ -2,6 +2,7 @@ package handler
 
 import (
 	"fmt"
+	"time"
 
 	"github.com/MingPV/clean-go-template/internal/user/dto"
 	"github.com/MingPV/clean-go-template/internal/user/usecase"
@@ -58,9 +59,54 @@ func (h *HttpUserHandler) Login(c *fiber.Ctx) error {
 		return response.Error(c, fiber.StatusUnauthorized, "invalid email or password")
 	}
 
+	// Set JWT token in HTTP-only cookie
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   false, // must be true on production
+		SameSite: "Strict",
+		Path:     "/",
+		Expires:  time.Now().Add(72 * time.Hour),
+	})
+
 	return c.JSON(fiber.Map{
-		"user":  dto.ToUserResponse(userEntity),
-		"token": token,
+		"user": dto.ToUserResponse(userEntity),
+	})
+}
+
+// LoginWithUsername godoc
+// @Summary Authenticate user and return token
+// @Tags users
+// @Accept json
+// @Produce json
+// @Param credentials body map[string]string true "Login credentials (username & password)"
+// @Success 200 {object} map[string]interface{} "Authenticated user and JWT token"
+// @Router /auth/signin [post]
+func (h *HttpUserHandler) LoginWithUsername(c *fiber.Ctx) error {
+	loginReq := new(dto.LoginWithUsernameRequest)
+	if err := c.BodyParser(loginReq); err != nil {
+		return response.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
+
+	token, userEntity, err := h.userUseCase.LoginWithUsername(loginReq.Username, loginReq.Password)
+	if err != nil {
+		return response.Error(c, fiber.StatusUnauthorized, "invalid username or password")
+	}
+
+	// Set JWT token in HTTP-only cookie
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   false, // must be true on production
+		SameSite: "Strict",
+		Path:     "/",
+		Expires:  time.Now().Add(72 * time.Hour),
+	})
+
+	return c.JSON(fiber.Map{
+		"user": dto.ToUserResponse(userEntity),
 	})
 }
 
@@ -100,6 +146,48 @@ func (h *HttpUserHandler) FindUserByID(c *fiber.Ctx) error {
 	}
 
 	userEntity, err := h.userUseCase.FindUserByID(id)
+	if err != nil {
+		return response.Error(c, fiber.StatusNotFound, "user not found")
+	}
+
+	return c.JSON(dto.ToUserResponse(userEntity))
+}
+
+// FindUserByEmail godoc
+// @Summary Get user by Email
+// @Tags users
+// @Produce json
+// @Param email path string true "User Email"
+// @Success 200 {object} entities.User
+// @Router /users/email/{email} [get]
+func (h *HttpUserHandler) FindUserByEmail(c *fiber.Ctx) error {
+	email := c.Params("email")
+	if email == "" {
+		return response.Error(c, fiber.StatusBadRequest, "email is required")
+	}
+
+	userEntity, err := h.userUseCase.FindUserByEmail(email)
+	if err != nil {
+		return response.Error(c, fiber.StatusNotFound, "user not found")
+	}
+
+	return c.JSON(dto.ToUserResponse(userEntity))
+}
+
+// FindUserByUsername godoc
+// @Summary Get user by Username
+// @Tags users
+// @Produce json
+// @Param username path string true "Username"
+// @Success 200 {object} entities.User
+// @Router /users/username/{username} [get]
+func (h *HttpUserHandler) FindUserByUsername(c *fiber.Ctx) error {
+	username := c.Params("username")
+	if username == "" {
+		return response.Error(c, fiber.StatusBadRequest, "username is required")
+	}
+
+	userEntity, err := h.userUseCase.FindUserByUsername(username)
 	if err != nil {
 		return response.Error(c, fiber.StatusNotFound, "user not found")
 	}

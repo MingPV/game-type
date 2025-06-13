@@ -1,8 +1,6 @@
 package repository
 
 import (
-	"errors"
-
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"gorm.io/gorm"
 )
@@ -22,9 +20,14 @@ func (r *GormUserRepository) Save(user *entities.User) error {
 func (r *GormUserRepository) FindByEmail(email string) (*entities.User, error) {
 	var user entities.User
 	if err := r.db.Where("email = ?", email).First(&user).Error; err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return nil, nil
-		}
+		return nil, err
+	}
+	return &user, nil
+}
+
+func (r *GormUserRepository) FindByUsername(username string) (*entities.User, error) {
+	var user entities.User
+	if err := r.db.Where("username = ?", username).First(&user).Error; err != nil {
 		return nil, err
 	}
 	return &user, nil

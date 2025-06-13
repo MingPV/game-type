@@ -28,6 +28,8 @@ type Config struct {
 	PgAdminPort     string
 
 	RedisAddress string
+
+	FrontendURL string
 }
 
 func LoadConfig(env string) *Config {
@@ -58,6 +60,7 @@ func LoadConfig(env string) *Config {
 		PgAdminPassword: getEnv("PGADMIN_DEFAULT_PASSWORD", ""),
 		PgAdminPort:     getEnv("PGADMIN_PORT", "5050"),
 		RedisAddress:    getEnv("REDIS_ADDR", "redis:6379"),
+		FrontendURL:     getEnv("FRONTEND_URL", "http://localhost:3000"),
 	}
 
 	cfg.DatabaseDSN = fmt.Sprintf(

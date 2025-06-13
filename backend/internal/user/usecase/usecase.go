@@ -75,9 +75,32 @@ func (s *UserService) Login(email string, password string) (string, *entities.Us
 	return tokenString, user, nil
 }
 
-// Get user by ID
-func (s *UserService) FindUserByID(id string) (*entities.User, error) {
-	return s.repo.FindByID(id)
+// Login user (check email + password)
+func (s *UserService) LoginWithUsername(username string, password string) (string, *entities.User, error) {
+	user, err := s.repo.FindByUsername(username)
+	if err != nil || user == nil {
+		return "", nil, errors.New("username not found")
+	}
+
+	if err := bcrypt.CompareHashAndPassword([]byte(user.Password), []byte(password)); err != nil {
+		fmt.Println(err)
+		return "", nil, errors.New("invalid username or password")
+	}
+
+	// Generate JWT token
+	claims := jwt.MapClaims{
+		"user_id": user.ID,
+		"exp":     time.Now().Add(time.Hour * 72).Unix(), // 3 days
+	}
+
+	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
+	secret := os.Getenv("JWT_SECRET")
+	tokenString, err := token.SignedString([]byte(secret))
+	if err != nil {
+		return "", nil, err
+	}
+
+	return tokenString, user, nil
 }
 
 // Get all users
@@ -89,11 +112,17 @@ func (s *UserService) FindAllUsers() ([]*entities.User, error) {
 	return users, nil
 }
 
-// Get user by Email
-func (s *UserService) GetUserByEmail(email string) (*entities.User, error) {
-	user, err := s.repo.FindByEmail(email)
-	if err != nil {
-		return nil, err
-	}
-	return user, nil
+// Get user by ID
+func (s *UserService) FindUserByID(id string) (*entities.User, error) {
+	return s.repo.FindByID(id)
+}
+
+// Find user by Email
+func (s *UserService) FindUserByEmail(email string) (*entities.User, error) {
+	return s.repo.FindByEmail(email)
+}
+
+// Find user by Username
+func (s *UserService) FindUserByUsername(username string) (*entities.User, error) {
+	return s.repo.FindByUsername(username)
 }
