@@ -107,7 +107,7 @@ export default function Page() {
   };
 
   return (
-    <div className="bg-stone-800 h-[100vh] w-[100vw] flex justify-center items-center">
+    <div className="h-full w-full flex justify-center items-center">
       <div className="bg-white/20 p-10 flex flex-col gap-2">
         <input
           type="text"
