@@ -42,7 +42,13 @@ export default function Page() {
             <div className="border border-stone-200 w-1/3"></div>
             <div className="border border-stone-100/10 w-2/3"></div>
           </div>
-          <div className="mb-24 text-stone-200/80">398,200 / 1,060,000</div>
+          <div className="mb-8 text-stone-200/80">398,200 / 1,060,000</div>
+          <Link
+            href={"/home"}
+            className="bg-stone-200/70 px-8 py-2 rounded-lg hover:bg-stone-100/80 transition-all duration-200 mb-16"
+          >
+            Play
+          </Link>
         </div>
         <div className="w-full h-full bg-stone-700/50 flex flex-col items-center">
           <div className="border-b-1 border-stone-200/20 w-1/2 mt-24 mb-2"></div>
