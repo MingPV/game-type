@@ -2,10 +2,10 @@ package repository
 
 import "github.com/MingPV/clean-go-template/internal/entities"
 
-type OrderRepository interface {
-	Save(order *entities.Order) error
-	FindAll() ([]*entities.Order, error)
-	FindByID(id int) (*entities.Order, error)
-	Patch(id int, order *entities.Order) error
+type ItemRepository interface {
+	Save(item *entities.Item) error
+	FindAll() ([]*entities.Item, error)
+	FindByID(id int) (*entities.Item, error)
+	// Patch(id int, item *entities.Item) error
 	Delete(id int) error
 }
