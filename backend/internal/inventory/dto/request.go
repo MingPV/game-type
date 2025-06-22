@@ -1,5 +1,8 @@
 package dto
 
-type CreateOrderRequest struct {
-	Total float64 `json:"total" validate:"required,gt=0"`
+type CreateInventoryRequest struct {
+	MaxSlots int `json:"max_slots"`
 }
+
+// 	ID       uuid.UUID `gorm:"type:uuid;primaryKey" json:"inventory_id"`
+// 	MaxSlots int       `json:"max_slots"`

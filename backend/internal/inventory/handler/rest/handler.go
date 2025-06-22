@@ -4,130 +4,133 @@ import (
 	"strconv"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	"github.com/MingPV/clean-go-template/internal/order/dto"
-	"github.com/MingPV/clean-go-template/internal/order/usecase"
+	"github.com/MingPV/clean-go-template/internal/inventory/dto"
+	"github.com/MingPV/clean-go-template/internal/inventory/usecase"
 	responses "github.com/MingPV/clean-go-template/pkg/responses"
 	"github.com/gofiber/fiber/v2"
 )
 
-type HttpOrderHandler struct {
-	orderUseCase usecase.OrderUseCase
+type HttpInventoryHandler struct {
+	inventoryUseCase usecase.InventoryUseCase
 }
 
-func NewHttpOrderHandler(useCase usecase.OrderUseCase) *HttpOrderHandler {
-	return &HttpOrderHandler{orderUseCase: useCase}
+func NewHttpInventoryHandler(useCase usecase.InventoryUseCase) *HttpInventoryHandler {
+	return &HttpInventoryHandler{inventoryUseCase: useCase}
 }
 
-// CreateOrder godoc
-// @Summary Create a new order
-// @Tags orders
+// CreateInventory godoc
+// @Summary Create a new inventory
+// @Tags inventorys
 // @Accept json
 // @Produce json
-// @Param order body entities.Order true "Order payload"
-// @Success 201 {object} entities.Order
-// @Router /orders [post]
-func (h *HttpOrderHandler) CreateOrder(c *fiber.Ctx) error {
-	var req dto.CreateOrderRequest
+// @Param inventory body entities.Inventory true "Inventory payload"
+// @Success 201 {object} entities.Inventory
+// @Router /inventorys [post]
+func (h *HttpInventoryHandler) CreateInventory(c *fiber.Ctx) error {
+	var req dto.CreateInventoryRequest
 	if err := c.BodyParser(&req); err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	order := &entities.Order{Total: req.Total}
-	if err := h.orderUseCase.CreateOrder(order); err != nil {
+	inventory := &entities.Inventory{
+		MaxSlots: req.MaxSlots,
+	}
+
+	if err := h.inventoryUseCase.CreateInventory(inventory); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToOrderResponse(order))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToInventoryResponse(inventory))
 }
 
-// FindAllOrders godoc
-// @Summary Get all orders
-// @Tags orders
+// FindAllInventorys godoc
+// @Summary Get all inventorys
+// @Tags inventorys
 // @Produce json
-// @Success 200 {array} entities.Order
-// @Router /orders [get]
-func (h *HttpOrderHandler) FindAllOrders(c *fiber.Ctx) error {
-	orders, err := h.orderUseCase.FindAllOrders()
+// @Success 200 {array} entities.Inventory
+// @Router /inventorys [get]
+func (h *HttpInventoryHandler) FindAllInventorys(c *fiber.Ctx) error {
+	inventorys, err := h.inventoryUseCase.FindAllInventorys()
 	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(dto.ToOrderResponseList(orders))
+	return c.JSON(dto.ToInventoryResponseList(inventorys))
 }
 
-// FindOrderByID godoc
-// @Summary Get order by ID
-// @Tags orders
+// FindInventoryByID godoc
+// @Summary Get inventory by ID
+// @Tags inventorys
 // @Produce json
-// @Param id path int true "Order ID"
-// @Success 200 {object} entities.Order
-// @Router /orders/{id} [get]
-func (h *HttpOrderHandler) FindOrderByID(c *fiber.Ctx) error {
+// @Param id path int true "Inventory ID"
+// @Success 200 {object} entities.Inventory
+// @Router /inventorys/{id} [get]
+func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
+	inventoryID, err := strconv.Atoi(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
 	}
 
-	order, err := h.orderUseCase.FindOrderByID(orderID)
+	inventory, err := h.inventoryUseCase.FindInventoryByID(inventoryID)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(dto.ToOrderResponse(order))
+	return c.JSON(dto.ToInventoryResponse(inventory))
 }
 
-// PatchOrder godoc
-// @Summary Update an order partially
-// @Tags orders
+// PatchInventory godoc
+// @Summary Update an inventory partially
+// @Tags inventorys
 // @Accept json
 // @Produce json
-// @Param id path int true "Order ID"
-// @Param order body entities.Order true "Order update payload"
-// @Success 200 {object} entities.Order
-// @Router /orders/{id} [patch]
-func (h *HttpOrderHandler) PatchOrder(c *fiber.Ctx) error {
-	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
+// @Param id path int true "Inventory ID"
+// @Param inventory body entities.Inventory true "Inventory update payload"
+// @Success 200 {object} entities.Inventory
+// @Router /inventorys/{id} [patch]
+// func (h *HttpInventoryHandler) PatchInventory(c *fiber.Ctx) error {
+// 	id := c.Params("id")
+// 	inventoryID, err := strconv.Atoi(id)
+// 	if err != nil {
+// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
+// 	}
 
-	var req dto.CreateOrderRequest
-	if err := c.BodyParser(&req); err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-	}
+// 	var req dto.CreateInventoryRequest
+// 	if err := c.BodyParser(&req); err != nil {
+// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+// 	}
 
-	order := &entities.Order{Total: req.Total}
-	if err := h.orderUseCase.PatchOrder(orderID, order); err != nil {
-		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-	}
+// 	inventory := &entities.Inventory{Total: req.Total}
+// 	if err := h.inventoryUseCase.PatchInventory(inventoryID, inventory); err != nil {
+// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+// 	}
 
-	updatedOrder, err := h.orderUseCase.FindOrderByID(orderID)
-	if err != nil {
-		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-	}
+// 	updatedInventory, err := h.inventoryUseCase.FindInventoryByID(inventoryID)
+// 	if err != nil {
+// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+// 	}
 
-	return c.JSON(dto.ToOrderResponse(updatedOrder))
-}
+// 	return c.JSON(dto.ToInventoryResponse(updatedInventory))
+// }
 
-// DeleteOrder godoc
-// @Summary Delete an order by ID
-// @Tags orders
+// DeleteInventory godoc
+// @Summary Delete an inventory by ID
+// @Tags inventorys
 // @Produce json
-// @Param id path int true "Order ID"
+// @Param id path int true "Inventory ID"
 // @Success 200 {object} response.MessageResponse
-// @Router /orders/{id} [delete]
-func (h *HttpOrderHandler) DeleteOrder(c *fiber.Ctx) error {
+// @Router /inventorys/{id} [delete]
+func (h *HttpInventoryHandler) DeleteInventory(c *fiber.Ctx) error {
 	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
+	inventoryID, err := strconv.Atoi(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
 	}
 
-	if err := h.orderUseCase.DeleteOrder(orderID); err != nil {
+	if err := h.inventoryUseCase.DeleteInventory(inventoryID); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.Message(c, fiber.StatusOK, "order deleted")
+	return responses.Message(c, fiber.StatusOK, "inventory deleted")
 }

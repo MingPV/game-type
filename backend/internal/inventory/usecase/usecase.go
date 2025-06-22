@@ -2,99 +2,98 @@ package usecase
 
 import (
 	"encoding/json"
-	"errors"
 	"strconv"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	"github.com/MingPV/clean-go-template/internal/order/repository"
+	"github.com/MingPV/clean-go-template/internal/inventory/repository"
 	"github.com/MingPV/clean-go-template/pkg/redisclient"
 )
 
-// OrderService
-type OrderService struct {
-	repo repository.OrderRepository
+// InventoryService
+type InventoryService struct {
+	repo repository.InventoryRepository
 }
 
-// Init OrderService function
-func NewOrderService(repo repository.OrderRepository) OrderUseCase {
-	return &OrderService{repo: repo}
+// Init InventoryService function
+func NewInventoryService(repo repository.InventoryRepository) InventoryUseCase {
+	return &InventoryService{repo: repo}
 }
 
-// OrderService Methods - 1 create
-func (s *OrderService) CreateOrder(order *entities.Order) error {
-	if err := s.repo.Save(order); err != nil {
+// InventoryService Methods - 1 create
+func (s *InventoryService) CreateInventory(inventory *entities.Inventory) error {
+	if err := s.repo.Save(inventory); err != nil {
 		return err
 	}
 
 	// Save to Redis cache
-	bytes, _ := json.Marshal(order)
-	redisclient.Set("order:"+strconv.FormatUint(uint64(order.ID), 10), string(bytes), time.Minute*10)
+	bytes, _ := json.Marshal(inventory)
+	redisclient.Set("inventory:"+inventory.ID.String(), string(bytes), time.Minute*10)
 
 	return nil
 }
 
-// OrderService Methods - 2 find all
-func (s *OrderService) FindAllOrders() ([]*entities.Order, error) {
-	orders, err := s.repo.FindAll()
+// InventoryService Methods - 2 find all
+func (s *InventoryService) FindAllInventorys() ([]*entities.Inventory, error) {
+	inventorys, err := s.repo.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	return orders, nil
+	return inventorys, nil
 }
 
-// OrderService Methods - 3 find by id
-func (s *OrderService) FindOrderByID(id int) (*entities.Order, error) {
+// InventoryService Methods - 3 find by id
+func (s *InventoryService) FindInventoryByID(id int) (*entities.Inventory, error) {
 
-	// Check if the order is in the cache
-	jsonData, err := redisclient.Get("order:" + strconv.Itoa(id))
+	// Check if the inventory is in the cache
+	jsonData, err := redisclient.Get("inventory:" + strconv.Itoa(id))
 	if err == nil {
-		var order entities.Order
-		json.Unmarshal([]byte(jsonData), &order)
+		var inventory entities.Inventory
+		json.Unmarshal([]byte(jsonData), &inventory)
 		// fmt.Println("Cache hit, returning from cache")
-		return &order, nil
+		return &inventory, nil
 	}
 
-	order, err := s.repo.FindByID(id)
+	inventory, err := s.repo.FindByID(id)
 	if err != nil {
-		return &entities.Order{}, err
+		return &entities.Inventory{}, err
 	}
 
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
-	bytes, _ := json.Marshal(order)
-	redisclient.Set("order:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	bytes, _ := json.Marshal(inventory)
+	redisclient.Set("inventory:"+strconv.Itoa(id), string(bytes), time.Minute*10)
 
-	return order, nil
+	return inventory, nil
 }
 
-// OrderService Methods - 4 patch
-func (s *OrderService) PatchOrder(id int, order *entities.Order) error {
-	if order.Total <= 0 {
-		return errors.New("total must be positive")
-	}
-	if err := s.repo.Patch(id, order); err != nil {
-		return err
-	}
+// InventoryService Methods - 4 patch
+// func (s *InventoryService) PatchInventory(id int, inventory *entities.Inventory) error {
+// 	if inventory.Total <= 0 {
+// 		return errors.New("total must be positive")
+// 	}
+// 	if err := s.repo.Patch(id, inventory); err != nil {
+// 		return err
+// 	}
 
-	// Update cache after patching
-	updatedOrder, err := s.repo.FindByID(id)
-	if err == nil {
-		bytes, _ := json.Marshal(updatedOrder)
-		redisclient.Set("order:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-	}
+// 	// Update cache after patching
+// 	updatedInventory, err := s.repo.FindByID(id)
+// 	if err == nil {
+// 		bytes, _ := json.Marshal(updatedInventory)
+// 		redisclient.Set("inventory:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+// 	}
 
-	return nil
-}
+// 	return nil
+// }
 
-// OrderService Methods - 5 delete
-func (s *OrderService) DeleteOrder(id int) error {
+// InventoryService Methods - 5 delete
+func (s *InventoryService) DeleteInventory(id int) error {
 	if err := s.repo.Delete(id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("order:" + strconv.Itoa(id))
+	redisclient.Delete("inventory:" + strconv.Itoa(id))
 
 	return nil
 }
