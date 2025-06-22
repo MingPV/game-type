@@ -20,12 +20,12 @@ func NewHttpInventoryHandler(useCase usecase.InventoryUseCase) *HttpInventoryHan
 
 // CreateInventory godoc
 // @Summary Create a new inventory
-// @Tags inventorys
+// @Tags inventories
 // @Accept json
 // @Produce json
 // @Param inventory body entities.Inventory true "Inventory payload"
 // @Success 201 {object} entities.Inventory
-// @Router /inventorys [post]
+// @Router /inventories [post]
 func (h *HttpInventoryHandler) CreateInventory(c *fiber.Ctx) error {
 	var req dto.CreateInventoryRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -43,28 +43,28 @@ func (h *HttpInventoryHandler) CreateInventory(c *fiber.Ctx) error {
 	return c.Status(fiber.StatusCreated).JSON(dto.ToInventoryResponse(inventory))
 }
 
-// FindAllInventorys godoc
-// @Summary Get all inventorys
-// @Tags inventorys
+// FindAllInventories godoc
+// @Summary Get all inventories
+// @Tags inventories
 // @Produce json
 // @Success 200 {array} entities.Inventory
-// @Router /inventorys [get]
-func (h *HttpInventoryHandler) FindAllInventorys(c *fiber.Ctx) error {
-	inventorys, err := h.inventoryUseCase.FindAllInventorys()
+// @Router /inventories [get]
+func (h *HttpInventoryHandler) FindAllInventories(c *fiber.Ctx) error {
+	inventories, err := h.inventoryUseCase.FindAllInventories()
 	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(dto.ToInventoryResponseList(inventorys))
+	return c.JSON(dto.ToInventoryResponseList(inventories))
 }
 
 // FindInventoryByID godoc
 // @Summary Get inventory by ID
-// @Tags inventorys
+// @Tags inventories
 // @Produce json
 // @Param id path int true "Inventory ID"
 // @Success 200 {object} entities.Inventory
-// @Router /inventorys/{id} [get]
+// @Router /inventories/{id} [get]
 func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 	id := c.Params("id")
 	inventoryID, err := strconv.Atoi(id)
@@ -82,13 +82,13 @@ func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 
 // PatchInventory godoc
 // @Summary Update an inventory partially
-// @Tags inventorys
+// @Tags inventories
 // @Accept json
 // @Produce json
 // @Param id path int true "Inventory ID"
 // @Param inventory body entities.Inventory true "Inventory update payload"
 // @Success 200 {object} entities.Inventory
-// @Router /inventorys/{id} [patch]
+// @Router /inventories/{id} [patch]
 // func (h *HttpInventoryHandler) PatchInventory(c *fiber.Ctx) error {
 // 	id := c.Params("id")
 // 	inventoryID, err := strconv.Atoi(id)
@@ -116,11 +116,11 @@ func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 
 // DeleteInventory godoc
 // @Summary Delete an inventory by ID
-// @Tags inventorys
+// @Tags inventories
 // @Produce json
 // @Param id path int true "Inventory ID"
 // @Success 200 {object} response.MessageResponse
-// @Router /inventorys/{id} [delete]
+// @Router /inventories/{id} [delete]
 func (h *HttpInventoryHandler) DeleteInventory(c *fiber.Ctx) error {
 	id := c.Params("id")
 	inventoryID, err := strconv.Atoi(id)

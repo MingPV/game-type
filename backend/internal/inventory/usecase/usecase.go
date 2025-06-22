@@ -34,12 +34,12 @@ func (s *InventoryService) CreateInventory(inventory *entities.Inventory) error 
 }
 
 // InventoryService Methods - 2 find all
-func (s *InventoryService) FindAllInventorys() ([]*entities.Inventory, error) {
-	inventorys, err := s.repo.FindAll()
+func (s *InventoryService) FindAllInventories() ([]*entities.Inventory, error) {
+	inventories, err := s.repo.FindAll()
 	if err != nil {
 		return nil, err
 	}
-	return inventorys, nil
+	return inventories, nil
 }
 
 // InventoryService Methods - 3 find by id

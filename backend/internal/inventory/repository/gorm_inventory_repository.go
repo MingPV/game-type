@@ -23,11 +23,11 @@ func (r *GormInventoryRepository) FindAll() ([]*entities.Inventory, error) {
 		return nil, err
 	}
 
-	inventorys := make([]*entities.Inventory, len(inventoryValues))
+	inventories := make([]*entities.Inventory, len(inventoryValues))
 	for i := range inventoryValues {
-		inventorys[i] = &inventoryValues[i]
+		inventories[i] = &inventoryValues[i]
 	}
-	return inventorys, nil
+	return inventories, nil
 }
 
 func (r *GormInventoryRepository) FindByID(id int) (*entities.Inventory, error) {

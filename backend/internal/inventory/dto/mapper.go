@@ -9,9 +9,9 @@ func ToInventoryResponse(inventory *entities.Inventory) *InventoryResponse {
 	}
 }
 
-func ToInventoryResponseList(inventorys []*entities.Inventory) []*InventoryResponse {
-	result := make([]*InventoryResponse, 0, len(inventorys))
-	for _, o := range inventorys {
+func ToInventoryResponseList(inventories []*entities.Inventory) []*InventoryResponse {
+	result := make([]*InventoryResponse, 0, len(inventories))
+	for _, o := range inventories {
 		result = append(result, ToInventoryResponse(o))
 	}
 	return result
