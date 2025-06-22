@@ -1,0 +1,11 @@
+package usecase
+
+import "github.com/MingPV/clean-go-template/internal/entities"
+
+type ItemLevelStatUseCase interface {
+	FindAllItemLevelStats() ([]*entities.ItemLevelStat, error)
+	CreateItemLevelStat(itemLevelStat *entities.ItemLevelStat) error
+	// PatchItemLevelStat(id int, itemLevelStat *entities.ItemLevelStat) error
+	DeleteItemLevelStat(id int) error
+	FindItemLevelStatByID(id int) (*entities.ItemLevelStat, error)
+}
