@@ -55,7 +55,25 @@ func SetupDependencies(env string) (*gorm.DB, *redis.Client, *config.Config, err
 	if env == "test" {
 		db.Migrator().DropTable(&entities.Order{}, &entities.User{})
 	}
-	if err := db.AutoMigrate(&entities.Order{}, &entities.User{}); err != nil {
+	if err := db.AutoMigrate(
+		&entities.Order{},
+		&entities.User{},
+		&entities.Character{},
+		&entities.Class{},
+		&entities.Status{},
+		&entities.EquipmentSlot{},
+		&entities.Inventory{},
+		&entities.ItemInstance{},
+		&entities.Item{},
+		&entities.ItemType{},
+		&entities.ItemLevelStat{},
+		&entities.ItemType{},
+		&entities.LevelProgression{},
+		&entities.MonsterLoot{},
+		&entities.Monster{},
+		&entities.Rarity{},
+		&entities.Setting{},
+	); err != nil {
 		return nil, nil, nil, err
 	}
 
