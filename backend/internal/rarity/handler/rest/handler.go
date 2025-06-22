@@ -4,130 +4,130 @@ import (
 	"strconv"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	"github.com/MingPV/clean-go-template/internal/order/dto"
-	"github.com/MingPV/clean-go-template/internal/order/usecase"
+	"github.com/MingPV/clean-go-template/internal/rarity/dto"
+	"github.com/MingPV/clean-go-template/internal/rarity/usecase"
 	responses "github.com/MingPV/clean-go-template/pkg/responses"
 	"github.com/gofiber/fiber/v2"
 )
 
-type HttpOrderHandler struct {
-	orderUseCase usecase.OrderUseCase
+type HttpRarityHandler struct {
+	rarityUseCase usecase.RarityUseCase
 }
 
-func NewHttpOrderHandler(useCase usecase.OrderUseCase) *HttpOrderHandler {
-	return &HttpOrderHandler{orderUseCase: useCase}
+func NewHttpRarityHandler(useCase usecase.RarityUseCase) *HttpRarityHandler {
+	return &HttpRarityHandler{rarityUseCase: useCase}
 }
 
-// CreateOrder godoc
-// @Summary Create a new order
-// @Tags orders
+// CreateRarity godoc
+// @Summary Create a new rarity
+// @Tags rarities
 // @Accept json
 // @Produce json
-// @Param order body entities.Order true "Order payload"
-// @Success 201 {object} entities.Order
-// @Router /orders [post]
-func (h *HttpOrderHandler) CreateOrder(c *fiber.Ctx) error {
-	var req dto.CreateOrderRequest
+// @Param rarity body entities.Rarity true "Rarity payload"
+// @Success 201 {object} entities.Rarity
+// @Router /rarities [post]
+func (h *HttpRarityHandler) CreateRarity(c *fiber.Ctx) error {
+	var req dto.CreateRarityRequest
 	if err := c.BodyParser(&req); err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	order := &entities.Order{Total: req.Total}
-	if err := h.orderUseCase.CreateOrder(order); err != nil {
+	rarity := &entities.Rarity{Name: req.Name, DropRate: req.DropRate}
+	if err := h.rarityUseCase.CreateRarity(rarity); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToOrderResponse(order))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToRarityResponse(rarity))
 }
 
-// FindAllOrders godoc
-// @Summary Get all orders
-// @Tags orders
+// FindAllRarities godoc
+// @Summary Get all rarities
+// @Tags rarities
 // @Produce json
-// @Success 200 {array} entities.Order
-// @Router /orders [get]
-func (h *HttpOrderHandler) FindAllOrders(c *fiber.Ctx) error {
-	orders, err := h.orderUseCase.FindAllOrders()
+// @Success 200 {array} entities.Rarity
+// @Router /rarities [get]
+func (h *HttpRarityHandler) FindAllRarities(c *fiber.Ctx) error {
+	rarities, err := h.rarityUseCase.FindAllRarities()
 	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.JSON(dto.ToOrderResponseList(orders))
+	return c.JSON(dto.ToRarityResponseList(rarities))
 }
 
-// FindOrderByID godoc
-// @Summary Get order by ID
-// @Tags orders
+// FindRarityByID godoc
+// @Summary Get rarity by ID
+// @Tags rarities
 // @Produce json
-// @Param id path int true "Order ID"
-// @Success 200 {object} entities.Order
-// @Router /orders/{id} [get]
-func (h *HttpOrderHandler) FindOrderByID(c *fiber.Ctx) error {
+// @Param id path int true "Rarity ID"
+// @Success 200 {object} entities.Rarity
+// @Router /rarities/{id} [get]
+func (h *HttpRarityHandler) FindRarityByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
+	rarityID, err := strconv.Atoi(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
 	}
 
-	order, err := h.orderUseCase.FindOrderByID(orderID)
+	rarity, err := h.rarityUseCase.FindRarityByID(rarityID)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}
 
-	return c.JSON(dto.ToOrderResponse(order))
+	return c.JSON(dto.ToRarityResponse(rarity))
 }
 
-// PatchOrder godoc
-// @Summary Update an order partially
-// @Tags orders
+// PatchRarity godoc
+// @Summary Update an rarity partially
+// @Tags rarities
 // @Accept json
 // @Produce json
-// @Param id path int true "Order ID"
-// @Param order body entities.Order true "Order update payload"
-// @Success 200 {object} entities.Order
-// @Router /orders/{id} [patch]
-func (h *HttpOrderHandler) PatchOrder(c *fiber.Ctx) error {
-	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
+// @Param id path int true "Rarity ID"
+// @Param rarity body entities.Rarity true "Rarity update payload"
+// @Success 200 {object} entities.Rarity
+// @Router /rarities/{id} [patch]
+// func (h *HttpRarityHandler) PatchRarity(c *fiber.Ctx) error {
+// 	id := c.Params("id")
+// 	rarityID, err := strconv.Atoi(id)
+// 	if err != nil {
+// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
+// 	}
 
-	var req dto.CreateOrderRequest
-	if err := c.BodyParser(&req); err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-	}
+// 	var req dto.CreateRarityRequest
+// 	if err := c.BodyParser(&req); err != nil {
+// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+// 	}
 
-	order := &entities.Order{Total: req.Total}
-	if err := h.orderUseCase.PatchOrder(orderID, order); err != nil {
-		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-	}
+// 	rarity := &entities.Rarity{Total: req.Total}
+// 	if err := h.rarityUseCase.PatchRarity(rarityID, rarity); err != nil {
+// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+// 	}
 
-	updatedOrder, err := h.orderUseCase.FindOrderByID(orderID)
-	if err != nil {
-		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-	}
+// 	updatedRarity, err := h.rarityUseCase.FindRarityByID(rarityID)
+// 	if err != nil {
+// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+// 	}
 
-	return c.JSON(dto.ToOrderResponse(updatedOrder))
-}
+// 	return c.JSON(dto.ToRarityResponse(updatedRarity))
+// }
 
-// DeleteOrder godoc
-// @Summary Delete an order by ID
-// @Tags orders
+// DeleteRarity godoc
+// @Summary Delete an rarity by ID
+// @Tags rarities
 // @Produce json
-// @Param id path int true "Order ID"
+// @Param id path int true "Rarity ID"
 // @Success 200 {object} response.MessageResponse
-// @Router /orders/{id} [delete]
-func (h *HttpOrderHandler) DeleteOrder(c *fiber.Ctx) error {
+// @Router /rarities/{id} [delete]
+func (h *HttpRarityHandler) DeleteRarity(c *fiber.Ctx) error {
 	id := c.Params("id")
-	orderID, err := strconv.Atoi(id)
+	rarityID, err := strconv.Atoi(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
 	}
 
-	if err := h.orderUseCase.DeleteOrder(orderID); err != nil {
+	if err := h.rarityUseCase.DeleteRarity(rarityID); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return responses.Message(c, fiber.StatusOK, "order deleted")
+	return responses.Message(c, fiber.StatusOK, "rarity deleted")
 }
