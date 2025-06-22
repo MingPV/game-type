@@ -2,17 +2,17 @@ package dto
 
 import "github.com/MingPV/clean-go-template/internal/entities"
 
-func ToOrderResponse(order *entities.Order) *OrderResponse {
-	return &OrderResponse{
-		ID:    order.ID,
-		Total: order.Total,
+func ToItemTypeResponse(itemType *entities.ItemType) *ItemTypeResponse {
+	return &ItemTypeResponse{
+		ID:   itemType.ID,
+		Name: itemType.Name,
 	}
 }
 
-func ToOrderResponseList(orders []*entities.Order) []*OrderResponse {
-	result := make([]*OrderResponse, 0, len(orders))
-	for _, o := range orders {
-		result = append(result, ToOrderResponse(o))
+func ToItemTypeResponseList(itemTypes []*entities.ItemType) []*ItemTypeResponse {
+	result := make([]*ItemTypeResponse, 0, len(itemTypes))
+	for _, o := range itemTypes {
+		result = append(result, ToItemTypeResponse(o))
 	}
 	return result
 }

@@ -6,7 +6,7 @@ import (
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	"github.com/MingPV/clean-go-template/internal/itemInstance/repository"
+	"github.com/MingPV/clean-go-template/internal/item_instance/repository"
 	"github.com/MingPV/clean-go-template/pkg/redisclient"
 )
 
@@ -28,7 +28,7 @@ func (s *ItemInstanceService) CreateItemInstance(itemInstance *entities.ItemInst
 
 	// Save to Redis cache
 	bytes, _ := json.Marshal(itemInstance)
-	redisclient.Set("itemInstance:"+strconv.FormatUint(uint64(itemInstance.ID), 10), string(bytes), time.Minute*10)
+	redisclient.Set("itemInstance:"+itemInstance.ID.String(), string(bytes), time.Minute*10)
 
 	return nil
 }
