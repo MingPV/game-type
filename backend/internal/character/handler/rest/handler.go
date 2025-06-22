@@ -6,18 +6,16 @@ import (
 	"github.com/google/uuid"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	statusUseCase "github.com/MingPV/clean-go-template/internal/status/usecase"
 	responses "github.com/MingPV/clean-go-template/pkg/responses"
 	"github.com/gofiber/fiber/v2"
 )
 
 type HttpCharacterHandler struct {
 	characterUseCase characterUseCase.CharacterUseCase
-	statusUseCase    statusUseCase.StatusUseCase
 }
 
-func NewHttpCharacterHandler(character_useCase characterUseCase.CharacterUseCase, status_useCase statusUseCase.StatusUseCase) *HttpCharacterHandler {
-	return &HttpCharacterHandler{characterUseCase: character_useCase, statusUseCase: status_useCase}
+func NewHttpCharacterHandler(character_useCase characterUseCase.CharacterUseCase) *HttpCharacterHandler {
+	return &HttpCharacterHandler{characterUseCase: character_useCase}
 }
 
 // CreateCharacter godoc
@@ -37,17 +35,6 @@ func (h *HttpCharacterHandler) CreateCharacter(c *fiber.Ctx) error {
 	// use in base_status, character
 	character_id := uuid.New()
 
-	baseStatus := &entities.Status{
-		CharacterID: character_id,
-		StatusPoint: 20,
-		STR:         1,
-		AGI:         1,
-		INT:         1,
-		DEX:         1,
-		VIT:         1,
-		LUK:         1,
-	}
-
 	character := &entities.Character{
 		ID:         character_id,
 		UserID:     req.UserID,
@@ -56,11 +43,6 @@ func (h *HttpCharacterHandler) CreateCharacter(c *fiber.Ctx) error {
 		CurrentExp: req.CurrentExp,
 		ClassID:    req.ClassID,
 		StatusID:   character_id,
-	}
-
-	// Create status first because character required statusID
-	if err := h.statusUseCase.CreateStatus(baseStatus); err != nil {
-		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
 	if err := h.characterUseCase.CreateCharacter(character); err != nil {

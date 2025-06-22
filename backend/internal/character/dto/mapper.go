@@ -12,9 +12,10 @@ func ToCharacterResponse(character *entities.Character) *CharacterResponse {
 		ClassID:    character.ClassID,
 		CreatedAt:  character.CreatedAt,
 
-		Class:  character.Class,
-		Status: character.Status,
-		Slots:  character.Slots,
+		Class:          character.Class,
+		Status:         character.Status,
+		EquipmentSlots: character.EquipmentSlots,
+		Inventory:      character.Inventory,
 	}
 }
 

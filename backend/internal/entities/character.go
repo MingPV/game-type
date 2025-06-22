@@ -18,10 +18,11 @@ type Character struct {
 	CreatedAt   time.Time `json:"created_at"`
 	// Inventory??
 
-	User   User            `gorm:"foreignKey:UserID;references:ID"`                    // this.UserID -> User.ID
-	Class  Class           `gorm:"foreignKey:ClassID;references:ID" json:"class"`      // this.ClassID -> Class.ID
-	Status Status          `gorm:"foreignKey:ID;references:CharacterID" json:"status"` // this.StatusID -> Status.CharacterID
-	Slots  []EquipmentSlot `gorm:"foreignKey:CharacterID" json:"equipment_slots"`      // Slots.CharacterID -> this.ID
+	User           User            `gorm:"foreignKey:UserID;references:ID"`                       // this.UserID -> User.ID
+	Class          Class           `gorm:"foreignKey:ClassID;references:ID" json:"class"`         // this.ClassID -> Class.ID
+	Status         Status          `gorm:"foreignKey:ID;references:CharacterID" json:"status"`    // this.StatusID -> Status.CharacterID
+	EquipmentSlots []EquipmentSlot `gorm:"foreignKey:CharacterID" json:"equipment_slots"`         // Slots.CharacterID -> this.ID
+	Inventory      Inventory       `gorm:"foreignKey:InventoryID;references:ID" json:"inventory"` // this.InventoryID -> Inventory.ID
 }
 
 // No need to auto generate UID because it need to be set together with base status

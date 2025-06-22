@@ -6,11 +6,10 @@ import (
 )
 
 type Inventory struct {
-	ID             uuid.UUID `gorm:"type:uuid;primaryKey" json:"inventory_id"`
-	ItemInstanceID uuid.UUID `gorm:"type:uuid" json:"item_instance_id"`
-	Quantity       int       `json:"quantity"`
+	ID       uuid.UUID `gorm:"type:uuid;primaryKey" json:"inventory_id"`
+	MaxSlots int       `json:"max_slots"`
 
-	ItemInstance ItemInstance `gorm:"foreignKey:ItemInstanceID;references:ID" json:"item_instance"` // this.ItemInstanceID -> ItemInstance.ID
+	ItemInstance []ItemInstance `gorm:"foreignKey:InventoryID;references:ID" json:"item_instance"` // ItemInstance.InventoryID -> this.ID
 }
 
 func (i *Inventory) BeforeCreate(tx *gorm.DB) (err error) {

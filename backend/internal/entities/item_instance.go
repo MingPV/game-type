@@ -9,6 +9,7 @@ import (
 
 type ItemInstance struct {
 	ID               uuid.UUID `gorm:"type:uuid;primaryKey" json:"item_instance_id"`
+	InventoryID      uuid.UUID `gorm:"type:uuid" json:"inventory_id"`
 	ItemID           uuid.UUID `gorm:"type:uuid" json:"item_id"`
 	UpgradeLevel     int       `json:"upgrade_level"`
 	OwnerCharacterID uuid.UUID `gorm:"type:uuid" json:"owner_character_id"`

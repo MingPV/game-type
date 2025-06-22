@@ -19,7 +19,7 @@ func (r *GormCharacterRepository) Save(character *entities.Character) error {
 
 func (r *GormCharacterRepository) FindAll() ([]*entities.Character, error) {
 	var characterValues []entities.Character
-	if err := r.db.Preload("Class").Preload("Status").Find(&characterValues).Error; err != nil {
+	if err := r.db.Preload("Class").Preload("Status").Preload("EquipmentSlots").Preload("Inventory").Find(&characterValues).Error; err != nil {
 		return nil, err
 	}
 

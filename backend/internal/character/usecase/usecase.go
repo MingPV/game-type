@@ -5,24 +5,47 @@ import (
 	"strconv"
 	"time"
 
-	"github.com/MingPV/clean-go-template/internal/character/repository"
+	characterRepo "github.com/MingPV/clean-go-template/internal/character/repository"
 	"github.com/MingPV/clean-go-template/internal/entities"
+	statusRepo "github.com/MingPV/clean-go-template/internal/status/repository"
+
+	// inventoryRepo "github.com/MingPV/clean-go-template/internal/inventory/repository"
+	// equipmentSlotRepo "github.com/MingPV/clean-go-template/internal/inventory/repository"
 	"github.com/MingPV/clean-go-template/pkg/redisclient"
 )
 
 // CharacterService
 type CharacterService struct {
-	repo repository.CharacterRepository
+	characterRepository characterRepo.CharacterRepository
+	statusRepository    statusRepo.StatusRepository
+	// inventoryRepository  inventoryRepo.InventoryRepository
+	// equipmentRepository equipmentSlotRepo.EquipmentRepository
 }
 
 // Init CharacterService function
-func NewCharacterService(repo repository.CharacterRepository) CharacterUseCase {
-	return &CharacterService{repo: repo}
+func NewCharacterService(character_repo characterRepo.CharacterRepository, status_repo statusRepo.StatusRepository) CharacterUseCase {
+	return &CharacterService{characterRepository: character_repo, statusRepository: status_repo}
 }
 
 // CharacterService Methods - 1 create
 func (s *CharacterService) CreateCharacter(character *entities.Character) error {
-	if err := s.repo.Save(character); err != nil {
+
+	baseStatus := &entities.Status{
+		CharacterID: character.ID,
+		StatusPoint: 20,
+		STR:         1,
+		AGI:         1,
+		INT:         1,
+		DEX:         1,
+		VIT:         1,
+		LUK:         1,
+	}
+
+	if err := s.statusRepository.Save(baseStatus); err != nil {
+		return err
+	}
+
+	if err := s.characterRepository.Save(character); err != nil {
 		return err
 	}
 
@@ -35,7 +58,7 @@ func (s *CharacterService) CreateCharacter(character *entities.Character) error 
 
 // CharacterService Methods - 2 find all
 func (s *CharacterService) FindAllCharacters() ([]*entities.Character, error) {
-	characters, err := s.repo.FindAll()
+	characters, err := s.characterRepository.FindAll()
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +77,7 @@ func (s *CharacterService) FindCharacterByID(id int) (*entities.Character, error
 		return &character, nil
 	}
 
-	character, err := s.repo.FindByID(id)
+	character, err := s.characterRepository.FindByID(id)
 	if err != nil {
 		return &entities.Character{}, err
 	}
@@ -72,12 +95,12 @@ func (s *CharacterService) FindCharacterByID(id int) (*entities.Character, error
 // 	if character.Total <= 0 {
 // 		return errors.New("total must be positive")
 // 	}
-// 	if err := s.repo.Patch(id, character); err != nil {
+// 	if err := s.characterRepository.Patch(id, character); err != nil {
 // 		return err
 // 	}
 
 // 	// Update cache after patching
-// 	updatedCharacter, err := s.repo.FindByID(id)
+// 	updatedCharacter, err := s.characterRepository.FindByID(id)
 // 	if err == nil {
 // 		bytes, _ := json.Marshal(updatedCharacter)
 // 		redisclient.Set("character:"+strconv.Itoa(id), string(bytes), time.Minute*10)
@@ -88,7 +111,7 @@ func (s *CharacterService) FindCharacterByID(id int) (*entities.Character, error
 
 // CharacterService Methods - 5 delete
 func (s *CharacterService) DeleteCharacter(id int) error {
-	if err := s.repo.Delete(id); err != nil {
+	if err := s.characterRepository.Delete(id); err != nil {
 		return err
 	}
 

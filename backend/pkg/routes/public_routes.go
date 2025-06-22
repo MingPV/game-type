@@ -53,8 +53,8 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 
 	// Character
 	characterRepo := characterRepository.NewGormCharacterRepository(db)
-	characterService := characterUseCase.NewCharacterService(characterRepo)
-	characterHandler := characterHandler.NewHttpCharacterHandler(characterService, statusService)
+	characterService := characterUseCase.NewCharacterService(characterRepo, statusRepo)
+	characterHandler := characterHandler.NewHttpCharacterHandler(characterService)
 
 	// User
 	userRepo := userRepository.NewGormUserRepository(db)

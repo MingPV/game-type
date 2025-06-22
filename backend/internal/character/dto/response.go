@@ -16,10 +16,10 @@ type CharacterResponse struct {
 	ClassID    uuid.UUID `gorm:"type:uuid" json:"class_id"`
 	CreatedAt  time.Time `json:"created_at"`
 
-	Class  entities.Class           `json:"class"`
-	Status entities.Status          `json:"status"`
-	Slots  []entities.EquipmentSlot `json:"equipment_slots"`
-	Items  []entities.ItemInstance  `json:"items"`
+	Class          entities.Class           `json:"class"`
+	Status         entities.Status          `json:"status"`
+	EquipmentSlots []entities.EquipmentSlot `json:"equipment_slots"`
+	Inventory      entities.Inventory       `json:"inventory"`
 }
 
 // type Character struct {
