@@ -67,23 +67,21 @@ func (s *RarityService) FindRarityByID(id string) (*entities.Rarity, error) {
 }
 
 // RarityService Methods - 4 patch
-// func (s *RarityService) PatchRarity(id int, rarity *entities.Rarity) error {
-// 	if rarity.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, rarity); err != nil {
-// 		return err
-// 	}
+func (s *RarityService) PatchRarity(id string, rarity *entities.Rarity) error {
 
-// 	// Update cache after patching
-// 	updatedRarity, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedRarity)
-// 		redisclient.Set("rarity:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, rarity); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedRarity, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedRarity)
+		redisclient.Set("rarity:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // RarityService Methods - 5 delete
 func (s *RarityService) DeleteRarity(id string) error {

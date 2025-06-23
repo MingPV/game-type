@@ -38,12 +38,12 @@ func (r *GormRarityRepository) FindByID(id string) (*entities.Rarity, error) {
 	return &rarity, nil
 }
 
-// func (r *GormRarityRepository) Patch(id int, rarity *entities.Rarity) error {
-// 	if err := r.db.Model(&entities.Rarity{}).Where("id = ?", id).Updates(rarity).Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (r *GormRarityRepository) Patch(id string, rarity *entities.Rarity) error {
+	if err := r.db.Model(&entities.Rarity{}).Where("id = ?", id).Updates(rarity).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (r *GormRarityRepository) Delete(id string) error {
 	if err := r.db.Where("id = ?", id).Delete(&entities.Rarity{}).Error; err != nil {

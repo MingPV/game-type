@@ -80,30 +80,26 @@ func (h *HttpRarityHandler) FindRarityByID(c *fiber.Ctx) error {
 // @Param rarity body entities.Rarity true "Rarity update payload"
 // @Success 200 {object} entities.Rarity
 // @Router /rarities/{id} [patch]
-// func (h *HttpRarityHandler) PatchRarity(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	rarityID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpRarityHandler) PatchRarity(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateRarityRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateRarityRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	rarity := &entities.Rarity{Total: req.Total}
-// 	if err := h.rarityUseCase.PatchRarity(rarityID, rarity); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	rarity := &entities.Rarity{Name: req.Name}
+	if err := h.rarityUseCase.PatchRarity(id, rarity); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedRarity, err := h.rarityUseCase.FindRarityByID(rarityID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedRarity, err := h.rarityUseCase.FindRarityByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToRarityResponse(updatedRarity))
-// }
+	return c.JSON(dto.ToRarityResponse(updatedRarity))
+}
 
 // DeleteRarity godoc
 // @Summary Delete an rarity by ID
