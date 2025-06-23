@@ -90,30 +90,26 @@ func (h *HttpItemLevelStatHandler) FindItemLevelStatByID(c *fiber.Ctx) error {
 // @Param itemLevelStat body entities.ItemLevelStat true "ItemLevelStat update payload"
 // @Success 200 {object} entities.ItemLevelStat
 // @Router /itemLevelStats/{id} [patch]
-// func (h *HttpItemLevelStatHandler) PatchItemLevelStat(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	itemLevelStatID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpItemLevelStatHandler) PatchItemLevelStat(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateItemLevelStatRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateItemLevelStatRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	itemLevelStat := &entities.ItemLevelStat{Total: req.Total}
-// 	if err := h.itemLevelStatUseCase.PatchItemLevelStat(itemLevelStatID, itemLevelStat); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	itemLevelStat := &entities.ItemLevelStat{BonusSTR: req.BonusSTR}
+	if err := h.itemLevelStatUseCase.PatchItemLevelStat(id, itemLevelStat); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedItemLevelStat, err := h.itemLevelStatUseCase.FindItemLevelStatByID(itemLevelStatID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedItemLevelStat, err := h.itemLevelStatUseCase.FindItemLevelStatByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToItemLevelStatResponse(updatedItemLevelStat))
-// }
+	return c.JSON(dto.ToItemLevelStatResponse(updatedItemLevelStat))
+}
 
 // DeleteItemLevelStat godoc
 // @Summary Delete an itemLevelStat by ID

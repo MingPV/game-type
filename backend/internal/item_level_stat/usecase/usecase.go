@@ -67,23 +67,21 @@ func (s *ItemLevelStatService) FindItemLevelStatByID(id string) (*entities.ItemL
 }
 
 // ItemLevelStatService Methods - 4 patch
-// func (s *ItemLevelStatService) PatchItemLevelStat(id int, itemLevelStat *entities.ItemLevelStat) error {
-// 	if itemLevelStat.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, itemLevelStat); err != nil {
-// 		return err
-// 	}
+func (s *ItemLevelStatService) PatchItemLevelStat(id string, itemLevelStat *entities.ItemLevelStat) error {
 
-// 	// Update cache after patching
-// 	updatedItemLevelStat, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedItemLevelStat)
-// 		redisclient.Set("itemLevelStat:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, itemLevelStat); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedItemLevelStat, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedItemLevelStat)
+		redisclient.Set("itemLevelStat:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // ItemLevelStatService Methods - 5 delete
 func (s *ItemLevelStatService) DeleteItemLevelStat(id string) error {
