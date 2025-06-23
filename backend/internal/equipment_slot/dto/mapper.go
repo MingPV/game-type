@@ -9,7 +9,7 @@ func ToEquipmentSlotResponse(equipmentSlot *entities.EquipmentSlot) *EquipmentSl
 		SlotType:       equipmentSlot.SlotType,
 		ItemInstanceID: equipmentSlot.ItemInstanceID,
 
-		ItemInstance: equipmentSlot.ItemInstance,
+		// ItemInstance: equipmentSlot.ItemInstance,
 	}
 }
 

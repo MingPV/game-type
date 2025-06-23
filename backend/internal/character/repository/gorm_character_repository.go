@@ -19,7 +19,7 @@ func (r *GormCharacterRepository) Save(character *entities.Character) error {
 
 func (r *GormCharacterRepository) FindAll() ([]*entities.Character, error) {
 	var characterValues []entities.Character
-	if err := r.db.Preload("Class").Preload("Status").Preload("EquipmentSlots").Preload("Inventory").Find(&characterValues).Error; err != nil {
+	if err := r.db.Preload("Class").Preload("Status").Preload("EquipmentSlots").Preload("Inventory").Preload("Inventory.ItemInstances").Find(&characterValues).Error; err != nil {
 		return nil, err
 	}
 
@@ -30,9 +30,16 @@ func (r *GormCharacterRepository) FindAll() ([]*entities.Character, error) {
 	return characters, nil
 }
 
-func (r *GormCharacterRepository) FindByID(id int) (*entities.Character, error) {
+func (r *GormCharacterRepository) FindByID(id string) (*entities.Character, error) {
 	var character entities.Character
-	if err := r.db.First(&character, id).Error; err != nil {
+	if err := r.db.
+		Preload("Class").
+		Preload("Status").
+		Preload("EquipmentSlots").
+		Preload("Inventory").
+		Preload("Inventory.ItemInstances").
+		Where("id = ?", id).
+		First(&character).Error; err != nil {
 		return &entities.Character{}, err
 	}
 	return &character, nil

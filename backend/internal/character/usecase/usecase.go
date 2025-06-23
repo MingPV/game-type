@@ -6,11 +6,12 @@ import (
 	"time"
 
 	characterRepo "github.com/MingPV/clean-go-template/internal/character/repository"
+	"github.com/MingPV/clean-go-template/internal/constants"
 	"github.com/MingPV/clean-go-template/internal/entities"
 	statusRepo "github.com/MingPV/clean-go-template/internal/status/repository"
 
-	// inventoryRepo "github.com/MingPV/clean-go-template/internal/inventory/repository"
-	// equipmentSlotRepo "github.com/MingPV/clean-go-template/internal/inventory/repository"
+	equipmentSlotRepo "github.com/MingPV/clean-go-template/internal/equipment_slot/repository"
+	inventoryRepo "github.com/MingPV/clean-go-template/internal/inventory/repository"
 	"github.com/MingPV/clean-go-template/pkg/redisclient"
 )
 
@@ -18,42 +19,60 @@ import (
 type CharacterService struct {
 	characterRepository characterRepo.CharacterRepository
 	statusRepository    statusRepo.StatusRepository
-	// inventoryRepository  inventoryRepo.InventoryRepository
-	// equipmentRepository equipmentSlotRepo.EquipmentRepository
+	inventoryRepository inventoryRepo.InventoryRepository
+	equipmentRepository equipmentSlotRepo.EquipmentSlotRepository
 }
 
 // Init CharacterService function
-func NewCharacterService(character_repo characterRepo.CharacterRepository, status_repo statusRepo.StatusRepository) CharacterUseCase {
-	return &CharacterService{characterRepository: character_repo, statusRepository: status_repo}
+func NewCharacterService(character_repo characterRepo.CharacterRepository, status_repo statusRepo.StatusRepository, inventory_repo inventoryRepo.InventoryRepository, equipment_slot equipmentSlotRepo.EquipmentSlotRepository) CharacterUseCase {
+	return &CharacterService{
+		characterRepository: character_repo,
+		statusRepository:    status_repo,
+		equipmentRepository: equipment_slot,
+		inventoryRepository: inventory_repo,
+	}
 }
 
 // CharacterService Methods - 1 create
-func (s *CharacterService) CreateCharacter(character *entities.Character) error {
+func (s *CharacterService) CreateCharacter(character *entities.Character) (character_return *entities.Character, err error) {
 
 	baseStatus := &entities.Status{
 		CharacterID: character.ID,
-		StatusPoint: 20,
-		STR:         1,
-		AGI:         1,
-		INT:         1,
-		DEX:         1,
-		VIT:         1,
-		LUK:         1,
+		StatusPoint: constants.BASE_STATUS_POINTS,
+		STR:         constants.STR,
+		AGI:         constants.AGI,
+		INT:         constants.INT,
+		DEX:         constants.DEX,
+		VIT:         constants.VIT,
+		LUK:         constants.LUK,
+	}
+
+	inventory := &entities.Inventory{
+		MaxSlots: constants.BAS_MAX_INVENTORY_SLOTS,
 	}
 
 	if err := s.statusRepository.Save(baseStatus); err != nil {
-		return err
+		return nil, err
 	}
 
+	if err := s.inventoryRepository.Save(inventory); err != nil {
+		return nil, err
+	}
+
+	// Need to insert inventory first to get the ID
+	character.InventoryID = inventory.ID
+
 	if err := s.characterRepository.Save(character); err != nil {
-		return err
+		return nil, err
 	}
 
 	// Save to Redis cache
 	bytes, _ := json.Marshal(character)
 	redisclient.Set("character:"+character.ID.String(), string(bytes), time.Minute*10)
 
-	return nil
+	character_return, err = s.characterRepository.FindByID(character.ID.String())
+
+	return character_return, err
 }
 
 // CharacterService Methods - 2 find all
@@ -66,10 +85,10 @@ func (s *CharacterService) FindAllCharacters() ([]*entities.Character, error) {
 }
 
 // CharacterService Methods - 3 find by id
-func (s *CharacterService) FindCharacterByID(id int) (*entities.Character, error) {
+func (s *CharacterService) FindCharacterByID(id string) (*entities.Character, error) {
 
 	// Check if the character is in the cache
-	jsonData, err := redisclient.Get("character:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("character:" + id)
 	if err == nil {
 		var character entities.Character
 		json.Unmarshal([]byte(jsonData), &character)
@@ -85,7 +104,7 @@ func (s *CharacterService) FindCharacterByID(id int) (*entities.Character, error
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(character)
-	redisclient.Set("character:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("character:"+id, string(bytes), time.Minute*10)
 
 	return character, nil
 }

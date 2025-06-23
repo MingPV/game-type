@@ -9,6 +9,16 @@ import (
 	orderRepository "github.com/MingPV/clean-go-template/internal/order/repository"
 	orderUseCase "github.com/MingPV/clean-go-template/internal/order/usecase"
 
+	// Inventory
+	inventoryHandler "github.com/MingPV/clean-go-template/internal/inventory/handler/rest"
+	inventoryRepository "github.com/MingPV/clean-go-template/internal/inventory/repository"
+	inventoryUseCase "github.com/MingPV/clean-go-template/internal/inventory/usecase"
+
+	// EquipmentSlot
+	equipmentSlotHandler "github.com/MingPV/clean-go-template/internal/equipment_slot/handler/rest"
+	equipmentSlotRepository "github.com/MingPV/clean-go-template/internal/equipment_slot/repository"
+	equipmentSlotUseCase "github.com/MingPV/clean-go-template/internal/equipment_slot/usecase"
+
 	// Character
 	characterHandler "github.com/MingPV/clean-go-template/internal/character/handler/rest"
 	characterRepository "github.com/MingPV/clean-go-template/internal/character/repository"
@@ -41,6 +51,16 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	orderService := orderUseCase.NewOrderService(orderRepo)
 	orderHandler := orderHandler.NewHttpOrderHandler(orderService)
 
+	// Inventory
+	inventoryRepo := inventoryRepository.NewGormInventoryRepository(db)
+	inventoryService := inventoryUseCase.NewInventoryService(inventoryRepo)
+	inventoryHandler := inventoryHandler.NewHttpInventoryHandler(inventoryService)
+
+	// EquipmentSlot
+	equipmentSlotRepo := equipmentSlotRepository.NewGormEquipmentSlotRepository(db)
+	equipmentSlotService := equipmentSlotUseCase.NewEquipmentSlotService(equipmentSlotRepo)
+	equipmentSlotHandler := equipmentSlotHandler.NewHttpEquipmentSlotHandler(equipmentSlotService)
+
 	// Status
 	statusRepo := statusRepository.NewGormStatusRepository(db)
 	statusService := statusUseCase.NewStatusService(statusRepo)
@@ -53,7 +73,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 
 	// Character
 	characterRepo := characterRepository.NewGormCharacterRepository(db)
-	characterService := characterUseCase.NewCharacterService(characterRepo, statusRepo)
+	characterService := characterUseCase.NewCharacterService(characterRepo, statusRepo, inventoryRepo, equipmentSlotRepo)
 	characterHandler := characterHandler.NewHttpCharacterHandler(characterService)
 
 	// User
@@ -87,7 +107,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	// Character routes
 	characterGroup := api.Group("/characters")
 	characterGroup.Get("/", characterHandler.FindAllCharacters)
-	// characterGroup.Get("/:id", characterHandler.FindCharacterByID)
+	characterGroup.Get("/:id", characterHandler.FindCharacterByID)
 	characterGroup.Post("/", characterHandler.CreateCharacter)
 	// characterGroup.Delete("/:id", characterHandler.DeleteCharacter)
 	// characterGroup.Patch("/:id", characterHandler.PatchCharacter)
@@ -107,5 +127,21 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	classGroup.Post("/", classHandler.CreateClass)
 	// classGroup.Delete("/:id", classHandler.DeleteClass)
 	// classGroup.Patch("/:id", classHandler.PatchClass)
+
+	// Inventory routes
+	inventoryGroup := api.Group("/inventories")
+	inventoryGroup.Get("/", inventoryHandler.FindAllInventories)
+	// inventoryGroup.Get("/:id", inventoryHandler.FindInventoryByID)
+	inventoryGroup.Post("/", inventoryHandler.CreateInventory)
+	// inventoryGroup.Delete("/:id", inventoryHandler.DeleteInventory)
+	// inventoryGroup.Patch("/:id", inventoryHandler.PatchInventory)
+
+	// EquipmentSlot routes
+	equipmentSlotGroup := api.Group("/equipmentSlots")
+	equipmentSlotGroup.Get("/", equipmentSlotHandler.FindAllEquipmentSlots)
+	// equipmentSlotGroup.Get("/:id", equipmentSlotHandler.FindEquipmentSlotByID)
+	equipmentSlotGroup.Post("/", equipmentSlotHandler.CreateEquipmentSlot)
+	// equipmentSlotGroup.Delete("/:id", equipmentSlotHandler.DeleteEquipmentSlot)
+	// equipmentSlotGroup.Patch("/:id", equipmentSlotHandler.PatchEquipmentSlot)
 
 }

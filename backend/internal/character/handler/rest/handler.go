@@ -45,11 +45,13 @@ func (h *HttpCharacterHandler) CreateCharacter(c *fiber.Ctx) error {
 		StatusID:   character_id,
 	}
 
-	if err := h.characterUseCase.CreateCharacter(character); err != nil {
+	character_return, err := h.characterUseCase.CreateCharacter(character)
+
+	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToCharacterResponse(character))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToCharacterResponse(character_return))
 }
 
 // FindAllCharacters godoc
@@ -74,20 +76,20 @@ func (h *HttpCharacterHandler) FindAllCharacters(c *fiber.Ctx) error {
 // @Param id path int true "Character ID"
 // @Success 200 {object} entities.Character
 // @Router /characters/{id} [get]
-// func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	characterID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
+	id := c.Params("id")
+	// characterID, err := id
+	// if err != nil {
+	// 	return responses.Error(c, fiber.StatusBadRequest, "invalid id")
+	// }
 
-// 	character, err := h.characterUseCase.FindCharacterByID(characterID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusNotFound, err.Error())
-// 	}
+	character, err := h.characterUseCase.FindCharacterByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusNotFound, err.Error())
+	}
 
-// 	return c.JSON(dto.ToCharacterResponse(character))
-// }
+	return c.JSON(dto.ToCharacterResponse(character))
+}
 
 // PatchCharacter godoc
 // @Summary Update an character partially

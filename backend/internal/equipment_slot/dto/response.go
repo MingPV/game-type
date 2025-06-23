@@ -1,7 +1,6 @@
 package dto
 
 import (
-	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/google/uuid"
 )
 
@@ -13,7 +12,7 @@ type EquipmentSlotResponse struct {
 	SlotType       string    `json:"slot_type"`
 	ItemInstanceID uuid.UUID `gorm:"type:uuid" json:"item_instance_id"`
 
-	ItemInstance entities.ItemInstance `json:"item_instance"`
+	// ItemInstance entities.ItemInstance `json:"item_instance"`
 }
 
 // type EquipmentSlot struct {
