@@ -83,30 +83,26 @@ func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 // @Param inventory body entities.Inventory true "Inventory update payload"
 // @Success 200 {object} entities.Inventory
 // @Router /inventories/{id} [patch]
-// func (h *HttpInventoryHandler) PatchInventory(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	inventoryID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpInventoryHandler) PatchInventory(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateInventoryRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateInventoryRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	inventory := &entities.Inventory{Total: req.Total}
-// 	if err := h.inventoryUseCase.PatchInventory(inventoryID, inventory); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	inventory := &entities.Inventory{MaxSlots: req.MaxSlots}
+	if err := h.inventoryUseCase.PatchInventory(id, inventory); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedInventory, err := h.inventoryUseCase.FindInventoryByID(inventoryID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedInventory, err := h.inventoryUseCase.FindInventoryByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToInventoryResponse(updatedInventory))
-// }
+	return c.JSON(dto.ToInventoryResponse(updatedInventory))
+}
 
 // DeleteInventory godoc
 // @Summary Delete an inventory by ID
