@@ -159,79 +159,79 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	characterGroup.Get("/", characterHandler.FindAllCharacters)
 	characterGroup.Get("/:id", characterHandler.FindCharacterByID)
 	characterGroup.Post("/", characterHandler.CreateCharacter)
-	// characterGroup.Delete("/:id", characterHandler.DeleteCharacter)
+	characterGroup.Delete("/:id", characterHandler.DeleteCharacter)
 	// characterGroup.Patch("/:id", characterHandler.PatchCharacter)
 
 	// Status routes
 	statusGroup := api.Group("/statuses")
 	statusGroup.Get("/", statusHandler.FindAllStatuses)
-	// statusGroup.Get("/:id", statusHandler.FindStatusByID)
+	statusGroup.Get("/:id", statusHandler.FindStatusByID)
 	statusGroup.Post("/", statusHandler.CreateStatus)
-	// statusGroup.Delete("/:id", statusHandler.DeleteStatus)
+	statusGroup.Delete("/:id", statusHandler.DeleteStatus)
 	// statusGroup.Patch("/:id", statusHandler.PatchStatus)
 
 	// Class routes
 	classGroup := api.Group("/classes")
 	classGroup.Get("/", classHandler.FindAllClasses)
-	// classGroup.Get("/:id", classHandler.FindClassByID)
+	classGroup.Get("/:id", classHandler.FindClassByID)
 	classGroup.Post("/", classHandler.CreateClass)
-	// classGroup.Delete("/:id", classHandler.DeleteClass)
+	classGroup.Delete("/:id", classHandler.DeleteClass)
 	// classGroup.Patch("/:id", classHandler.PatchClass)
 
 	// Inventory routes
 	inventoryGroup := api.Group("/inventories")
 	inventoryGroup.Get("/", inventoryHandler.FindAllInventories)
-	// inventoryGroup.Get("/:id", inventoryHandler.FindInventoryByID)
+	inventoryGroup.Get("/:id", inventoryHandler.FindInventoryByID)
 	inventoryGroup.Post("/", inventoryHandler.CreateInventory)
-	// inventoryGroup.Delete("/:id", inventoryHandler.DeleteInventory)
+	inventoryGroup.Delete("/:id", inventoryHandler.DeleteInventory)
 	// inventoryGroup.Patch("/:id", inventoryHandler.PatchInventory)
 
 	// EquipmentSlot routes
 	equipmentSlotGroup := api.Group("/equipmentSlots")
 	equipmentSlotGroup.Get("/", equipmentSlotHandler.FindAllEquipmentSlots)
-	// equipmentSlotGroup.Get("/:id", equipmentSlotHandler.FindEquipmentSlotByID)
+	equipmentSlotGroup.Get("/:id", equipmentSlotHandler.FindEquipmentSlotByID)
 	equipmentSlotGroup.Post("/", equipmentSlotHandler.CreateEquipmentSlot)
-	// equipmentSlotGroup.Delete("/:id", equipmentSlotHandler.DeleteEquipmentSlot)
+	equipmentSlotGroup.Delete("/:id", equipmentSlotHandler.DeleteEquipmentSlot)
 	// equipmentSlotGroup.Patch("/:id", equipmentSlotHandler.PatchEquipmentSlot)
 
 	// Item routes
 	itemGroup := api.Group("/items")
 	itemGroup.Get("/", itemHandler.FindAllItems)
-	// itemGroup.Get("/:id", itemHandler.FindItemByID)
+	itemGroup.Get("/:id", itemHandler.FindItemByID)
 	itemGroup.Post("/", itemHandler.CreateItem)
-	// itemGroup.Delete("/:id", itemHandler.DeleteItem)
+	itemGroup.Delete("/:id", itemHandler.DeleteItem)
 	// itemGroup.Patch("/:id", itemHandler.PatchItem)
 
 	// ItemInstance routes
 	itemInstanceGroup := api.Group("/itemInstances")
 	itemInstanceGroup.Get("/", itemInstanceHandler.FindAllItemInstances)
-	// itemInstanceGroup.Get("/:id", itemInstanceHandler.FindItemInstanceByID)
+	itemInstanceGroup.Get("/:id", itemInstanceHandler.FindItemInstanceByID)
 	itemInstanceGroup.Post("/", itemInstanceHandler.CreateItemInstance)
-	// itemInstanceGroup.Delete("/:id", itemInstanceHandler.DeleteItemInstance)
+	itemInstanceGroup.Delete("/:id", itemInstanceHandler.DeleteItemInstance)
 	// itemInstanceGroup.Patch("/:id", itemInstanceHandler.PatchItemInstance)
 
 	// ItemLevelStat routes
 	itemLevelStatGroup := api.Group("/itemLevelStats")
 	itemLevelStatGroup.Get("/", itemLevelStatHandler.FindAllItemLevelStats)
-	// itemLevelStatGroup.Get("/:id", itemLevelStatHandler.FindItemLevelStatByID)
+	itemLevelStatGroup.Get("/:id", itemLevelStatHandler.FindItemLevelStatByID)
 	itemLevelStatGroup.Post("/", itemLevelStatHandler.CreateItemLevelStat)
-	// itemLevelStatGroup.Delete("/:id", itemLevelStatHandler.DeleteItemLevelStat)
+	itemLevelStatGroup.Delete("/:id", itemLevelStatHandler.DeleteItemLevelStat)
 	// itemLevelStatGroup.Patch("/:id", itemLevelStatHandler.PatchItemLevelStat)
 
 	// ItemType routes
 	itemTypeGroup := api.Group("/itemTypes")
 	itemTypeGroup.Get("/", itemTypeHandler.FindAllItemTypes)
-	// itemTypeGroup.Get("/:id", itemTypeHandler.FindItemTypeByID)
+	itemTypeGroup.Get("/:id", itemTypeHandler.FindItemTypeByID)
 	itemTypeGroup.Post("/", itemTypeHandler.CreateItemType)
-	// itemTypeGroup.Delete("/:id", itemTypeHandler.DeleteItemType)
+	itemTypeGroup.Delete("/:id", itemTypeHandler.DeleteItemType)
 	// itemTypeGroup.Patch("/:id", itemTypeHandler.PatchItemType)
 
 	// Rarity routes
 	rarityGroup := api.Group("/rarities")
 	rarityGroup.Get("/", rarityHandler.FindAllRarities)
-	// rarityGroup.Get("/:id", rarityHandler.FindRarityByID)
+	rarityGroup.Get("/:id", rarityHandler.FindRarityByID)
 	rarityGroup.Post("/", rarityHandler.CreateRarity)
-	// rarityGroup.Delete("/:id", rarityHandler.DeleteRarity)
+	rarityGroup.Delete("/:id", rarityHandler.DeleteRarity)
 	// rarityGroup.Patch("/:id", rarityHandler.PatchRarity)
 
 }

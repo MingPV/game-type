@@ -45,8 +45,8 @@ func (r *GormStatusRepository) Patch(id int, status *entities.Status) error {
 	return nil
 }
 
-func (r *GormStatusRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.Status{}, id).Error; err != nil {
+func (r *GormStatusRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.Status{}).Error; err != nil {
 		return err
 	}
 	return nil

@@ -7,5 +7,5 @@ type EquipmentSlotRepository interface {
 	FindAll() ([]*entities.EquipmentSlot, error)
 	FindByID(id string) (*entities.EquipmentSlot, error)
 	// Patch(id int, equipmentSlot *entities.EquipmentSlot) error
-	Delete(id int) error
+	Delete(id string) error
 }

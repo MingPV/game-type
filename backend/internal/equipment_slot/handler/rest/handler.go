@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"strconv"
-
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/equipment_slot/dto"
 	"github.com/MingPV/clean-go-template/internal/equipment_slot/usecase"
@@ -122,12 +120,8 @@ func (h *HttpEquipmentSlotHandler) FindEquipmentSlotByID(c *fiber.Ctx) error {
 // @Router /equipmentSlots/{id} [delete]
 func (h *HttpEquipmentSlotHandler) DeleteEquipmentSlot(c *fiber.Ctx) error {
 	id := c.Params("id")
-	equipmentSlotID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	if err := h.equipmentSlotUseCase.DeleteEquipmentSlot(equipmentSlotID); err != nil {
+	if err := h.equipmentSlotUseCase.DeleteEquipmentSlot(id); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 

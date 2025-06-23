@@ -45,8 +45,8 @@ func (r *GormClassRepository) Patch(id int, class *entities.Class) error {
 	return nil
 }
 
-func (r *GormClassRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.Class{}, id).Error; err != nil {
+func (r *GormClassRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.Class{}).Error; err != nil {
 		return err
 	}
 	return nil

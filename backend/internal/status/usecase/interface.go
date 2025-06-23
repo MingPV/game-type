@@ -6,6 +6,6 @@ type StatusUseCase interface {
 	FindAllStatuses() ([]*entities.Status, error)
 	CreateStatus(status *entities.Status) error
 	// PatchStatus(id int, status *entities.Status) error
-	DeleteStatus(id int) error
+	DeleteStatus(id string) error
 	FindStatusByID(id string) (*entities.Status, error)
 }

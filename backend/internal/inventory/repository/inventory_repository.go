@@ -7,5 +7,5 @@ type InventoryRepository interface {
 	FindAll() ([]*entities.Inventory, error)
 	FindByID(id string) (*entities.Inventory, error)
 	// Patch(id int, inventory *entities.Inventory) error
-	Delete(id int) error
+	Delete(id string) error
 }

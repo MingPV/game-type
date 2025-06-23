@@ -7,5 +7,5 @@ type ItemRepository interface {
 	FindAll() ([]*entities.Item, error)
 	FindByID(id string) (*entities.Item, error)
 	// Patch(id int, item *entities.Item) error
-	Delete(id int) error
+	Delete(id string) error
 }

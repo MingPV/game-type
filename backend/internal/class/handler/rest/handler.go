@@ -119,16 +119,12 @@ func (h *HttpClassHandler) FindClassByID(c *fiber.Ctx) error {
 // @Param id path int true "Class ID"
 // @Success 200 {object} response.MessageResponse
 // @Router /classes/{id} [delete]
-// func (h *HttpStatusHandler) DeleteClass(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	classID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpClassHandler) DeleteClass(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	if err := h.classUseCase.DeleteClass(classID); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	if err := h.classUseCase.DeleteClass(id); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return responses.Message(c, fiber.StatusOK, "class deleted")
-// }
+	return responses.Message(c, fiber.StatusOK, "class deleted")
+}

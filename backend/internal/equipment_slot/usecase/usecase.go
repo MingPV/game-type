@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
@@ -87,13 +86,13 @@ func (s *EquipmentSlotService) FindEquipmentSlotByID(id string) (*entities.Equip
 // }
 
 // EquipmentSlotService Methods - 5 delete
-func (s *EquipmentSlotService) DeleteEquipmentSlot(id int) error {
+func (s *EquipmentSlotService) DeleteEquipmentSlot(id string) error {
 	if err := s.repo.Delete(id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("equipmentSlot:" + strconv.Itoa(id))
+	redisclient.Delete("equipmentSlot:" + id)
 
 	return nil
 }

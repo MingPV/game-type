@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"strconv"
-
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/rarity/dto"
 	"github.com/MingPV/clean-go-template/internal/rarity/usecase"
@@ -116,12 +114,8 @@ func (h *HttpRarityHandler) FindRarityByID(c *fiber.Ctx) error {
 // @Router /rarities/{id} [delete]
 func (h *HttpRarityHandler) DeleteRarity(c *fiber.Ctx) error {
 	id := c.Params("id")
-	rarityID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	if err := h.rarityUseCase.DeleteRarity(rarityID); err != nil {
+	if err := h.rarityUseCase.DeleteRarity(id); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 

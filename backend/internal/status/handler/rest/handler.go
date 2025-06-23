@@ -124,16 +124,12 @@ func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
 // @Param id path int true "Status ID"
 // @Success 200 {object} response.MessageResponse
 // @Router /statuses/{id} [delete]
-// func (h *HttpStatusHandler) DeleteStatus(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	statusID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpStatusHandler) DeleteStatus(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	if err := h.statusUseCase.DeleteStatus(statusID); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	if err := h.statusUseCase.DeleteStatus(id); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return responses.Message(c, fiber.StatusOK, "status deleted")
-// }
+	return responses.Message(c, fiber.StatusOK, "status deleted")
+}

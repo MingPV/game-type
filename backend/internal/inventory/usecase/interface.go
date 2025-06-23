@@ -6,6 +6,6 @@ type InventoryUseCase interface {
 	FindAllInventories() ([]*entities.Inventory, error)
 	CreateInventory(inventory *entities.Inventory) error
 	// PatchInventory(id int, inventory *entities.Inventory) error
-	DeleteInventory(id int) error
+	DeleteInventory(id string) error
 	FindInventoryByID(id string) (*entities.Inventory, error)
 }

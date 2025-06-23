@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"strconv"
-
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/item_instance/dto"
 	"github.com/MingPV/clean-go-template/internal/item_instance/usecase"
@@ -122,12 +120,8 @@ func (h *HttpItemInstanceHandler) FindItemInstanceByID(c *fiber.Ctx) error {
 // @Router /itemInstances/{id} [delete]
 func (h *HttpItemInstanceHandler) DeleteItemInstance(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemInstanceID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	if err := h.itemInstanceUseCase.DeleteItemInstance(itemInstanceID); err != nil {
+	if err := h.itemInstanceUseCase.DeleteItemInstance(id); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 

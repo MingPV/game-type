@@ -52,8 +52,8 @@ func (r *GormCharacterRepository) Patch(id int, character *entities.Character) e
 	return nil
 }
 
-func (r *GormCharacterRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.Character{}, id).Error; err != nil {
+func (r *GormCharacterRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.Character{}).Error; err != nil {
 		return err
 	}
 	return nil

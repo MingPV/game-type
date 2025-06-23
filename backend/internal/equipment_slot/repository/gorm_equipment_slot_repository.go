@@ -45,8 +45,8 @@ func (r *GormEquipmentSlotRepository) FindByID(id string) (*entities.EquipmentSl
 // 	return nil
 // }
 
-func (r *GormEquipmentSlotRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.EquipmentSlot{}, id).Error; err != nil {
+func (r *GormEquipmentSlotRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.EquipmentSlot{}).Error; err != nil {
 		return err
 	}
 	return nil

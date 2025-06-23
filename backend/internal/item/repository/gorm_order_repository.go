@@ -45,8 +45,8 @@ func (r *GormItemRepository) FindByID(id string) (*entities.Item, error) {
 // 	return nil
 // }
 
-func (r *GormItemRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.Item{}, id).Error; err != nil {
+func (r *GormItemRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.Item{}).Error; err != nil {
 		return err
 	}
 	return nil

@@ -132,16 +132,12 @@ func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
 // @Param id path int true "Character ID"
 // @Success 200 {object} response.MessageResponse
 // @Router /characters/{id} [delete]
-// func (h *HttpCharacterHandler) DeleteCharacter(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	characterID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpCharacterHandler) DeleteCharacter(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	if err := h.characterUseCase.DeleteCharacter(characterID); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	if err := h.characterUseCase.DeleteCharacter(id); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return responses.Message(c, fiber.StatusOK, "character deleted")
-// }
+	return responses.Message(c, fiber.StatusOK, "character deleted")
+}

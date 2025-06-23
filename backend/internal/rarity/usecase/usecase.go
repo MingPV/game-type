@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
@@ -87,13 +86,13 @@ func (s *RarityService) FindRarityByID(id string) (*entities.Rarity, error) {
 // }
 
 // RarityService Methods - 5 delete
-func (s *RarityService) DeleteRarity(id int) error {
+func (s *RarityService) DeleteRarity(id string) error {
 	if err := s.repo.Delete(id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("rarity:" + strconv.Itoa(id))
+	redisclient.Delete("rarity:" + id)
 
 	return nil
 }

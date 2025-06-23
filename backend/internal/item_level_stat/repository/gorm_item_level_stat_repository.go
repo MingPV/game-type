@@ -45,8 +45,8 @@ func (r *GormItemLevelStatRepository) FindByID(id string) (*entities.ItemLevelSt
 // 	return nil
 // }
 
-func (r *GormItemLevelStatRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.ItemLevelStat{}, id).Error; err != nil {
+func (r *GormItemLevelStatRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.ItemLevelStat{}).Error; err != nil {
 		return err
 	}
 	return nil

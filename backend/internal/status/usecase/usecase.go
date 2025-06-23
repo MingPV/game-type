@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
@@ -87,13 +86,13 @@ func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, e
 // }
 
 // StatusService Methods - 5 delete
-func (s *StatusService) DeleteStatus(character_id int) error {
+func (s *StatusService) DeleteStatus(character_id string) error {
 	if err := s.repo.Delete(character_id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("status:" + strconv.Itoa(character_id))
+	redisclient.Delete("status:" + character_id)
 
 	return nil
 }

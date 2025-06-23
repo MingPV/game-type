@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	characterRepo "github.com/MingPV/clean-go-template/internal/character/repository"
@@ -129,13 +128,13 @@ func (s *CharacterService) FindCharacterByID(id string) (*entities.Character, er
 // }
 
 // CharacterService Methods - 5 delete
-func (s *CharacterService) DeleteCharacter(id int) error {
+func (s *CharacterService) DeleteCharacter(id string) error {
 	if err := s.characterRepository.Delete(id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("character:" + strconv.Itoa(id))
+	redisclient.Delete("character:" + id)
 
 	return nil
 }

@@ -7,5 +7,5 @@ type ItemLevelStatRepository interface {
 	FindAll() ([]*entities.ItemLevelStat, error)
 	FindByID(id string) (*entities.ItemLevelStat, error)
 	// Patch(id int, itemLevelStat *entities.ItemLevelStat) error
-	Delete(id int) error
+	Delete(id string) error
 }

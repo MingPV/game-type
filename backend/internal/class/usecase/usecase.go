@@ -2,7 +2,6 @@ package usecase
 
 import (
 	"encoding/json"
-	"strconv"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/class/repository"
@@ -87,13 +86,13 @@ func (s *ClassService) FindClassByID(character_id string) (*entities.Class, erro
 // }
 
 // ClassService Methods - 5 delete
-func (s *ClassService) DeleteClass(character_id int) error {
+func (s *ClassService) DeleteClass(character_id string) error {
 	if err := s.repo.Delete(character_id); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("class:" + strconv.Itoa(character_id))
+	redisclient.Delete("class:" + character_id)
 
 	return nil
 }

@@ -45,8 +45,8 @@ func (r *GormRarityRepository) FindByID(id string) (*entities.Rarity, error) {
 // 	return nil
 // }
 
-func (r *GormRarityRepository) Delete(id int) error {
-	if err := r.db.Delete(&entities.Rarity{}, id).Error; err != nil {
+func (r *GormRarityRepository) Delete(id string) error {
+	if err := r.db.Where("id = ?", id).Delete(&entities.Rarity{}).Error; err != nil {
 		return err
 	}
 	return nil

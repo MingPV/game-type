@@ -6,6 +6,6 @@ type CharacterUseCase interface {
 	FindAllCharacters() ([]*entities.Character, error)
 	CreateCharacter(character *entities.Character) (*entities.Character, error)
 	// PatchCharacter(id int, character *entities.Character) error
-	DeleteCharacter(id int) error
+	DeleteCharacter(id string) error
 	FindCharacterByID(id string) (*entities.Character, error)
 }

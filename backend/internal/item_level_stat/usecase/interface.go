@@ -6,6 +6,6 @@ type ItemLevelStatUseCase interface {
 	FindAllItemLevelStats() ([]*entities.ItemLevelStat, error)
 	CreateItemLevelStat(itemLevelStat *entities.ItemLevelStat) error
 	// PatchItemLevelStat(id int, itemLevelStat *entities.ItemLevelStat) error
-	DeleteItemLevelStat(id int) error
+	DeleteItemLevelStat(id string) error
 	FindItemLevelStatByID(id string) (*entities.ItemLevelStat, error)
 }

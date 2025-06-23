@@ -7,5 +7,5 @@ type RarityRepository interface {
 	FindAll() ([]*entities.Rarity, error)
 	FindByID(id string) (*entities.Rarity, error)
 	// Patch(id int, rarity *entities.Rarity) error
-	Delete(id int) error
+	Delete(id string) error
 }

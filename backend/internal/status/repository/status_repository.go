@@ -7,5 +7,5 @@ type StatusRepository interface {
 	FindAll() ([]*entities.Status, error)
 	FindByID(id string) (*entities.Status, error)
 	// Patch(id int, status *entities.Status) error
-	Delete(id int) error
+	Delete(id string) error
 }

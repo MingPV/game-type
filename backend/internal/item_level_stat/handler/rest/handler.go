@@ -1,8 +1,6 @@
 package rest
 
 import (
-	"strconv"
-
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/item_level_stat/dto"
 	"github.com/MingPV/clean-go-template/internal/item_level_stat/usecase"
@@ -126,12 +124,8 @@ func (h *HttpItemLevelStatHandler) FindItemLevelStatByID(c *fiber.Ctx) error {
 // @Router /itemLevelStats/{id} [delete]
 func (h *HttpItemLevelStatHandler) DeleteItemLevelStat(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemLevelStatID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	if err := h.itemLevelStatUseCase.DeleteItemLevelStat(itemLevelStatID); err != nil {
+	if err := h.itemLevelStatUseCase.DeleteItemLevelStat(id); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
