@@ -54,6 +54,26 @@ import (
 	rarityRepository "github.com/MingPV/clean-go-template/internal/rarity/repository"
 	rarityUseCase "github.com/MingPV/clean-go-template/internal/rarity/usecase"
 
+	// LevelProgress
+	levelProgressHandler "github.com/MingPV/clean-go-template/internal/level_progress/handler/rest"
+	levelProgressRepository "github.com/MingPV/clean-go-template/internal/level_progress/repository"
+	levelProgressUseCase "github.com/MingPV/clean-go-template/internal/level_progress/usecase"
+
+	// Monster
+	monsterHandler "github.com/MingPV/clean-go-template/internal/monster/handler/rest"
+	monsterRepository "github.com/MingPV/clean-go-template/internal/monster/repository"
+	monsterUseCase "github.com/MingPV/clean-go-template/internal/monster/usecase"
+
+	// MonsterType
+	monsterTypeHandler "github.com/MingPV/clean-go-template/internal/monster_type/handler/rest"
+	monsterTypeRepository "github.com/MingPV/clean-go-template/internal/monster_type/repository"
+	monsterTypeUseCase "github.com/MingPV/clean-go-template/internal/monster_type/usecase"
+
+	// MonsterLoot
+	monsterLootHandler "github.com/MingPV/clean-go-template/internal/monster_loot/handler/rest"
+	monsterLootRepository "github.com/MingPV/clean-go-template/internal/monster_loot/repository"
+	monsterLootUseCase "github.com/MingPV/clean-go-template/internal/monster_loot/usecase"
+
 	// Status
 	statusHandler "github.com/MingPV/clean-go-template/internal/status/handler/rest"
 	statusRepository "github.com/MingPV/clean-go-template/internal/status/repository"
@@ -63,6 +83,11 @@ import (
 	userHandler "github.com/MingPV/clean-go-template/internal/user/handler/rest"
 	userRepository "github.com/MingPV/clean-go-template/internal/user/repository"
 	userUseCase "github.com/MingPV/clean-go-template/internal/user/usecase"
+
+	// Setting
+	settingHandler "github.com/MingPV/clean-go-template/internal/setting/handler/rest"
+	settingRepository "github.com/MingPV/clean-go-template/internal/setting/repository"
+	settingUseCase "github.com/MingPV/clean-go-template/internal/setting/usecase"
 )
 
 func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
@@ -125,6 +150,31 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	rarityRepo := rarityRepository.NewGormRarityRepository(db)
 	rarityService := rarityUseCase.NewRarityService(rarityRepo)
 	rarityHandler := rarityHandler.NewHttpRarityHandler(rarityService)
+
+	// LevelProgress
+	levelProgressRepo := levelProgressRepository.NewGormLevelProgressRepository(db)
+	levelProgressService := levelProgressUseCase.NewLevelProgressService(levelProgressRepo)
+	levelProgressHandler := levelProgressHandler.NewHttpLevelProgressHandler(levelProgressService)
+
+	// Monster
+	monsterRepo := monsterRepository.NewGormMonsterRepository(db)
+	monsterService := monsterUseCase.NewMonsterService(monsterRepo)
+	monsterHandler := monsterHandler.NewHttpMonsterHandler(monsterService)
+
+	// MonsterLoot
+	monsterLootRepo := monsterLootRepository.NewGormMonsterLootRepository(db)
+	monsterLootService := monsterLootUseCase.NewMonsterLootService(monsterLootRepo)
+	monsterLootHandler := monsterLootHandler.NewHttpMonsterLootHandler(monsterLootService)
+
+	// MonsterType
+	monsterTypeRepo := monsterTypeRepository.NewGormMonsterTypeRepository(db)
+	monsterTypeService := monsterTypeUseCase.NewMonsterTypeService(monsterTypeRepo)
+	monsterTypeHandler := monsterTypeHandler.NewHttpMonsterTypeHandler(monsterTypeService)
+
+	// Setting
+	settingRepo := settingRepository.NewGormSettingRepository(db)
+	settingService := settingUseCase.NewSettingService(settingRepo)
+	settingHandler := settingHandler.NewHttpSettingHandler(settingService)
 
 	// User
 	userRepo := userRepository.NewGormUserRepository(db)
@@ -233,5 +283,45 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	rarityGroup.Post("/", rarityHandler.CreateRarity)
 	rarityGroup.Delete("/:id", rarityHandler.DeleteRarity)
 	// rarityGroup.Patch("/:id", rarityHandler.PatchRarity)
+
+	// LevelProgress routes
+	levelProgressGroup := api.Group("/levelProgresss")
+	levelProgressGroup.Get("/", levelProgressHandler.FindAllLevelProgresses)
+	levelProgressGroup.Get("/:id", levelProgressHandler.FindLevelProgressByID)
+	levelProgressGroup.Post("/", levelProgressHandler.CreateLevelProgress)
+	levelProgressGroup.Delete("/:id", levelProgressHandler.DeleteLevelProgress)
+	// levelProgressGroup.Patch("/:id", levelProgressHandler.PatchLevelProgress)
+
+	// Monster routes
+	monsterGroup := api.Group("/monsters")
+	monsterGroup.Get("/", monsterHandler.FindAllMonsters)
+	monsterGroup.Get("/:id", monsterHandler.FindMonsterByID)
+	monsterGroup.Post("/", monsterHandler.CreateMonster)
+	monsterGroup.Delete("/:id", monsterHandler.DeleteMonster)
+	// monsterGroup.Patch("/:id", monsterHandler.PatchMonster)
+
+	// MonsterLoot routes
+	monsterLootGroup := api.Group("/monsterLoots")
+	monsterLootGroup.Get("/", monsterLootHandler.FindAllMonsterLoots)
+	monsterLootGroup.Get("/:id", monsterLootHandler.FindMonsterLootByID)
+	monsterLootGroup.Post("/", monsterLootHandler.CreateMonsterLoot)
+	monsterLootGroup.Delete("/:id", monsterLootHandler.DeleteMonsterLoot)
+	// monsterLootGroup.Patch("/:id", monsterLootHandler.PatchMonsterLoot)
+
+	// MonsterType routes
+	monsterTypeGroup := api.Group("/monsterTypes")
+	monsterTypeGroup.Get("/", monsterTypeHandler.FindAllMonsterTypes)
+	monsterTypeGroup.Get("/:id", monsterTypeHandler.FindMonsterTypeByID)
+	monsterTypeGroup.Post("/", monsterTypeHandler.CreateMonsterType)
+	monsterTypeGroup.Delete("/:id", monsterTypeHandler.DeleteMonsterType)
+	// monsterTypeGroup.Patch("/:id", monsterTypeHandler.PatchMonsterType)
+
+	// Setting routes
+	settingGroup := api.Group("/settings")
+	settingGroup.Get("/", settingHandler.FindAllSettings)
+	settingGroup.Get("/:id", settingHandler.FindSettingByID)
+	settingGroup.Post("/", settingHandler.CreateSetting)
+	settingGroup.Delete("/:id", settingHandler.DeleteSetting)
+	// settingGroup.Patch("/:id", settingHandler.PatchSetting)
 
 }
