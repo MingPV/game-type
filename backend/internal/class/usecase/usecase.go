@@ -67,23 +67,21 @@ func (s *ClassService) FindClassByID(character_id string) (*entities.Class, erro
 }
 
 // ClassService Methods - 4 patch
-// func (s *ClassService) PatchClass(id int, class *entities.Class) error {
-// 	if class.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, class); err != nil {
-// 		return err
-// 	}
+func (s *ClassService) PatchClass(id string, class *entities.Class) error {
 
-// 	// Update cache after patching
-// 	updatedClass, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedClass)
-// 		redisclient.Set("class:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, class); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedClass, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedClass)
+		redisclient.Set("class:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // ClassService Methods - 5 delete
 func (s *ClassService) DeleteClass(character_id string) error {

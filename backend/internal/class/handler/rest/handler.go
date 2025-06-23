@@ -87,30 +87,26 @@ func (h *HttpClassHandler) FindClassByID(c *fiber.Ctx) error {
 // @Param class body entities.Class true "Class update payload"
 // @Success 200 {object} entities.Class
 // @Router /classes/{id} [patch]
-// func (h *HttpClassHandler) PatchClass(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	classID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpClassHandler) PatchClass(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateClassRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateClassRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	class := &entities.Class{Total: req.Total}
-// 	if err := h.classUseCase.PatchClass(classID, class); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	class := &entities.Class{Description: req.Description}
+	if err := h.classUseCase.PatchClass(id, class); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedClass, err := h.classUseCase.FindClassByID(classID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedClass, err := h.classUseCase.FindClassByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToClassResponse(updatedClass))
-// }
+	return c.JSON(dto.ToClassResponse(updatedClass))
+}
 
 // DeleteClass godoc
 // @Summary Delete an class by ID
