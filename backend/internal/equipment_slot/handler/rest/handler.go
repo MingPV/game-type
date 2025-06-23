@@ -86,30 +86,26 @@ func (h *HttpEquipmentSlotHandler) FindEquipmentSlotByID(c *fiber.Ctx) error {
 // @Param equipmentSlot body entities.EquipmentSlot true "EquipmentSlot update payload"
 // @Success 200 {object} entities.EquipmentSlot
 // @Router /equipmentSlots/{id} [patch]
-// func (h *HttpEquipmentSlotHandler) PatchEquipmentSlot(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	equipmentSlotID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpEquipmentSlotHandler) PatchEquipmentSlot(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateEquipmentSlotRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateEquipmentSlotRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	equipmentSlot := &entities.EquipmentSlot{Total: req.Total}
-// 	if err := h.equipmentSlotUseCase.PatchEquipmentSlot(equipmentSlotID, equipmentSlot); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	equipmentSlot := &entities.EquipmentSlot{SlotType: req.SlotType}
+	if err := h.equipmentSlotUseCase.PatchEquipmentSlot(id, equipmentSlot); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedEquipmentSlot, err := h.equipmentSlotUseCase.FindEquipmentSlotByID(equipmentSlotID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedEquipmentSlot, err := h.equipmentSlotUseCase.FindEquipmentSlotByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToEquipmentSlotResponse(updatedEquipmentSlot))
-// }
+	return c.JSON(dto.ToEquipmentSlotResponse(updatedEquipmentSlot))
+}
 
 // DeleteEquipmentSlot godoc
 // @Summary Delete an equipmentSlot by ID

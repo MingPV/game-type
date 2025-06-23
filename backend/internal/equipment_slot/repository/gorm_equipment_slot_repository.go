@@ -38,12 +38,12 @@ func (r *GormEquipmentSlotRepository) FindByID(id string) (*entities.EquipmentSl
 	return &equipmentSlot, nil
 }
 
-// func (r *GormEquipmentSlotRepository) Patch(id int, equipmentSlot *entities.EquipmentSlot) error {
-// 	if err := r.db.Model(&entities.EquipmentSlot{}).Where("id = ?", id).Updates(equipmentSlot).Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (r *GormEquipmentSlotRepository) Patch(id string, equipmentSlot *entities.EquipmentSlot) error {
+	if err := r.db.Model(&entities.EquipmentSlot{}).Where("id = ?", id).Updates(equipmentSlot).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (r *GormEquipmentSlotRepository) Delete(id string) error {
 	if err := r.db.Where("id = ?", id).Delete(&entities.EquipmentSlot{}).Error; err != nil {

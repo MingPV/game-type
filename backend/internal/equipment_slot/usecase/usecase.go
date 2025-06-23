@@ -67,23 +67,21 @@ func (s *EquipmentSlotService) FindEquipmentSlotByID(id string) (*entities.Equip
 }
 
 // EquipmentSlotService Methods - 4 patch
-// func (s *EquipmentSlotService) PatchEquipmentSlot(id int, equipmentSlot *entities.EquipmentSlot) error {
-// 	if equipmentSlot.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, equipmentSlot); err != nil {
-// 		return err
-// 	}
+func (s *EquipmentSlotService) PatchEquipmentSlot(id string, equipmentSlot *entities.EquipmentSlot) error {
 
-// 	// Update cache after patching
-// 	updatedEquipmentSlot, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedEquipmentSlot)
-// 		redisclient.Set("equipmentSlot:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, equipmentSlot); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedEquipmentSlot, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedEquipmentSlot)
+		redisclient.Set("equipmentSlot:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // EquipmentSlotService Methods - 5 delete
 func (s *EquipmentSlotService) DeleteEquipmentSlot(id string) error {
