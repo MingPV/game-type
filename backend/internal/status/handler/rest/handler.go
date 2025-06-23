@@ -92,30 +92,26 @@ func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
 // @Param status body entities.Status true "Status update payload"
 // @Success 200 {object} entities.Status
 // @Router /statuses/{id} [patch]
-// func (h *HttpStatusHandler) PatchStatus(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	statusID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpStatusHandler) PatchStatus(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateStatusRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateStatusRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	status := &entities.Status{Total: req.Total}
-// 	if err := h.statusUseCase.PatchStatus(statusID, status); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	status := &entities.Status{StatusPoint: req.StatusPoint}
+	if err := h.statusUseCase.PatchStatus(id, status); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedStatus, err := h.statusUseCase.FindStatusByID(statusID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedStatus, err := h.statusUseCase.FindStatusByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToStatusResponse(updatedStatus))
-// }
+	return c.JSON(dto.ToStatusResponse(updatedStatus))
+}
 
 // DeleteStatus godoc
 // @Summary Delete an status by ID

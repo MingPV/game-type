@@ -38,7 +38,7 @@ func (r *GormStatusRepository) FindByID(id string) (*entities.Status, error) {
 	return &status, nil
 }
 
-func (r *GormStatusRepository) Patch(id int, status *entities.Status) error {
+func (r *GormStatusRepository) Patch(id string, status *entities.Status) error {
 	if err := r.db.Model(&entities.Status{}).Where("id = ?", id).Updates(status).Error; err != nil {
 		return err
 	}

@@ -6,6 +6,6 @@ type StatusRepository interface {
 	Save(status *entities.Status) error
 	FindAll() ([]*entities.Status, error)
 	FindByID(id string) (*entities.Status, error)
-	// Patch(id int, status *entities.Status) error
+	Patch(id string, status *entities.Status) error
 	Delete(id string) error
 }

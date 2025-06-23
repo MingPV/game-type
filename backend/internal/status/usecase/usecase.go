@@ -67,23 +67,21 @@ func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, e
 }
 
 // StatusService Methods - 4 patch
-// func (s *StatusService) PatchStatus(id int, status *entities.Status) error {
-// 	if status.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, status); err != nil {
-// 		return err
-// 	}
+func (s *StatusService) PatchStatus(id string, status *entities.Status) error {
 
-// 	// Update cache after patching
-// 	updatedStatus, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedStatus)
-// 		redisclient.Set("status:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, status); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedStatus, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedStatus)
+		redisclient.Set("status:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // StatusService Methods - 5 delete
 func (s *StatusService) DeleteStatus(character_id string) error {
