@@ -67,23 +67,21 @@ func (s *ItemTypeService) FindItemTypeByID(id string) (*entities.ItemType, error
 }
 
 // ItemTypeService Methods - 4 patch
-// func (s *ItemTypeService) PatchItemType(id int, itemType *entities.ItemType) error {
-// 	if itemType.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, itemType); err != nil {
-// 		return err
-// 	}
+func (s *ItemTypeService) PatchItemType(id string, itemType *entities.ItemType) error {
 
-// 	// Update cache after patching
-// 	updatedItemType, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedItemType)
-// 		redisclient.Set("itemType:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, itemType); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedItemType, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedItemType)
+		redisclient.Set("itemType:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // ItemTypeService Methods - 5 delete
 func (s *ItemTypeService) DeleteItemType(id string) error {

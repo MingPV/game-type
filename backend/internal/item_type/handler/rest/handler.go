@@ -80,30 +80,26 @@ func (h *HttpItemTypeHandler) FindItemTypeByID(c *fiber.Ctx) error {
 // @Param itemType body entities.ItemType true "ItemType update payload"
 // @Success 200 {object} entities.ItemType
 // @Router /itemTypes/{id} [patch]
-// func (h *HttpItemTypeHandler) PatchItemType(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	itemTypeID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpItemTypeHandler) PatchItemType(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateItemTypeRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateItemTypeRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	itemType := &entities.ItemType{Total: req.Total}
-// 	if err := h.itemTypeUseCase.PatchItemType(itemTypeID, itemType); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	itemType := &entities.ItemType{Name: req.Name}
+	if err := h.itemTypeUseCase.PatchItemType(id, itemType); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedItemType, err := h.itemTypeUseCase.FindItemTypeByID(itemTypeID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedItemType, err := h.itemTypeUseCase.FindItemTypeByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToItemTypeResponse(updatedItemType))
-// }
+	return c.JSON(dto.ToItemTypeResponse(updatedItemType))
+}
 
 // DeleteItemType godoc
 // @Summary Delete an itemType by ID
