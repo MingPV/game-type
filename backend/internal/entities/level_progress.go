@@ -1,6 +1,6 @@
 package entities
 
-type LevelProgression struct {
+type LevelProgress struct {
 	Level       int `gorm:"primaryKey" json:"level"`
 	ExpRequired int `json:"exp_required"`
 }
