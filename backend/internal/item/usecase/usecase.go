@@ -67,23 +67,21 @@ func (s *ItemService) FindItemByID(id string) (*entities.Item, error) {
 }
 
 // ItemService Methods - 4 patch
-// func (s *ItemService) PatchItem(id int, item *entities.Item) error {
-// 	if item.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.repo.Patch(id, item); err != nil {
-// 		return err
-// 	}
+func (s *ItemService) PatchItem(id string, item *entities.Item) error {
 
-// 	// Update cache after patching
-// 	updatedItem, err := s.repo.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedItem)
-// 		redisclient.Set("item:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.repo.Patch(id, item); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedItem, err := s.repo.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedItem)
+		redisclient.Set("item:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // ItemService Methods - 5 delete
 func (s *ItemService) DeleteItem(id string) error {

@@ -90,30 +90,26 @@ func (h *HttpItemHandler) FindItemByID(c *fiber.Ctx) error {
 // @Param item body entities.Item true "Item update payload"
 // @Success 200 {object} entities.Item
 // @Router /items/{id} [patch]
-// func (h *HttpItemHandler) PatchItem(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	itemID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpItemHandler) PatchItem(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateItemRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateItemRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	item := &entities.Item{Total: req.Total}
-// 	if err := h.itemUseCase.PatchItem(itemID, item); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	item := &entities.Item{Description: req.Description}
+	if err := h.itemUseCase.PatchItem(id, item); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedItem, err := h.itemUseCase.FindItemByID(itemID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedItem, err := h.itemUseCase.FindItemByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToItemResponse(updatedItem))
-// }
+	return c.JSON(dto.ToItemResponse(updatedItem))
+}
 
 // DeleteItem godoc
 // @Summary Delete an item by ID
