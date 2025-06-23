@@ -9,7 +9,7 @@ import (
 type Character struct {
 	ID          uuid.UUID `gorm:"type:uuid;primaryKey" json:"character_id"`
 	UserID      uuid.UUID `gorm:"type:uuid" json:"user_id"`
-	Name        string    `json:"name"`
+	Name        string    `gorm:"uniqueIndex" json:"name"`
 	Level       int       `json:"level"`
 	CurrentExp  int       `json:"current_exp"`
 	ClassID     uuid.UUID `gorm:"type:uuid" json:"class_id"`

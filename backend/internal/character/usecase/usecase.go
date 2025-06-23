@@ -109,23 +109,21 @@ func (s *CharacterService) FindCharacterByID(id string) (*entities.Character, er
 }
 
 // CharacterService Methods - 4 patch
-// func (s *CharacterService) PatchCharacter(id int, character *entities.Character) error {
-// 	if character.Total <= 0 {
-// 		return errors.New("total must be positive")
-// 	}
-// 	if err := s.characterRepository.Patch(id, character); err != nil {
-// 		return err
-// 	}
+func (s *CharacterService) PatchCharacter(id string, character *entities.Character) error {
 
-// 	// Update cache after patching
-// 	updatedCharacter, err := s.characterRepository.FindByID(id)
-// 	if err == nil {
-// 		bytes, _ := json.Marshal(updatedCharacter)
-// 		redisclient.Set("character:"+strconv.Itoa(id), string(bytes), time.Minute*10)
-// 	}
+	if err := s.characterRepository.Patch(id, character); err != nil {
+		return err
+	}
 
-// 	return nil
-// }
+	// Update cache after patching
+	updatedCharacter, err := s.characterRepository.FindByID(id)
+	if err == nil {
+		bytes, _ := json.Marshal(updatedCharacter)
+		redisclient.Set("character:"+id, string(bytes), time.Minute*10)
+	}
+
+	return nil
+}
 
 // CharacterService Methods - 5 delete
 func (s *CharacterService) DeleteCharacter(id string) error {

@@ -100,30 +100,26 @@ func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
 // @Param character body entities.Character true "Character update payload"
 // @Success 200 {object} entities.Character
 // @Router /characters/{id} [patch]
-// func (h *HttpCharacterHandler) PatchCharacter(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	characterID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpCharacterHandler) PatchCharacter(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateCharacterRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateCharacterRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	character := &entities.Character{Total: req.Total}
-// 	if err := h.characterUseCase.PatchCharacter(characterID, character); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	character := &entities.Character{Name: req.Name}
+	if err := h.characterUseCase.PatchCharacter(id, character); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedCharacter, err := h.characterUseCase.FindCharacterByID(characterID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedCharacter, err := h.characterUseCase.FindCharacterByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToCharacterResponse(updatedCharacter))
-// }
+	return c.JSON(dto.ToCharacterResponse(updatedCharacter))
+}
 
 // DeleteCharacter godoc
 // @Summary Delete an character by ID

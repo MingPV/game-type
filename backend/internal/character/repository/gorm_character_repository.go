@@ -45,7 +45,7 @@ func (r *GormCharacterRepository) FindByID(id string) (*entities.Character, erro
 	return &character, nil
 }
 
-func (r *GormCharacterRepository) Patch(id int, character *entities.Character) error {
+func (r *GormCharacterRepository) Patch(id string, character *entities.Character) error {
 	if err := r.db.Model(&entities.Character{}).Where("id = ?", id).Updates(character).Error; err != nil {
 		return err
 	}
