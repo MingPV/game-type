@@ -38,12 +38,12 @@ func (r *GormItemInstanceRepository) FindByID(id string) (*entities.ItemInstance
 	return &itemInstance, nil
 }
 
-// func (r *GormItemInstanceRepository) Patch(id int, itemInstance *entities.ItemInstance) error {
-// 	if err := r.db.Model(&entities.ItemInstance{}).Where("id = ?", id).Updates(itemInstance).Error; err != nil {
-// 		return err
-// 	}
-// 	return nil
-// }
+func (r *GormItemInstanceRepository) Patch(id string, itemInstance *entities.ItemInstance) error {
+	if err := r.db.Model(&entities.ItemInstance{}).Where("id = ?", id).Updates(itemInstance).Error; err != nil {
+		return err
+	}
+	return nil
+}
 
 func (r *GormItemInstanceRepository) Delete(id string) error {
 	if err := r.db.Where("id = ?", id).Delete(&entities.ItemInstance{}).Error; err != nil {

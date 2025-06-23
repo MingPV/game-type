@@ -86,30 +86,26 @@ func (h *HttpItemInstanceHandler) FindItemInstanceByID(c *fiber.Ctx) error {
 // @Param itemInstance body entities.ItemInstance true "ItemInstance update payload"
 // @Success 200 {object} entities.ItemInstance
 // @Router /itemInstances/{id} [patch]
-// func (h *HttpItemInstanceHandler) PatchItemInstance(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	itemInstanceID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpItemInstanceHandler) PatchItemInstance(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	var req dto.CreateItemInstanceRequest
-// 	if err := c.BodyParser(&req); err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
-// 	}
+	var req dto.CreateItemInstanceRequest
+	if err := c.BodyParser(&req); err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
+	}
 
-// 	itemInstance := &entities.ItemInstance{Total: req.Total}
-// 	if err := h.itemInstanceUseCase.PatchItemInstance(itemInstanceID, itemInstance); err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	itemInstance := &entities.ItemInstance{UpgradeLevel: req.UpgradeLevel}
+	if err := h.itemInstanceUseCase.PatchItemInstance(id, itemInstance); err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	updatedItemInstance, err := h.itemInstanceUseCase.FindItemInstanceByID(itemInstanceID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
-// 	}
+	updatedItemInstance, err := h.itemInstanceUseCase.FindItemInstanceByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
 
-// 	return c.JSON(dto.ToItemInstanceResponse(updatedItemInstance))
-// }
+	return c.JSON(dto.ToItemInstanceResponse(updatedItemInstance))
+}
 
 // DeleteItemInstance godoc
 // @Summary Delete an itemInstance by ID
