@@ -9,30 +9,55 @@ import (
 	orderRepository "github.com/MingPV/clean-go-template/internal/order/repository"
 	orderUseCase "github.com/MingPV/clean-go-template/internal/order/usecase"
 
-	// Inventory
-	inventoryHandler "github.com/MingPV/clean-go-template/internal/inventory/handler/rest"
-	inventoryRepository "github.com/MingPV/clean-go-template/internal/inventory/repository"
-	inventoryUseCase "github.com/MingPV/clean-go-template/internal/inventory/usecase"
+	// Character
+	characterHandler "github.com/MingPV/clean-go-template/internal/character/handler/rest"
+	characterRepository "github.com/MingPV/clean-go-template/internal/character/repository"
+	characterUseCase "github.com/MingPV/clean-go-template/internal/character/usecase"
+
+	// Class
+	classHandler "github.com/MingPV/clean-go-template/internal/class/handler/rest"
+	classRepository "github.com/MingPV/clean-go-template/internal/class/repository"
+	classUseCase "github.com/MingPV/clean-go-template/internal/class/usecase"
 
 	// EquipmentSlot
 	equipmentSlotHandler "github.com/MingPV/clean-go-template/internal/equipment_slot/handler/rest"
 	equipmentSlotRepository "github.com/MingPV/clean-go-template/internal/equipment_slot/repository"
 	equipmentSlotUseCase "github.com/MingPV/clean-go-template/internal/equipment_slot/usecase"
 
-	// Character
-	characterHandler "github.com/MingPV/clean-go-template/internal/character/handler/rest"
-	characterRepository "github.com/MingPV/clean-go-template/internal/character/repository"
-	characterUseCase "github.com/MingPV/clean-go-template/internal/character/usecase"
+	// Inventory
+	inventoryHandler "github.com/MingPV/clean-go-template/internal/inventory/handler/rest"
+	inventoryRepository "github.com/MingPV/clean-go-template/internal/inventory/repository"
+	inventoryUseCase "github.com/MingPV/clean-go-template/internal/inventory/usecase"
+
+	// Item
+	itemHandler "github.com/MingPV/clean-go-template/internal/item/handler/rest"
+	itemRepository "github.com/MingPV/clean-go-template/internal/item/repository"
+	itemUseCase "github.com/MingPV/clean-go-template/internal/item/usecase"
+
+	// ItemInstance
+	itemInstanceHandler "github.com/MingPV/clean-go-template/internal/item_instance/handler/rest"
+	itemInstanceRepository "github.com/MingPV/clean-go-template/internal/item_instance/repository"
+	itemInstanceUseCase "github.com/MingPV/clean-go-template/internal/item_instance/usecase"
+
+	// ItemLevelStat
+	itemLevelStatHandler "github.com/MingPV/clean-go-template/internal/item_level_stat/handler/rest"
+	itemLevelStatRepository "github.com/MingPV/clean-go-template/internal/item_level_stat/repository"
+	itemLevelStatUseCase "github.com/MingPV/clean-go-template/internal/item_level_stat/usecase"
+
+	// ItemType
+	itemTypeHandler "github.com/MingPV/clean-go-template/internal/item_type/handler/rest"
+	itemTypeRepository "github.com/MingPV/clean-go-template/internal/item_type/repository"
+	itemTypeUseCase "github.com/MingPV/clean-go-template/internal/item_type/usecase"
+
+	// Rarity
+	rarityHandler "github.com/MingPV/clean-go-template/internal/rarity/handler/rest"
+	rarityRepository "github.com/MingPV/clean-go-template/internal/rarity/repository"
+	rarityUseCase "github.com/MingPV/clean-go-template/internal/rarity/usecase"
 
 	// Status
 	statusHandler "github.com/MingPV/clean-go-template/internal/status/handler/rest"
 	statusRepository "github.com/MingPV/clean-go-template/internal/status/repository"
 	statusUseCase "github.com/MingPV/clean-go-template/internal/status/usecase"
-
-	// Class
-	classHandler "github.com/MingPV/clean-go-template/internal/class/handler/rest"
-	classRepository "github.com/MingPV/clean-go-template/internal/class/repository"
-	classUseCase "github.com/MingPV/clean-go-template/internal/class/usecase"
 
 	// User
 	userHandler "github.com/MingPV/clean-go-template/internal/user/handler/rest"
@@ -66,15 +91,40 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	statusService := statusUseCase.NewStatusService(statusRepo)
 	statusHandler := statusHandler.NewHttpStatusHandler(statusService)
 
+	// Character
+	characterRepo := characterRepository.NewGormCharacterRepository(db)
+	characterService := characterUseCase.NewCharacterService(characterRepo, statusRepo, inventoryRepo, equipmentSlotRepo)
+	characterHandler := characterHandler.NewHttpCharacterHandler(characterService)
+
 	// Class
 	classRepo := classRepository.NewGormClassRepository(db)
 	classService := classUseCase.NewClassService(classRepo)
 	classHandler := classHandler.NewHttpClassHandler(classService)
 
-	// Character
-	characterRepo := characterRepository.NewGormCharacterRepository(db)
-	characterService := characterUseCase.NewCharacterService(characterRepo, statusRepo, inventoryRepo, equipmentSlotRepo)
-	characterHandler := characterHandler.NewHttpCharacterHandler(characterService)
+	// Item
+	itemRepo := itemRepository.NewGormItemRepository(db)
+	itemService := itemUseCase.NewItemService(itemRepo)
+	itemHandler := itemHandler.NewHttpItemHandler(itemService)
+
+	// ItemInstance
+	itemInstanceRepo := itemInstanceRepository.NewGormItemInstanceRepository(db)
+	itemInstanceService := itemInstanceUseCase.NewItemInstanceService(itemInstanceRepo)
+	itemInstanceHandler := itemInstanceHandler.NewHttpItemInstanceHandler(itemInstanceService)
+
+	// ItemLevelStat
+	itemLevelStatRepo := itemLevelStatRepository.NewGormItemLevelStatRepository(db)
+	itemLevelStatService := itemLevelStatUseCase.NewItemLevelStatService(itemLevelStatRepo)
+	itemLevelStatHandler := itemLevelStatHandler.NewHttpItemLevelStatHandler(itemLevelStatService)
+
+	// ItemType
+	itemTypeRepo := itemTypeRepository.NewGormItemTypeRepository(db)
+	itemTypeService := itemTypeUseCase.NewItemTypeService(itemTypeRepo)
+	itemTypeHandler := itemTypeHandler.NewHttpItemTypeHandler(itemTypeService)
+
+	// Rarity
+	rarityRepo := rarityRepository.NewGormRarityRepository(db)
+	rarityService := rarityUseCase.NewRarityService(rarityRepo)
+	rarityHandler := rarityHandler.NewHttpRarityHandler(rarityService)
 
 	// User
 	userRepo := userRepository.NewGormUserRepository(db)
@@ -143,5 +193,45 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	equipmentSlotGroup.Post("/", equipmentSlotHandler.CreateEquipmentSlot)
 	// equipmentSlotGroup.Delete("/:id", equipmentSlotHandler.DeleteEquipmentSlot)
 	// equipmentSlotGroup.Patch("/:id", equipmentSlotHandler.PatchEquipmentSlot)
+
+	// Item routes
+	itemGroup := api.Group("/items")
+	itemGroup.Get("/", itemHandler.FindAllItems)
+	// itemGroup.Get("/:id", itemHandler.FindItemByID)
+	itemGroup.Post("/", itemHandler.CreateItem)
+	// itemGroup.Delete("/:id", itemHandler.DeleteItem)
+	// itemGroup.Patch("/:id", itemHandler.PatchItem)
+
+	// ItemInstance routes
+	itemInstanceGroup := api.Group("/itemInstances")
+	itemInstanceGroup.Get("/", itemInstanceHandler.FindAllItemInstances)
+	// itemInstanceGroup.Get("/:id", itemInstanceHandler.FindItemInstanceByID)
+	itemInstanceGroup.Post("/", itemInstanceHandler.CreateItemInstance)
+	// itemInstanceGroup.Delete("/:id", itemInstanceHandler.DeleteItemInstance)
+	// itemInstanceGroup.Patch("/:id", itemInstanceHandler.PatchItemInstance)
+
+	// ItemLevelStat routes
+	itemLevelStatGroup := api.Group("/itemLevelStats")
+	itemLevelStatGroup.Get("/", itemLevelStatHandler.FindAllItemLevelStats)
+	// itemLevelStatGroup.Get("/:id", itemLevelStatHandler.FindItemLevelStatByID)
+	itemLevelStatGroup.Post("/", itemLevelStatHandler.CreateItemLevelStat)
+	// itemLevelStatGroup.Delete("/:id", itemLevelStatHandler.DeleteItemLevelStat)
+	// itemLevelStatGroup.Patch("/:id", itemLevelStatHandler.PatchItemLevelStat)
+
+	// ItemType routes
+	itemTypeGroup := api.Group("/itemTypes")
+	itemTypeGroup.Get("/", itemTypeHandler.FindAllItemTypes)
+	// itemTypeGroup.Get("/:id", itemTypeHandler.FindItemTypeByID)
+	itemTypeGroup.Post("/", itemTypeHandler.CreateItemType)
+	// itemTypeGroup.Delete("/:id", itemTypeHandler.DeleteItemType)
+	// itemTypeGroup.Patch("/:id", itemTypeHandler.PatchItemType)
+
+	// Rarity routes
+	rarityGroup := api.Group("/rarities")
+	rarityGroup.Get("/", rarityHandler.FindAllRarities)
+	// rarityGroup.Get("/:id", rarityHandler.FindRarityByID)
+	rarityGroup.Post("/", rarityHandler.CreateRarity)
+	// rarityGroup.Delete("/:id", rarityHandler.DeleteRarity)
+	// rarityGroup.Patch("/:id", rarityHandler.PatchRarity)
 
 }
