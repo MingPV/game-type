@@ -74,12 +74,8 @@ func (h *HttpItemLevelStatHandler) FindAllItemLevelStats(c *fiber.Ctx) error {
 // @Router /itemLevelStats/{id} [get]
 func (h *HttpItemLevelStatHandler) FindItemLevelStatByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemLevelStatID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	itemLevelStat, err := h.itemLevelStatUseCase.FindItemLevelStatByID(itemLevelStatID)
+	itemLevelStat, err := h.itemLevelStatUseCase.FindItemLevelStatByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

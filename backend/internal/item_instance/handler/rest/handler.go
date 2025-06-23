@@ -70,12 +70,8 @@ func (h *HttpItemInstanceHandler) FindAllItemInstances(c *fiber.Ctx) error {
 // @Router /itemInstances/{id} [get]
 func (h *HttpItemInstanceHandler) FindItemInstanceByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemInstanceID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	itemInstance, err := h.itemInstanceUseCase.FindItemInstanceByID(itemInstanceID)
+	itemInstance, err := h.itemInstanceUseCase.FindItemInstanceByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

@@ -43,10 +43,10 @@ func (s *ItemLevelStatService) FindAllItemLevelStats() ([]*entities.ItemLevelSta
 }
 
 // ItemLevelStatService Methods - 3 find by id
-func (s *ItemLevelStatService) FindItemLevelStatByID(id int) (*entities.ItemLevelStat, error) {
+func (s *ItemLevelStatService) FindItemLevelStatByID(id string) (*entities.ItemLevelStat, error) {
 
 	// Check if the itemLevelStat is in the cache
-	jsonData, err := redisclient.Get("itemLevelStat:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("itemLevelStat:" + id)
 	if err == nil {
 		var itemLevelStat entities.ItemLevelStat
 		json.Unmarshal([]byte(jsonData), &itemLevelStat)
@@ -62,7 +62,7 @@ func (s *ItemLevelStatService) FindItemLevelStatByID(id int) (*entities.ItemLeve
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(itemLevelStat)
-	redisclient.Set("itemLevelStat:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("itemLevelStat:"+id, string(bytes), time.Minute*10)
 
 	return itemLevelStat, nil
 }

@@ -43,10 +43,10 @@ func (s *RarityService) FindAllRarities() ([]*entities.Rarity, error) {
 }
 
 // RarityService Methods - 3 find by id
-func (s *RarityService) FindRarityByID(id int) (*entities.Rarity, error) {
+func (s *RarityService) FindRarityByID(id string) (*entities.Rarity, error) {
 
 	// Check if the rarity is in the cache
-	jsonData, err := redisclient.Get("rarity:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("rarity:" + id)
 	if err == nil {
 		var rarity entities.Rarity
 		json.Unmarshal([]byte(jsonData), &rarity)
@@ -62,7 +62,7 @@ func (s *RarityService) FindRarityByID(id int) (*entities.Rarity, error) {
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(rarity)
-	redisclient.Set("rarity:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("rarity:"+id, string(bytes), time.Minute*10)
 
 	return rarity, nil
 }

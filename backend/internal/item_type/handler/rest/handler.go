@@ -64,12 +64,8 @@ func (h *HttpItemTypeHandler) FindAllItemTypes(c *fiber.Ctx) error {
 // @Router /itemTypes/{id} [get]
 func (h *HttpItemTypeHandler) FindItemTypeByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemTypeID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	itemType, err := h.itemTypeUseCase.FindItemTypeByID(itemTypeID)
+	itemType, err := h.itemTypeUseCase.FindItemTypeByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

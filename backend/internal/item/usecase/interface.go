@@ -7,5 +7,5 @@ type ItemUseCase interface {
 	CreateItem(item *entities.Item) error
 	// PatchItem(id int, item *entities.Item) error
 	DeleteItem(id int) error
-	FindItemByID(id int) (*entities.Item, error)
+	FindItemByID(id string) (*entities.Item, error)
 }

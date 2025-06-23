@@ -43,10 +43,10 @@ func (s *ItemService) FindAllItems() ([]*entities.Item, error) {
 }
 
 // ItemService Methods - 3 find by id
-func (s *ItemService) FindItemByID(id int) (*entities.Item, error) {
+func (s *ItemService) FindItemByID(id string) (*entities.Item, error) {
 
 	// Check if the item is in the cache
-	jsonData, err := redisclient.Get("item:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("item:" + id)
 	if err == nil {
 		var item entities.Item
 		json.Unmarshal([]byte(jsonData), &item)
@@ -62,7 +62,7 @@ func (s *ItemService) FindItemByID(id int) (*entities.Item, error) {
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(item)
-	redisclient.Set("item:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("item:"+id, string(bytes), time.Minute*10)
 
 	return item, nil
 }

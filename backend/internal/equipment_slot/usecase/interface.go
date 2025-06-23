@@ -7,5 +7,5 @@ type EquipmentSlotUseCase interface {
 	CreateEquipmentSlot(equipmentSlot *entities.EquipmentSlot) error
 	// PatchEquipmentSlot(id int, equipmentSlot *entities.EquipmentSlot) error
 	DeleteEquipmentSlot(id int) error
-	FindEquipmentSlotByID(id int) (*entities.EquipmentSlot, error)
+	FindEquipmentSlotByID(id string) (*entities.EquipmentSlot, error)
 }

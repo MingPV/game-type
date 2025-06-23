@@ -7,5 +7,5 @@ type ItemTypeUseCase interface {
 	CreateItemType(itemType *entities.ItemType) error
 	// PatchItemType(id int, itemType *entities.ItemType) error
 	DeleteItemType(id int) error
-	FindItemTypeByID(id int) (*entities.ItemType, error)
+	FindItemTypeByID(id string) (*entities.ItemType, error)
 }

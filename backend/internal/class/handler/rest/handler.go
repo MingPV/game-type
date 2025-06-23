@@ -67,20 +67,16 @@ func (h *HttpClassHandler) FindAllClasses(c *fiber.Ctx) error {
 // @Param id path int true "Class ID"
 // @Success 200 {object} entities.Class
 // @Router /classes/{id} [get]
-// func (h *HttpClassHandler) FindClassByID(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	classID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpClassHandler) FindClassByID(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	class, err := h.classUseCase.FindClassByID(classID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusNotFound, err.Error())
-// 	}
+	class, err := h.classUseCase.FindClassByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusNotFound, err.Error())
+	}
 
-// 	return c.JSON(dto.ToClassResponse(class))
-// }
+	return c.JSON(dto.ToClassResponse(class))
+}
 
 // PatchClass godoc
 // @Summary Update an class partially

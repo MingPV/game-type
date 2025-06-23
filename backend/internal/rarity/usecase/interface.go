@@ -7,5 +7,5 @@ type RarityUseCase interface {
 	CreateRarity(rarity *entities.Rarity) error
 	// PatchRarity(id int, rarity *entities.Rarity) error
 	DeleteRarity(id int) error
-	FindRarityByID(id int) (*entities.Rarity, error)
+	FindRarityByID(id string) (*entities.Rarity, error)
 }

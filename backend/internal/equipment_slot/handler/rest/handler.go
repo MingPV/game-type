@@ -70,12 +70,8 @@ func (h *HttpEquipmentSlotHandler) FindAllEquipmentSlots(c *fiber.Ctx) error {
 // @Router /equipmentSlots/{id} [get]
 func (h *HttpEquipmentSlotHandler) FindEquipmentSlotByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	equipmentSlotID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	equipmentSlot, err := h.equipmentSlotUseCase.FindEquipmentSlotByID(equipmentSlotID)
+	equipmentSlot, err := h.equipmentSlotUseCase.FindEquipmentSlotByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

@@ -43,10 +43,10 @@ func (s *StatusService) FindAllStatuses() ([]*entities.Status, error) {
 }
 
 // StatusService Methods - 3 find by id
-func (s *StatusService) FindStatusByID(character_id int) (*entities.Status, error) {
+func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, error) {
 
 	// Check if the status is in the cache
-	jsonData, err := redisclient.Get("status:" + strconv.Itoa(character_id))
+	jsonData, err := redisclient.Get("status:" + character_id)
 	if err == nil {
 		var status entities.Status
 		json.Unmarshal([]byte(jsonData), &status)
@@ -62,7 +62,7 @@ func (s *StatusService) FindStatusByID(character_id int) (*entities.Status, erro
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(status)
-	redisclient.Set("status:"+strconv.Itoa(character_id), string(bytes), time.Minute*10)
+	redisclient.Set("status:"+character_id, string(bytes), time.Minute*10)
 
 	return status, nil
 }

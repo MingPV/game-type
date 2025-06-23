@@ -30,9 +30,9 @@ func (r *GormRarityRepository) FindAll() ([]*entities.Rarity, error) {
 	return rarities, nil
 }
 
-func (r *GormRarityRepository) FindByID(id int) (*entities.Rarity, error) {
+func (r *GormRarityRepository) FindByID(id string) (*entities.Rarity, error) {
 	var rarity entities.Rarity
-	if err := r.db.First(&rarity, id).Error; err != nil {
+	if err := r.db.Where("id = ?", id).First(&rarity).Error; err != nil {
 		return &entities.Rarity{}, err
 	}
 	return &rarity, nil

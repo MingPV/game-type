@@ -64,12 +64,8 @@ func (h *HttpRarityHandler) FindAllRarities(c *fiber.Ctx) error {
 // @Router /rarities/{id} [get]
 func (h *HttpRarityHandler) FindRarityByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	rarityID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	rarity, err := h.rarityUseCase.FindRarityByID(rarityID)
+	rarity, err := h.rarityUseCase.FindRarityByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

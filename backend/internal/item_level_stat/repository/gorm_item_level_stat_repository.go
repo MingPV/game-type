@@ -30,9 +30,9 @@ func (r *GormItemLevelStatRepository) FindAll() ([]*entities.ItemLevelStat, erro
 	return itemLevelStats, nil
 }
 
-func (r *GormItemLevelStatRepository) FindByID(id int) (*entities.ItemLevelStat, error) {
+func (r *GormItemLevelStatRepository) FindByID(id string) (*entities.ItemLevelStat, error) {
 	var itemLevelStat entities.ItemLevelStat
-	if err := r.db.First(&itemLevelStat, id).Error; err != nil {
+	if err := r.db.Where("id = ?", id).First(&itemLevelStat).Error; err != nil {
 		return &entities.ItemLevelStat{}, err
 	}
 	return &itemLevelStat, nil

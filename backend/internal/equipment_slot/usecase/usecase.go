@@ -43,10 +43,10 @@ func (s *EquipmentSlotService) FindAllEquipmentSlots() ([]*entities.EquipmentSlo
 }
 
 // EquipmentSlotService Methods - 3 find by id
-func (s *EquipmentSlotService) FindEquipmentSlotByID(id int) (*entities.EquipmentSlot, error) {
+func (s *EquipmentSlotService) FindEquipmentSlotByID(id string) (*entities.EquipmentSlot, error) {
 
 	// Check if the equipmentSlot is in the cache
-	jsonData, err := redisclient.Get("equipmentSlot:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("equipmentSlot:" + id)
 	if err == nil {
 		var equipmentSlot entities.EquipmentSlot
 		json.Unmarshal([]byte(jsonData), &equipmentSlot)
@@ -62,7 +62,7 @@ func (s *EquipmentSlotService) FindEquipmentSlotByID(id int) (*entities.Equipmen
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(equipmentSlot)
-	redisclient.Set("equipmentSlot:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("equipmentSlot:"+id, string(bytes), time.Minute*10)
 
 	return equipmentSlot, nil
 }

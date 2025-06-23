@@ -72,20 +72,16 @@ func (h *HttpStatusHandler) FindAllStatuses(c *fiber.Ctx) error {
 // @Param id path int true "Status ID"
 // @Success 200 {object} entities.Status
 // @Router /statuses/{id} [get]
-// func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
-// 	id := c.Params("id")
-// 	statusID, err := strconv.Atoi(id)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-// 	}
+func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
+	id := c.Params("id")
 
-// 	status, err := h.statusUseCase.FindStatusByID(statusID)
-// 	if err != nil {
-// 		return responses.Error(c, fiber.StatusNotFound, err.Error())
-// 	}
+	status, err := h.statusUseCase.FindStatusByID(id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusNotFound, err.Error())
+	}
 
-// 	return c.JSON(dto.ToStatusResponse(status))
-// }
+	return c.JSON(dto.ToStatusResponse(status))
+}
 
 // PatchStatus godoc
 // @Summary Update an status partially

@@ -74,12 +74,8 @@ func (h *HttpItemHandler) FindAllItems(c *fiber.Ctx) error {
 // @Router /items/{id} [get]
 func (h *HttpItemHandler) FindItemByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	itemID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	item, err := h.itemUseCase.FindItemByID(itemID)
+	item, err := h.itemUseCase.FindItemByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}

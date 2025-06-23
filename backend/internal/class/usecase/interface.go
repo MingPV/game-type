@@ -7,5 +7,5 @@ type ClassUseCase interface {
 	CreateClass(class *entities.Class) error
 	// PatchClass(id int, class *entities.Class) error
 	DeleteClass(id int) error
-	FindClassByID(id int) (*entities.Class, error)
+	FindClassByID(id string) (*entities.Class, error)
 }

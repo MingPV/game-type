@@ -7,5 +7,5 @@ type ItemLevelStatUseCase interface {
 	CreateItemLevelStat(itemLevelStat *entities.ItemLevelStat) error
 	// PatchItemLevelStat(id int, itemLevelStat *entities.ItemLevelStat) error
 	DeleteItemLevelStat(id int) error
-	FindItemLevelStatByID(id int) (*entities.ItemLevelStat, error)
+	FindItemLevelStatByID(id string) (*entities.ItemLevelStat, error)
 }

@@ -43,10 +43,10 @@ func (s *InventoryService) FindAllInventories() ([]*entities.Inventory, error) {
 }
 
 // InventoryService Methods - 3 find by id
-func (s *InventoryService) FindInventoryByID(id int) (*entities.Inventory, error) {
+func (s *InventoryService) FindInventoryByID(id string) (*entities.Inventory, error) {
 
 	// Check if the inventory is in the cache
-	jsonData, err := redisclient.Get("inventory:" + strconv.Itoa(id))
+	jsonData, err := redisclient.Get("inventory:" + id)
 	if err == nil {
 		var inventory entities.Inventory
 		json.Unmarshal([]byte(jsonData), &inventory)
@@ -62,7 +62,7 @@ func (s *InventoryService) FindInventoryByID(id int) (*entities.Inventory, error
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(inventory)
-	redisclient.Set("inventory:"+strconv.Itoa(id), string(bytes), time.Minute*10)
+	redisclient.Set("inventory:"+id, string(bytes), time.Minute*10)
 
 	return inventory, nil
 }

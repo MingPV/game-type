@@ -30,9 +30,9 @@ func (r *GormEquipmentSlotRepository) FindAll() ([]*entities.EquipmentSlot, erro
 	return equipmentSlots, nil
 }
 
-func (r *GormEquipmentSlotRepository) FindByID(id int) (*entities.EquipmentSlot, error) {
+func (r *GormEquipmentSlotRepository) FindByID(id string) (*entities.EquipmentSlot, error) {
 	var equipmentSlot entities.EquipmentSlot
-	if err := r.db.First(&equipmentSlot, id).Error; err != nil {
+	if err := r.db.Where("id = ?", id).First(&equipmentSlot).Error; err != nil {
 		return &entities.EquipmentSlot{}, err
 	}
 	return &equipmentSlot, nil

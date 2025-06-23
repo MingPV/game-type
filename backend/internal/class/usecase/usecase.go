@@ -43,10 +43,10 @@ func (s *ClassService) FindAllClasses() ([]*entities.Class, error) {
 }
 
 // ClassService Methods - 3 find by id
-func (s *ClassService) FindClassByID(character_id int) (*entities.Class, error) {
+func (s *ClassService) FindClassByID(character_id string) (*entities.Class, error) {
 
 	// Check if the class is in the cache
-	jsonData, err := redisclient.Get("class:" + strconv.Itoa(character_id))
+	jsonData, err := redisclient.Get("class:" + character_id)
 	if err == nil {
 		var class entities.Class
 		json.Unmarshal([]byte(jsonData), &class)
@@ -62,7 +62,7 @@ func (s *ClassService) FindClassByID(character_id int) (*entities.Class, error) 
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(class)
-	redisclient.Set("class:"+strconv.Itoa(character_id), string(bytes), time.Minute*10)
+	redisclient.Set("class:"+character_id, string(bytes), time.Minute*10)
 
 	return class, nil
 }

@@ -30,9 +30,9 @@ func (r *GormStatusRepository) FindAll() ([]*entities.Status, error) {
 	return statuses, nil
 }
 
-func (r *GormStatusRepository) FindByID(id int) (*entities.Status, error) {
+func (r *GormStatusRepository) FindByID(id string) (*entities.Status, error) {
 	var status entities.Status
-	if err := r.db.First(&status, id).Error; err != nil {
+	if err := r.db.Where("id = ?", id).First(&status).Error; err != nil {
 		return &entities.Status{}, err
 	}
 	return &status, nil

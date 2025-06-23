@@ -67,12 +67,8 @@ func (h *HttpInventoryHandler) FindAllInventories(c *fiber.Ctx) error {
 // @Router /inventories/{id} [get]
 func (h *HttpInventoryHandler) FindInventoryByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	inventoryID, err := strconv.Atoi(id)
-	if err != nil {
-		return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	}
 
-	inventory, err := h.inventoryUseCase.FindInventoryByID(inventoryID)
+	inventory, err := h.inventoryUseCase.FindInventoryByID(id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}
