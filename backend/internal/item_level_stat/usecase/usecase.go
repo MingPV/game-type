@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
@@ -21,8 +22,19 @@ func NewItemLevelStatService(repo repository.ItemLevelStatRepository) ItemLevelS
 
 // ItemLevelStatService Methods - 1 create
 func (s *ItemLevelStatService) CreateItemLevelStat(itemLevelStat *entities.ItemLevelStat) error {
-	if err := s.repo.Save(itemLevelStat); err != nil {
-		return err
+
+	// if there are existing item_id i will patch.
+	existingItemLevelStat, err := s.repo.FindByID(itemLevelStat.ItemID.String())
+	if err == nil && existingItemLevelStat != nil {
+		// If the itemLevelStat already exists, we patch it instead of creating a new one
+		itemLevelStat.ItemID = existingItemLevelStat.ItemID // Ensure we keep the same ItemID
+		if err := s.repo.Patch(itemLevelStat.ItemID.String(), itemLevelStat); err != nil {
+			return err
+		}
+	} else {
+		if err := s.repo.Save(itemLevelStat); err != nil {
+			return err
+		}
 	}
 
 	// Save to Redis cache
@@ -49,7 +61,7 @@ func (s *ItemLevelStatService) FindItemLevelStatByID(id string) (*entities.ItemL
 	if err == nil {
 		var itemLevelStat entities.ItemLevelStat
 		json.Unmarshal([]byte(jsonData), &itemLevelStat)
-		// fmt.Println("Cache hit, returning from cache")
+		fmt.Println("Cache hit, returning from cache")
 		return &itemLevelStat, nil
 	}
 
@@ -78,6 +90,7 @@ func (s *ItemLevelStatService) PatchItemLevelStat(id string, itemLevelStat *enti
 	if err == nil {
 		bytes, _ := json.Marshal(updatedItemLevelStat)
 		redisclient.Set("itemLevelStat:"+id, string(bytes), time.Minute*10)
+		fmt.Println("updatea cache", updatedItemLevelStat)
 	}
 
 	return nil
@@ -94,3 +107,5 @@ func (s *ItemLevelStatService) DeleteItemLevelStat(id string) error {
 
 	return nil
 }
+
+// Fix 2 primary key when find or cache

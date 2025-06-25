@@ -1,6 +1,8 @@
 package rest
 
 import (
+	"encoding/json"
+
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/item_level_stat/dto"
 	"github.com/MingPV/clean-go-template/internal/item_level_stat/usecase"
@@ -30,15 +32,15 @@ func (h *HttpItemLevelStatHandler) CreateItemLevelStat(c *fiber.Ctx) error {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
+	// convert map to string
+	bonusStatBytes, err := json.Marshal(req.BonusStat)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid bonus_stat format")
+	}
+
 	itemLevelStat := &entities.ItemLevelStat{
-		ItemID:   req.ItemID,
-		Level:    req.Level,
-		BonusSTR: req.BonusSTR,
-		BonusAGI: req.BonusAGI,
-		BonusINT: req.BonusINT,
-		BonusDEX: req.BonusDEX,
-		BonusVIT: req.BonusVIT,
-		BonusLUK: req.BonusLUK,
+		ItemID:    req.ItemID,
+		BonusStat: string(bonusStatBytes),
 	}
 
 	if err := h.itemLevelStatUseCase.CreateItemLevelStat(itemLevelStat); err != nil {
@@ -93,12 +95,18 @@ func (h *HttpItemLevelStatHandler) FindItemLevelStatByID(c *fiber.Ctx) error {
 func (h *HttpItemLevelStatHandler) PatchItemLevelStat(c *fiber.Ctx) error {
 	id := c.Params("id")
 
-	var req dto.CreateItemLevelStatRequest
+	var req dto.PatchItemLevelStatRequest
 	if err := c.BodyParser(&req); err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	itemLevelStat := &entities.ItemLevelStat{BonusSTR: req.BonusSTR}
+	// convert map to string
+	bonusStatBytes, err := json.Marshal(req.BonusStat)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid bonus_stat format")
+	}
+
+	itemLevelStat := &entities.ItemLevelStat{BonusStat: string(bonusStatBytes)}
 	if err := h.itemLevelStatUseCase.PatchItemLevelStat(id, itemLevelStat); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}

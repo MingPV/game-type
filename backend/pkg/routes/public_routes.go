@@ -266,7 +266,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	itemLevelStatGroup.Get("/:id", itemLevelStatHandler.FindItemLevelStatByID)
 	itemLevelStatGroup.Post("/", itemLevelStatHandler.CreateItemLevelStat)
 	itemLevelStatGroup.Delete("/:id", itemLevelStatHandler.DeleteItemLevelStat)
-	// itemLevelStatGroup.Patch("/:id", itemLevelStatHandler.PatchItemLevelStat)
+	itemLevelStatGroup.Patch("/:id", itemLevelStatHandler.PatchItemLevelStat)
 
 	// ItemType routes
 	itemTypeGroup := api.Group("/itemTypes")

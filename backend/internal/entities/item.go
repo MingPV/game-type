@@ -14,9 +14,9 @@ type Item struct {
 	RequiredLevel int       `json:"required_level"`
 	MaxStack      int       `json:"max_stack"`
 
-	ItemType  ItemType        `gorm:"foreignKey:ItemTypeID;references:ID" json:"item_type"`   // this.ItemTypeID -> ItemType.ID
-	Rarity    Rarity          `gorm:"foreignKey:RarityID;references:ID" json:"rarity"`        // this.RarityID -> Rarity.ID
-	ItemStats []ItemLevelStat `gorm:"foreignKey:ItemID;references:ID" json:"item_level_stat"` // ItemLevelStat.ItemID -> this.ID
+	ItemType  ItemType        `gorm:"foreignKey:ItemTypeID;references:ID" json:"item_type"` // this.ItemTypeID -> ItemType.ID
+	Rarity    Rarity          `gorm:"foreignKey:RarityID;references:ID" json:"rarity"`      // this.RarityID -> Rarity.ID
+	ItemStats []ItemLevelStat `gorm:"foreignKey:ItemID" json:"item_level_stat"`             // ItemLevelStat.ItemID -> this.ID
 }
 
 func (i *Item) BeforeCreate(tx *gorm.DB) (err error) {

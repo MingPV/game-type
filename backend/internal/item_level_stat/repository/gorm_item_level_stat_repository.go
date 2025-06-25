@@ -32,21 +32,21 @@ func (r *GormItemLevelStatRepository) FindAll() ([]*entities.ItemLevelStat, erro
 
 func (r *GormItemLevelStatRepository) FindByID(id string) (*entities.ItemLevelStat, error) {
 	var itemLevelStat entities.ItemLevelStat
-	if err := r.db.Where("id = ?", id).First(&itemLevelStat).Error; err != nil {
+	if err := r.db.Where("item_id = ?", id).First(&itemLevelStat).Error; err != nil {
 		return &entities.ItemLevelStat{}, err
 	}
 	return &itemLevelStat, nil
 }
 
 func (r *GormItemLevelStatRepository) Patch(id string, itemLevelStat *entities.ItemLevelStat) error {
-	if err := r.db.Model(&entities.ItemLevelStat{}).Where("id = ?", id).Updates(itemLevelStat).Error; err != nil {
+	if err := r.db.Model(&entities.ItemLevelStat{}).Where("item_id = ?", id).Updates(itemLevelStat).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
 func (r *GormItemLevelStatRepository) Delete(id string) error {
-	if err := r.db.Where("id = ?", id).Delete(&entities.ItemLevelStat{}).Error; err != nil {
+	if err := r.db.Where("item_id = ?", id).Delete(&entities.ItemLevelStat{}).Error; err != nil {
 		return err
 	}
 	return nil

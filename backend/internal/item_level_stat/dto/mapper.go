@@ -1,17 +1,29 @@
 package dto
 
-import "github.com/MingPV/clean-go-template/internal/entities"
+import (
+	"encoding/json"
+	"fmt"
+
+	"github.com/MingPV/clean-go-template/internal/entities"
+)
 
 func ToItemLevelStatResponse(itemLevelStat *entities.ItemLevelStat) *ItemLevelStatResponse {
+
+	// bonus_stat := itemLevelStat.BonusStat
+
+	fmt.Println("ItemLevelStatResponse: ", itemLevelStat.BonusStat)
+
+	var bonusStatMap map[string]entities.BonusStat
+	err := json.Unmarshal([]byte(itemLevelStat.BonusStat), &bonusStatMap)
+	if err != nil {
+		bonusStatMap = make(map[string]entities.BonusStat)
+	}
+
+	fmt.Println("ItemLevelStatResponse: ", bonusStatMap)
+
 	return &ItemLevelStatResponse{
-		ItemID:   itemLevelStat.ItemID,
-		Level:    itemLevelStat.Level,
-		BonusSTR: itemLevelStat.BonusSTR,
-		BonusAGI: itemLevelStat.BonusAGI,
-		BonusINT: itemLevelStat.BonusINT,
-		BonusDEX: itemLevelStat.BonusDEX,
-		BonusVIT: itemLevelStat.BonusVIT,
-		BonusLUK: itemLevelStat.BonusLUK,
+		ItemID:    itemLevelStat.ItemID,
+		BonusStat: bonusStatMap,
 	}
 }
 

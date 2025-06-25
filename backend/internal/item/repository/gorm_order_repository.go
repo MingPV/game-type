@@ -19,7 +19,7 @@ func (r *GormItemRepository) Save(item *entities.Item) error {
 
 func (r *GormItemRepository) FindAll() ([]*entities.Item, error) {
 	var itemValues []entities.Item
-	if err := r.db.Find(&itemValues).Error; err != nil {
+	if err := r.db.Preload("ItemType").Preload("Rarity").Preload("ItemStats").Find(&itemValues).Error; err != nil {
 		return nil, err
 	}
 
