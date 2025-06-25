@@ -1,8 +1,12 @@
 package dto
 
-import "github.com/MingPV/clean-go-template/internal/entities"
+import (
+	"github.com/MingPV/clean-go-template/internal/entities"
+	"github.com/MingPV/clean-go-template/internal/item_level_stat/dto"
+)
 
 func ToItemResponse(item *entities.Item) *ItemResponse {
+
 	return &ItemResponse{
 		ID:            item.ID,
 		Name:          item.Name,
@@ -11,12 +15,10 @@ func ToItemResponse(item *entities.Item) *ItemResponse {
 		RarityID:      item.RarityID,
 		RequiredLevel: item.RequiredLevel,
 		MaxStack:      item.MaxStack,
-		// ItemType:  ToItemTypeResponse(item.ItemType),
-		// Rarity:    ToRarityResponse(item.Rarity),
-		// ItemStats: ToItemLevelStatResponseList(item.ItemStats),
+
 		ItemType:  item.ItemType,
 		Rarity:    item.Rarity,
-		ItemStats: item.ItemStats,
+		ItemStats: *dto.ToItemLevelStatResponse(&item.ItemStats),
 	}
 }
 
@@ -27,17 +29,3 @@ func ToItemResponseList(items []*entities.Item) []*ItemResponse {
 	}
 	return result
 }
-
-// type Item struct {
-// 	ID            uuid.UUID `gorm:"type:uuid;primaryKey" json:"item_id"`
-// 	Name          string    `json:"name"`
-// 	Description   string    `json:"description"`
-// 	ItemTypeID    uuid.UUID `gorm:"type:uuid" json:"item_type_id"`
-// 	RarityID      uuid.UUID `gorm:"type:uuid" json:"rarity_id"`
-// 	RequiredLevel int       `json:"required_level"`
-// 	MaxStack      int       `json:"max_stack"`
-
-// 	ItemType  ItemType        `gorm:"foreignKey:ItemTypeID;references:ID" json:"item_type"`   // this.ItemTypeID -> ItemType.ID
-// 	Rarity    Rarity          `gorm:"foreignKey:RarityID;references:ID" json:"rarity"`        // this.RarityID -> Rarity.ID
-// 	ItemStats []ItemLevelStat `gorm:"foreignKey:ItemID;references:ID" json:"item_level_stat"` // ItemLevelStat.ItemID -> this.ID
-// }

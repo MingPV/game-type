@@ -98,7 +98,14 @@ func (h *HttpItemHandler) PatchItem(c *fiber.Ctx) error {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	item := &entities.Item{Description: req.Description}
+	item := &entities.Item{
+		Name:          req.Name,
+		Description:   req.Description,
+		ItemTypeID:    req.ItemTypeID,
+		RarityID:      req.RarityID,
+		RequiredLevel: req.RequiredLevel,
+		MaxStack:      req.MaxStack,
+	}
 	if err := h.itemUseCase.PatchItem(id, item); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}

@@ -250,7 +250,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	itemGroup.Get("/:id", itemHandler.FindItemByID)
 	itemGroup.Post("/", itemHandler.CreateItem)
 	itemGroup.Delete("/:id", itemHandler.DeleteItem)
-	// itemGroup.Patch("/:id", itemHandler.PatchItem)
+	itemGroup.Patch("/:id", itemHandler.PatchItem)
 
 	// ItemInstance routes
 	itemInstanceGroup := api.Group("/itemInstances")

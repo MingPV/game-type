@@ -16,7 +16,6 @@ type Character struct {
 	StatusID    uuid.UUID `gorm:"type:uuid" json:"status_id"`
 	InventoryID uuid.UUID `gorm:"type:uuid" json:"inventory_id"`
 	CreatedAt   time.Time `json:"created_at"`
-	// Inventory??
 
 	User           User            `gorm:"foreignKey:UserID;references:ID"`                       // this.UserID -> User.ID
 	Class          Class           `gorm:"foreignKey:ClassID;references:ID" json:"class"`         // this.ClassID -> Class.ID

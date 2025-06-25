@@ -1,6 +1,8 @@
 package repository
 
 import (
+	"fmt"
+
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"gorm.io/gorm"
 )
@@ -23,6 +25,8 @@ func (r *GormItemRepository) FindAll() ([]*entities.Item, error) {
 		return nil, err
 	}
 
+	fmt.Println("Itemsss :: ", itemValues)
+
 	items := make([]*entities.Item, len(itemValues))
 	for i := range itemValues {
 		items[i] = &itemValues[i]
@@ -32,7 +36,7 @@ func (r *GormItemRepository) FindAll() ([]*entities.Item, error) {
 
 func (r *GormItemRepository) FindByID(id string) (*entities.Item, error) {
 	var item entities.Item
-	if err := r.db.Where("id = ?", id).First(&item).Error; err != nil {
+	if err := r.db.Preload("ItemType").Preload("Rarity").Preload("ItemStats").Where("id = ?", id).First(&item).Error; err != nil {
 		return &entities.Item{}, err
 	}
 	return &item, nil

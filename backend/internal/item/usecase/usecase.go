@@ -2,6 +2,7 @@ package usecase
 
 import (
 	"encoding/json"
+	"fmt"
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
@@ -69,9 +70,13 @@ func (s *ItemService) FindItemByID(id string) (*entities.Item, error) {
 // ItemService Methods - 4 patch
 func (s *ItemService) PatchItem(id string, item *entities.Item) error {
 
+	fmt.Println("item patched2 :: ", item)
+
 	if err := s.repo.Patch(id, item); err != nil {
 		return err
 	}
+
+	fmt.Println("item patched :: ", item)
 
 	// Update cache after patching
 	updatedItem, err := s.repo.FindByID(id)
