@@ -226,7 +226,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	classGroup.Get("/:id", classHandler.FindClassByID)
 	classGroup.Post("/", classHandler.CreateClass)
 	classGroup.Delete("/:id", classHandler.DeleteClass)
-	// classGroup.Patch("/:id", classHandler.PatchClass)
+	classGroup.Patch("/:id", classHandler.PatchClass)
 
 	// Inventory routes
 	inventoryGroup := api.Group("/inventories")
@@ -274,7 +274,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	itemTypeGroup.Get("/:id", itemTypeHandler.FindItemTypeByID)
 	itemTypeGroup.Post("/", itemTypeHandler.CreateItemType)
 	itemTypeGroup.Delete("/:id", itemTypeHandler.DeleteItemType)
-	// itemTypeGroup.Patch("/:id", itemTypeHandler.PatchItemType)
+	itemTypeGroup.Patch("/:id", itemTypeHandler.PatchItemType)
 
 	// Rarity routes
 	rarityGroup := api.Group("/rarities")
@@ -282,15 +282,15 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	rarityGroup.Get("/:id", rarityHandler.FindRarityByID)
 	rarityGroup.Post("/", rarityHandler.CreateRarity)
 	rarityGroup.Delete("/:id", rarityHandler.DeleteRarity)
-	// rarityGroup.Patch("/:id", rarityHandler.PatchRarity)
+	rarityGroup.Patch("/:id", rarityHandler.PatchRarity)
 
 	// LevelProgress routes
-	levelProgressGroup := api.Group("/levelProgresss")
+	levelProgressGroup := api.Group("/levelProgresses")
 	levelProgressGroup.Get("/", levelProgressHandler.FindAllLevelProgresses)
-	levelProgressGroup.Get("/:id", levelProgressHandler.FindLevelProgressByID)
+	levelProgressGroup.Get("/:level", levelProgressHandler.FindLevelProgressByLevel)
 	levelProgressGroup.Post("/", levelProgressHandler.CreateLevelProgress)
-	levelProgressGroup.Delete("/:id", levelProgressHandler.DeleteLevelProgress)
-	// levelProgressGroup.Patch("/:id", levelProgressHandler.PatchLevelProgress)
+	levelProgressGroup.Delete("/:level", levelProgressHandler.DeleteLevelProgress)
+	levelProgressGroup.Patch("/:level", levelProgressHandler.PatchLevelProgress)
 
 	// Monster routes
 	monsterGroup := api.Group("/monsters")

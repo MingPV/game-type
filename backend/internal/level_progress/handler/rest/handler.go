@@ -1,6 +1,8 @@
 package rest
 
 import (
+	"strconv"
+
 	"github.com/MingPV/clean-go-template/internal/level_progress/dto"
 	"github.com/MingPV/clean-go-template/internal/level_progress/usecase"
 
@@ -63,13 +65,17 @@ func (h *HttpLevelProgressHandler) FindAllLevelProgresses(c *fiber.Ctx) error {
 // @Summary Get level_progress by ID
 // @Tags level_progresses
 // @Produce json
-// @Param id path int true "LevelProgress ID"
+// @Param level path int true "LevelProgress ID"
 // @Success 200 {object} entities.LevelProgress
-// @Router /level_progresses/{id} [get]
-func (h *HttpLevelProgressHandler) FindLevelProgressByID(c *fiber.Ctx) error {
-	id := c.Params("id")
+// @Router /level_progresses/{level} [get]
+func (h *HttpLevelProgressHandler) FindLevelProgressByLevel(c *fiber.Ctx) error {
+	levelStr := c.Params("level")
+	level, err := strconv.Atoi(levelStr)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid level parameter")
+	}
 
-	level_progress, err := h.level_progressUseCase.FindLevelProgressByID(id)
+	level_progress, err := h.level_progressUseCase.FindLevelProgressByLevel(level)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}
@@ -87,7 +93,12 @@ func (h *HttpLevelProgressHandler) FindLevelProgressByID(c *fiber.Ctx) error {
 // @Success 200 {object} entities.LevelProgress
 // @Router /level_progresses/{id} [patch]
 func (h *HttpLevelProgressHandler) PatchLevelProgress(c *fiber.Ctx) error {
-	id := c.Params("id")
+
+	levelStr := c.Params("level")
+	level, err := strconv.Atoi(levelStr)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid level parameter")
+	}
 
 	var req dto.CreateLevelProgressRequest
 	if err := c.BodyParser(&req); err != nil {
@@ -95,11 +106,11 @@ func (h *HttpLevelProgressHandler) PatchLevelProgress(c *fiber.Ctx) error {
 	}
 
 	level_progress := &entities.LevelProgress{ExpRequired: req.ExpRequired}
-	if err := h.level_progressUseCase.PatchLevelProgress(id, level_progress); err != nil {
+	if err := h.level_progressUseCase.PatchLevelProgress(level, level_progress); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	updatedLevelProgress, err := h.level_progressUseCase.FindLevelProgressByID(id)
+	updatedLevelProgress, err := h.level_progressUseCase.FindLevelProgressByLevel(level)
 	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
@@ -115,9 +126,13 @@ func (h *HttpLevelProgressHandler) PatchLevelProgress(c *fiber.Ctx) error {
 // @Success 200 {object} response.MessageResponse
 // @Router /level_progresses/{id} [delete]
 func (h *HttpLevelProgressHandler) DeleteLevelProgress(c *fiber.Ctx) error {
-	id := c.Params("id")
+	levelStr := c.Params("level")
+	level, err := strconv.Atoi(levelStr)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid level parameter")
+	}
 
-	if err := h.level_progressUseCase.DeleteLevelProgress(id); err != nil {
+	if err := h.level_progressUseCase.DeleteLevelProgress(level); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 

@@ -15,3 +15,5 @@ func (r *Rarity) BeforeCreate(tx *gorm.DB) (err error) {
 	r.ID = uuid.New()
 	return
 }
+
+// Tested

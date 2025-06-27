@@ -14,3 +14,5 @@ func (i *ItemType) BeforeCreate(tx *gorm.DB) (err error) {
 	i.ID = uuid.New()
 	return
 }
+
+// Tested

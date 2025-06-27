@@ -42,11 +42,11 @@ func (s *LevelProgressService) FindAllLevelProgresses() ([]*entities.LevelProgre
 	return level_progresses, nil
 }
 
-// LevelProgressService Methods - 3 find by id
-func (s *LevelProgressService) FindLevelProgressByID(character_id string) (*entities.LevelProgress, error) {
+// LevelProgressService Methods - 3 find by level
+func (s *LevelProgressService) FindLevelProgressByLevel(level int) (*entities.LevelProgress, error) {
 
 	// Check if the level_progress is in the cache
-	jsonData, err := redisclient.Get("level_progress:" + character_id)
+	jsonData, err := redisclient.Get("level_progress:" + strconv.Itoa(level))
 	if err == nil {
 		var level_progress entities.LevelProgress
 		json.Unmarshal([]byte(jsonData), &level_progress)
@@ -54,7 +54,7 @@ func (s *LevelProgressService) FindLevelProgressByID(character_id string) (*enti
 		return &level_progress, nil
 	}
 
-	level_progress, err := s.repo.FindByID(character_id)
+	level_progress, err := s.repo.FindByLevel(level)
 	if err != nil {
 		return &entities.LevelProgress{}, err
 	}
@@ -62,36 +62,36 @@ func (s *LevelProgressService) FindLevelProgressByID(character_id string) (*enti
 	// If not found in the cache, save it to the cache
 	// fmt.Println("Cache miss saving to cache")
 	bytes, _ := json.Marshal(level_progress)
-	redisclient.Set("level_progress:"+character_id, string(bytes), time.Minute*10)
+	redisclient.Set("level_progress:"+strconv.Itoa(level), string(bytes), time.Minute*10)
 
 	return level_progress, nil
 }
 
 // LevelProgressService Methods - 4 patch
-func (s *LevelProgressService) PatchLevelProgress(id string, level_progress *entities.LevelProgress) error {
+func (s *LevelProgressService) PatchLevelProgress(level int, level_progress *entities.LevelProgress) error {
 
-	if err := s.repo.Patch(id, level_progress); err != nil {
+	if err := s.repo.Patch(level, level_progress); err != nil {
 		return err
 	}
 
 	// Update cache after patching
-	updatedLevelProgress, err := s.repo.FindByID(id)
+	updatedLevelProgress, err := s.repo.FindByLevel(level)
 	if err == nil {
 		bytes, _ := json.Marshal(updatedLevelProgress)
-		redisclient.Set("level_progress:"+id, string(bytes), time.Minute*10)
+		redisclient.Set("level_progress:"+strconv.Itoa(level), string(bytes), time.Minute*10)
 	}
 
 	return nil
 }
 
 // LevelProgressService Methods - 5 delete
-func (s *LevelProgressService) DeleteLevelProgress(character_id string) error {
-	if err := s.repo.Delete(character_id); err != nil {
+func (s *LevelProgressService) DeleteLevelProgress(level int) error {
+	if err := s.repo.Delete(level); err != nil {
 		return err
 	}
 
 	// Delete cache after removing from DB
-	redisclient.Delete("level_progress:" + character_id)
+	redisclient.Delete("level_progress:" + strconv.Itoa(level))
 
 	return nil
 }

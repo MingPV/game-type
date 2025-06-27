@@ -88,7 +88,7 @@ func (h *HttpRarityHandler) PatchRarity(c *fiber.Ctx) error {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	rarity := &entities.Rarity{Name: req.Name}
+	rarity := &entities.Rarity{Name: req.Name, DropRate: req.DropRate}
 	if err := h.rarityUseCase.PatchRarity(id, rarity); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}

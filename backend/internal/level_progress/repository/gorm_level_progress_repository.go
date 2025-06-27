@@ -30,23 +30,23 @@ func (r *GormLevelProgressRepository) FindAll() ([]*entities.LevelProgress, erro
 	return level_progresses, nil
 }
 
-func (r *GormLevelProgressRepository) FindByID(id string) (*entities.LevelProgress, error) {
+func (r *GormLevelProgressRepository) FindByLevel(level int) (*entities.LevelProgress, error) {
 	var level_progress entities.LevelProgress
-	if err := r.db.Where("id = ?", id).First(&level_progress).Error; err != nil {
+	if err := r.db.Where("level = ?", level).First(&level_progress).Error; err != nil {
 		return &entities.LevelProgress{}, err
 	}
 	return &level_progress, nil
 }
 
-func (r *GormLevelProgressRepository) Patch(id string, level_progress *entities.LevelProgress) error {
-	if err := r.db.Model(&entities.LevelProgress{}).Where("id = ?", id).Updates(level_progress).Error; err != nil {
+func (r *GormLevelProgressRepository) Patch(level int, level_progress *entities.LevelProgress) error {
+	if err := r.db.Model(&entities.LevelProgress{}).Where("level = ?", level).Updates(level_progress).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *GormLevelProgressRepository) Delete(id string) error {
-	if err := r.db.Where("id = ?", id).Delete(&entities.LevelProgress{}).Error; err != nil {
+func (r *GormLevelProgressRepository) Delete(level int) error {
+	if err := r.db.Where("level = ?", level).Delete(&entities.LevelProgress{}).Error; err != nil {
 		return err
 	}
 	return nil

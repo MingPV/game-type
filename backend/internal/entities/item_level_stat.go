@@ -15,3 +15,5 @@ type BonusStat struct {
 	BonusVIT int `json:"bonus_vit"`
 	BonusLUK int `json:"bonus_luk"`
 }
+
+// Tested

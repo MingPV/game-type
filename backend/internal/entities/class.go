@@ -15,3 +15,5 @@ func (c *Class) BeforeCreate(tx *gorm.DB) (err error) {
 	c.ID = uuid.New()
 	return
 }
+
+// Tested
