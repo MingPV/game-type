@@ -215,10 +215,10 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	// Status routes
 	statusGroup := api.Group("/statuses")
 	statusGroup.Get("/", statusHandler.FindAllStatuses)
-	statusGroup.Get("/:id", statusHandler.FindStatusByID)
+	statusGroup.Get("/:character_id", statusHandler.FindStatusByCharacterID)
 	statusGroup.Post("/", statusHandler.CreateStatus)
-	statusGroup.Delete("/:id", statusHandler.DeleteStatus)
-	// statusGroup.Patch("/:id", statusHandler.PatchStatus)
+	statusGroup.Delete("/:character_id", statusHandler.DeleteStatus)
+	statusGroup.Patch("/:character_id", statusHandler.PatchStatus)
 
 	// Class routes
 	classGroup := api.Group("/classes")

@@ -65,17 +65,17 @@ func (h *HttpStatusHandler) FindAllStatuses(c *fiber.Ctx) error {
 	return c.JSON(dto.ToStatusResponseList(statuses))
 }
 
-// FindStatusByID godoc
+// FindStatusByCharacterID godoc
 // @Summary Get status by ID
 // @Tags statuses
 // @Produce json
-// @Param id path int true "Status ID"
+// @Param character_id path int true "Status ID"
 // @Success 200 {object} entities.Status
-// @Router /statuses/{id} [get]
-func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
-	id := c.Params("id")
+// @Router /statuses/{character_id} [get]
+func (h *HttpStatusHandler) FindStatusByCharacterID(c *fiber.Ctx) error {
+	character_id := c.Params("character_id")
 
-	status, err := h.statusUseCase.FindStatusByID(id)
+	status, err := h.statusUseCase.FindStatusByCharacterID(character_id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusNotFound, err.Error())
 	}
@@ -88,24 +88,32 @@ func (h *HttpStatusHandler) FindStatusByID(c *fiber.Ctx) error {
 // @Tags statuses
 // @Accept json
 // @Produce json
-// @Param id path int true "Status ID"
+// @Param character_id path int true "Status ID"
 // @Param status body entities.Status true "Status update payload"
 // @Success 200 {object} entities.Status
-// @Router /statuses/{id} [patch]
+// @Router /statuses/{character_id} [patch]
 func (h *HttpStatusHandler) PatchStatus(c *fiber.Ctx) error {
-	id := c.Params("id")
+	character_id := c.Params("character_id")
 
 	var req dto.CreateStatusRequest
 	if err := c.BodyParser(&req); err != nil {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	status := &entities.Status{StatusPoint: req.StatusPoint}
-	if err := h.statusUseCase.PatchStatus(id, status); err != nil {
+	status := &entities.Status{
+		StatusPoint: req.StatusPoint,
+		STR:         req.STR,
+		AGI:         req.AGI,
+		INT:         req.INT,
+		DEX:         req.DEX,
+		VIT:         req.VIT,
+		LUK:         req.LUK,
+	}
+	if err := h.statusUseCase.PatchStatus(character_id, status); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	updatedStatus, err := h.statusUseCase.FindStatusByID(id)
+	updatedStatus, err := h.statusUseCase.FindStatusByCharacterID(character_id)
 	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
@@ -117,13 +125,13 @@ func (h *HttpStatusHandler) PatchStatus(c *fiber.Ctx) error {
 // @Summary Delete an status by ID
 // @Tags statuses
 // @Produce json
-// @Param id path int true "Status ID"
+// @Param character_id path int true "Status ID"
 // @Success 200 {object} response.MessageResponse
-// @Router /statuses/{id} [delete]
+// @Router /statuses/{character_id} [delete]
 func (h *HttpStatusHandler) DeleteStatus(c *fiber.Ctx) error {
-	id := c.Params("id")
+	character_id := c.Params("character_id")
 
-	if err := h.statusUseCase.DeleteStatus(id); err != nil {
+	if err := h.statusUseCase.DeleteStatus(character_id); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 

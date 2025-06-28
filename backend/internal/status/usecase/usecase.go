@@ -42,7 +42,7 @@ func (s *StatusService) FindAllStatuses() ([]*entities.Status, error) {
 }
 
 // StatusService Methods - 3 find by id
-func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, error) {
+func (s *StatusService) FindStatusByCharacterID(character_id string) (*entities.Status, error) {
 
 	// Check if the status is in the cache
 	jsonData, err := redisclient.Get("status:" + character_id)
@@ -53,7 +53,7 @@ func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, e
 		return &status, nil
 	}
 
-	status, err := s.repo.FindByID(character_id)
+	status, err := s.repo.FindByCharacterID(character_id)
 	if err != nil {
 		return &entities.Status{}, err
 	}
@@ -67,17 +67,17 @@ func (s *StatusService) FindStatusByID(character_id string) (*entities.Status, e
 }
 
 // StatusService Methods - 4 patch
-func (s *StatusService) PatchStatus(id string, status *entities.Status) error {
+func (s *StatusService) PatchStatus(character_id string, status *entities.Status) error {
 
-	if err := s.repo.Patch(id, status); err != nil {
+	if err := s.repo.Patch(character_id, status); err != nil {
 		return err
 	}
 
 	// Update cache after patching
-	updatedStatus, err := s.repo.FindByID(id)
+	updatedStatus, err := s.repo.FindByCharacterID(character_id)
 	if err == nil {
 		bytes, _ := json.Marshal(updatedStatus)
-		redisclient.Set("status:"+id, string(bytes), time.Minute*10)
+		redisclient.Set("status:"+character_id, string(bytes), time.Minute*10)
 	}
 
 	return nil

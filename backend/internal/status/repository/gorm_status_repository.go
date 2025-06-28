@@ -30,23 +30,23 @@ func (r *GormStatusRepository) FindAll() ([]*entities.Status, error) {
 	return statuses, nil
 }
 
-func (r *GormStatusRepository) FindByID(id string) (*entities.Status, error) {
+func (r *GormStatusRepository) FindByCharacterID(character_id string) (*entities.Status, error) {
 	var status entities.Status
-	if err := r.db.Where("id = ?", id).First(&status).Error; err != nil {
+	if err := r.db.Where("character_id = ?", character_id).First(&status).Error; err != nil {
 		return &entities.Status{}, err
 	}
 	return &status, nil
 }
 
-func (r *GormStatusRepository) Patch(id string, status *entities.Status) error {
-	if err := r.db.Model(&entities.Status{}).Where("id = ?", id).Updates(status).Error; err != nil {
+func (r *GormStatusRepository) Patch(character_id string, status *entities.Status) error {
+	if err := r.db.Model(&entities.Status{}).Where("character_id = ?", character_id).Updates(status).Error; err != nil {
 		return err
 	}
 	return nil
 }
 
-func (r *GormStatusRepository) Delete(id string) error {
-	if err := r.db.Where("id = ?", id).Delete(&entities.Status{}).Error; err != nil {
+func (r *GormStatusRepository) Delete(character_id string) error {
+	if err := r.db.Where("character_id = ?", character_id).Delete(&entities.Status{}).Error; err != nil {
 		return err
 	}
 	return nil
