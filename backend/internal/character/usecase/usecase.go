@@ -65,11 +65,11 @@ func (s *CharacterService) CreateCharacter(character *entities.Character) (*enti
 		return nil, err
 	}
 
-	// Save to Redis cache
-	bytes, _ := json.Marshal(character)
-	redisclient.Set("character:"+character.ID.String(), string(bytes), time.Minute*10)
-
 	character_return, err := s.characterRepository.FindByID(character.ID.String())
+
+	// Save to Redis cache
+	bytes, _ := json.Marshal(character_return)
+	redisclient.Set("character:"+character.ID.String(), string(bytes), time.Minute*10)
 
 	return character_return, err
 }

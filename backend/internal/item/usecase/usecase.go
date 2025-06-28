@@ -33,15 +33,15 @@ func (s *ItemService) CreateItem(item *entities.Item, item_level_stat *entities.
 		return nil, err
 	}
 
-	// Save to Redis cache
-	bytes, _ := json.Marshal(item)
-	redisclient.Set("item:"+item.ID.String(), string(bytes), time.Minute*10)
-
 	item_return, err := s.itemReposiroty.FindByID(item.ID.String())
 
 	if err != nil {
 		return nil, err
 	}
+
+	// Save to Redis cache
+	bytes, _ := json.Marshal(item_return)
+	redisclient.Set("item:"+item.ID.String(), string(bytes), time.Minute*10)
 
 	return item_return, nil
 }

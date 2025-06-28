@@ -77,10 +77,6 @@ func (h *HttpCharacterHandler) FindAllCharacters(c *fiber.Ctx) error {
 // @Router /characters/{id} [get]
 func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
 	id := c.Params("id")
-	// characterID, err := id
-	// if err != nil {
-	// 	return responses.Error(c, fiber.StatusBadRequest, "invalid id")
-	// }
 
 	character, err := h.characterUseCase.FindCharacterByID(id)
 	if err != nil {
