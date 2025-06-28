@@ -126,20 +126,20 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	classService := classUseCase.NewClassService(classRepo)
 	classHandler := classHandler.NewHttpClassHandler(classService)
 
+	// ItemLevelStat
+	itemLevelStatRepo := itemLevelStatRepository.NewGormItemLevelStatRepository(db)
+	itemLevelStatService := itemLevelStatUseCase.NewItemLevelStatService(itemLevelStatRepo)
+	itemLevelStatHandler := itemLevelStatHandler.NewHttpItemLevelStatHandler(itemLevelStatService)
+
 	// Item
 	itemRepo := itemRepository.NewGormItemRepository(db)
-	itemService := itemUseCase.NewItemService(itemRepo)
+	itemService := itemUseCase.NewItemService(itemRepo, itemLevelStatRepo)
 	itemHandler := itemHandler.NewHttpItemHandler(itemService)
 
 	// ItemInstance
 	itemInstanceRepo := itemInstanceRepository.NewGormItemInstanceRepository(db)
 	itemInstanceService := itemInstanceUseCase.NewItemInstanceService(itemInstanceRepo)
 	itemInstanceHandler := itemInstanceHandler.NewHttpItemInstanceHandler(itemInstanceService)
-
-	// ItemLevelStat
-	itemLevelStatRepo := itemLevelStatRepository.NewGormItemLevelStatRepository(db)
-	itemLevelStatService := itemLevelStatUseCase.NewItemLevelStatService(itemLevelStatRepo)
-	itemLevelStatHandler := itemLevelStatHandler.NewHttpItemLevelStatHandler(itemLevelStatService)
 
 	// ItemType
 	itemTypeRepo := itemTypeRepository.NewGormItemTypeRepository(db)
@@ -234,7 +234,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	inventoryGroup.Get("/:id", inventoryHandler.FindInventoryByID)
 	inventoryGroup.Post("/", inventoryHandler.CreateInventory)
 	inventoryGroup.Delete("/:id", inventoryHandler.DeleteInventory)
-	// inventoryGroup.Patch("/:id", inventoryHandler.PatchInventory)
+	inventoryGroup.Patch("/:id", inventoryHandler.PatchInventory)
 
 	// EquipmentSlot routes
 	equipmentSlotGroup := api.Group("/equipmentSlots")
@@ -322,6 +322,6 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	settingGroup.Get("/:id", settingHandler.FindSettingByID)
 	settingGroup.Post("/", settingHandler.CreateSetting)
 	settingGroup.Delete("/:id", settingHandler.DeleteSetting)
-	// settingGroup.Patch("/:id", settingHandler.PatchSetting)
+	settingGroup.Patch("/:id", settingHandler.PatchSetting)
 
 }

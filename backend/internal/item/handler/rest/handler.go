@@ -1,11 +1,14 @@
 package rest
 
 import (
+	"encoding/json"
+
 	"github.com/MingPV/clean-go-template/internal/entities"
 	"github.com/MingPV/clean-go-template/internal/item/dto"
 	"github.com/MingPV/clean-go-template/internal/item/usecase"
 	responses "github.com/MingPV/clean-go-template/pkg/responses"
 	"github.com/gofiber/fiber/v2"
+	"github.com/google/uuid"
 )
 
 type HttpItemHandler struct {
@@ -30,9 +33,11 @@ func (h *HttpItemHandler) CreateItem(c *fiber.Ctx) error {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	// item := &entities.Item{Total: req.Total}
+	// use in item, item_level_stat
+	item_id := uuid.New()
 
 	item := &entities.Item{
+		ID:            item_id,
 		Name:          req.Name,
 		Description:   req.Description,
 		ItemTypeID:    req.ItemTypeID,
@@ -41,11 +46,24 @@ func (h *HttpItemHandler) CreateItem(c *fiber.Ctx) error {
 		MaxStack:      req.MaxStack,
 	}
 
-	if err := h.itemUseCase.CreateItem(item); err != nil {
+	// convert map to string
+	statBytes, err := json.Marshal(req.LevelStat)
+	if err != nil {
+		return responses.Error(c, fiber.StatusBadRequest, "invalid level_stat format")
+	}
+
+	item_level_stat := &entities.ItemLevelStat{
+		ItemID:    item_id,
+		BonusStat: string(statBytes),
+	}
+
+	return_item, err := h.itemUseCase.CreateItem(item, item_level_stat)
+
+	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToItemResponse(item))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToItemResponse(return_item))
 }
 
 // FindAllItems godoc

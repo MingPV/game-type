@@ -14,3 +14,5 @@ type Status struct {
 	VIT         int       `json:"vit"`
 	LUK         int       `json:"luk"`
 }
+
+// Tested

@@ -6,36 +6,49 @@ import (
 	"time"
 
 	"github.com/MingPV/clean-go-template/internal/entities"
-	"github.com/MingPV/clean-go-template/internal/item/repository"
+	itemRepo "github.com/MingPV/clean-go-template/internal/item/repository"
+	itemLevelStatRepo "github.com/MingPV/clean-go-template/internal/item_level_stat/repository"
 	"github.com/MingPV/clean-go-template/pkg/redisclient"
 )
 
 // ItemService
 type ItemService struct {
-	repo repository.ItemRepository
+	itemReposiroty          itemRepo.ItemRepository
+	itemLevelStatRepository itemLevelStatRepo.ItemLevelStatRepository
 }
 
 // Init ItemService function
-func NewItemService(repo repository.ItemRepository) ItemUseCase {
-	return &ItemService{repo: repo}
+func NewItemService(item_repo itemRepo.ItemRepository, item_level_stat_repo itemLevelStatRepo.ItemLevelStatRepository) ItemUseCase {
+	return &ItemService{itemReposiroty: item_repo, itemLevelStatRepository: item_level_stat_repo}
 }
 
 // ItemService Methods - 1 create
-func (s *ItemService) CreateItem(item *entities.Item) error {
-	if err := s.repo.Save(item); err != nil {
-		return err
+func (s *ItemService) CreateItem(item *entities.Item, item_level_stat *entities.ItemLevelStat) (*entities.Item, error) {
+
+	if err := s.itemLevelStatRepository.Save(item_level_stat); err != nil {
+		return nil, err
+	}
+
+	if err := s.itemReposiroty.Save(item); err != nil {
+		return nil, err
 	}
 
 	// Save to Redis cache
 	bytes, _ := json.Marshal(item)
 	redisclient.Set("item:"+item.ID.String(), string(bytes), time.Minute*10)
 
-	return nil
+	item_return, err := s.itemReposiroty.FindByID(item.ID.String())
+
+	if err != nil {
+		return nil, err
+	}
+
+	return item_return, nil
 }
 
 // ItemService Methods - 2 find all
 func (s *ItemService) FindAllItems() ([]*entities.Item, error) {
-	items, err := s.repo.FindAll()
+	items, err := s.itemReposiroty.FindAll()
 	if err != nil {
 		return nil, err
 	}
@@ -54,7 +67,7 @@ func (s *ItemService) FindItemByID(id string) (*entities.Item, error) {
 		return &item, nil
 	}
 
-	item, err := s.repo.FindByID(id)
+	item, err := s.itemReposiroty.FindByID(id)
 	if err != nil {
 		return &entities.Item{}, err
 	}
@@ -72,14 +85,14 @@ func (s *ItemService) PatchItem(id string, item *entities.Item) error {
 
 	fmt.Println("item patched2 :: ", item)
 
-	if err := s.repo.Patch(id, item); err != nil {
+	if err := s.itemReposiroty.Patch(id, item); err != nil {
 		return err
 	}
 
 	fmt.Println("item patched :: ", item)
 
 	// Update cache after patching
-	updatedItem, err := s.repo.FindByID(id)
+	updatedItem, err := s.itemReposiroty.FindByID(id)
 	if err == nil {
 		bytes, _ := json.Marshal(updatedItem)
 		redisclient.Set("item:"+id, string(bytes), time.Minute*10)
@@ -90,7 +103,7 @@ func (s *ItemService) PatchItem(id string, item *entities.Item) error {
 
 // ItemService Methods - 5 delete
 func (s *ItemService) DeleteItem(id string) error {
-	if err := s.repo.Delete(id); err != nil {
+	if err := s.itemReposiroty.Delete(id); err != nil {
 		return err
 	}
 

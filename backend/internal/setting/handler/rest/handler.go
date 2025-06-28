@@ -95,7 +95,7 @@ func (h *HttpSettingHandler) PatchSetting(c *fiber.Ctx) error {
 		return responses.Error(c, fiber.StatusBadRequest, "invalid request")
 	}
 
-	setting := &entities.Setting{Language: req.Language}
+	setting := &entities.Setting{Language: req.Language, MusicVolume: req.MusicVolume}
 	if err := h.settingUseCase.PatchSetting(id, setting); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}

@@ -2,7 +2,6 @@ package entities
 
 import (
 	"github.com/google/uuid"
-	"gorm.io/gorm"
 )
 
 type Item struct {
@@ -16,10 +15,12 @@ type Item struct {
 
 	ItemType  ItemType      `gorm:"foreignKey:ItemTypeID;references:ID" json:"item_type"`   // this.ItemTypeID -> ItemType.ID
 	Rarity    Rarity        `gorm:"foreignKey:RarityID;references:ID" json:"rarity"`        // this.RarityID -> Rarity.ID
-	ItemStats ItemLevelStat `gorm:"foreignKey:ID;references:ItemID" json:"item_level_stat"` // ItemLevelStat.ItemID -> this.ID
+	ItemStats ItemLevelStat `gorm:"foreignKey:ID;references:ItemID" json:"item_level_stat"` // this.ID -> ItemLevelStat.ItemID
 }
 
-func (i *Item) BeforeCreate(tx *gorm.DB) (err error) {
-	i.ID = uuid.New()
-	return
-}
+// func (i *Item) BeforeCreate(tx *gorm.DB) (err error) {
+// 	i.ID = uuid.New()
+// 	return
+// }
+
+// Tested

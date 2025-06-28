@@ -8,7 +8,6 @@ func ToSettingResponse(setting *entities.Setting) *SettingResponse {
 		UserID:      setting.UserID,
 		MusicVolume: setting.MusicVolume,
 		Language:    setting.Language,
-		User:        setting.User,
 	}
 }
 

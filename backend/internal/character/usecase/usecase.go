@@ -33,7 +33,7 @@ func NewCharacterService(character_repo characterRepo.CharacterRepository, statu
 }
 
 // CharacterService Methods - 1 create
-func (s *CharacterService) CreateCharacter(character *entities.Character) (character_return *entities.Character, err error) {
+func (s *CharacterService) CreateCharacter(character *entities.Character) (*entities.Character, error) {
 
 	baseStatus := &entities.Status{
 		CharacterID: character.ID,
@@ -69,7 +69,7 @@ func (s *CharacterService) CreateCharacter(character *entities.Character) (chara
 	bytes, _ := json.Marshal(character)
 	redisclient.Set("character:"+character.ID.String(), string(bytes), time.Minute*10)
 
-	character_return, err = s.characterRepository.FindByID(character.ID.String())
+	character_return, err := s.characterRepository.FindByID(character.ID.String())
 
 	return character_return, err
 }

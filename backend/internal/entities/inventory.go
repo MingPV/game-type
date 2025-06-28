@@ -16,3 +16,5 @@ func (i *Inventory) BeforeCreate(tx *gorm.DB) (err error) {
 	i.ID = uuid.New()
 	return
 }
+
+// Tested

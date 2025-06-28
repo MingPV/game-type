@@ -16,9 +16,9 @@ func ToItemResponse(item *entities.Item) *ItemResponse {
 		RequiredLevel: item.RequiredLevel,
 		MaxStack:      item.MaxStack,
 
-		ItemType:  item.ItemType,
-		Rarity:    item.Rarity,
-		ItemStats: *dto.ToItemLevelStatResponse(&item.ItemStats),
+		ItemType: item.ItemType,
+		Rarity:   item.Rarity,
+		ItemStat: *dto.ToItemLevelStatResponse(&item.ItemStats),
 	}
 }
 

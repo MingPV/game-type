@@ -1,8 +1,6 @@
 package dto
 
 import (
-	"time"
-
 	"github.com/google/uuid"
 )
 
@@ -12,5 +10,4 @@ type CreateCharacterRequest struct {
 	Level      int       `json:"level"`
 	CurrentExp int       `json:"current_exp"`
 	ClassID    uuid.UUID `gorm:"type:uuid" json:"class_id"`
-	CreatedAt  time.Time `json:"created_at"`
 }

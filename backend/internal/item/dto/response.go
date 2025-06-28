@@ -7,8 +7,6 @@ import (
 )
 
 type ItemResponse struct {
-	// ID    uint    `json:"id"`
-	// Total float64 `json:"total"`
 	ID            uuid.UUID `gorm:"type:uuid" json:"item_id"`
 	Name          string    `json:"name"`
 	Description   string    `json:"description"`
@@ -17,7 +15,7 @@ type ItemResponse struct {
 	RequiredLevel int       `json:"required_level"`
 	MaxStack      int       `json:"max_stack"`
 
-	ItemType  entities.ItemType                      `json:"item_type"`       // this.ItemTypeID -> ItemType.ID
-	Rarity    entities.Rarity                        `json:"rarity"`          // this.RarityID -> Rarity.ID
-	ItemStats itemLevelStatDTO.ItemLevelStatResponse `json:"item_level_stat"` // ItemLevelStat.ItemID -> this.ID
+	ItemType entities.ItemType                      `json:"item_type"`       // this.ItemTypeID -> ItemType.ID
+	Rarity   entities.Rarity                        `json:"rarity"`          // this.RarityID -> Rarity.ID
+	ItemStat itemLevelStatDTO.ItemLevelStatResponse `json:"item_level_stat"` // ItemLevelStat.ItemID -> this.ID
 }

@@ -42,7 +42,6 @@ func (h *HttpCharacterHandler) CreateCharacter(c *fiber.Ctx) error {
 		Level:      req.Level,
 		CurrentExp: req.CurrentExp,
 		ClassID:    req.ClassID,
-		StatusID:   character_id,
 	}
 
 	character_return, err := h.characterUseCase.CreateCharacter(character)
