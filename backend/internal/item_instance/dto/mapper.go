@@ -1,16 +1,18 @@
 package dto
 
-import "github.com/MingPV/clean-go-template/internal/entities"
+import (
+	"github.com/MingPV/clean-go-template/internal/entities"
+	itemDTO "github.com/MingPV/clean-go-template/internal/item/dto"
+)
 
 func ToItemInstanceResponse(itemInstance *entities.ItemInstance) *ItemInstanceResponse {
 	return &ItemInstanceResponse{
-		ID:               itemInstance.ID,
-		InventoryID:      itemInstance.InventoryID,
-		ItemID:           itemInstance.ItemID,
-		UpgradeLevel:     itemInstance.UpgradeLevel,
-		OwnerCharacterID: itemInstance.OwnerCharacterID,
-		CreatedAt:        itemInstance.CreatedAt,
-		Item:             itemInstance.Item, // this.ItemID -> Item.ID
+		ID:           itemInstance.ID,
+		InventoryID:  itemInstance.InventoryID,
+		ItemID:       itemInstance.ItemID,
+		UpgradeLevel: itemInstance.UpgradeLevel,
+		CreatedAt:    itemInstance.CreatedAt,
+		Item:         *itemDTO.ToItemResponse(&itemInstance.Item), // this.ItemID -> Item.ID
 	}
 }
 

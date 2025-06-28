@@ -31,17 +31,18 @@ func (h *HttpItemInstanceHandler) CreateItemInstance(c *fiber.Ctx) error {
 	}
 
 	itemInstance := &entities.ItemInstance{
-		InventoryID:      req.InventoryID,
-		ItemID:           req.ItemID,
-		UpgradeLevel:     req.UpgradeLevel,
-		OwnerCharacterID: req.OwnerCharacterID,
+		InventoryID:  req.InventoryID,
+		ItemID:       req.ItemID,
+		UpgradeLevel: req.UpgradeLevel,
 	}
 
-	if err := h.itemInstanceUseCase.CreateItemInstance(itemInstance); err != nil {
+	return_item_instance, err := h.itemInstanceUseCase.CreateItemInstance(itemInstance)
+
+	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToItemInstanceResponse(itemInstance))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToItemInstanceResponse(return_item_instance))
 }
 
 // FindAllItemInstances godoc

@@ -20,16 +20,22 @@ func NewItemInstanceService(repo repository.ItemInstanceRepository) ItemInstance
 }
 
 // ItemInstanceService Methods - 1 create
-func (s *ItemInstanceService) CreateItemInstance(itemInstance *entities.ItemInstance) error {
+func (s *ItemInstanceService) CreateItemInstance(itemInstance *entities.ItemInstance) (*entities.ItemInstance, error) {
 	if err := s.repo.Save(itemInstance); err != nil {
-		return err
+		return nil, err
+	}
+
+	item_instance_return, err := s.repo.FindByID(itemInstance.ID.String())
+
+	if err != nil {
+		return nil, err
 	}
 
 	// Save to Redis cache
-	bytes, _ := json.Marshal(itemInstance)
+	bytes, _ := json.Marshal(item_instance_return)
 	redisclient.Set("itemInstance:"+itemInstance.ID.String(), string(bytes), time.Minute*10)
 
-	return nil
+	return item_instance_return, nil
 }
 
 // ItemInstanceService Methods - 2 find all
