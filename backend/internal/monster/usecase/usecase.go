@@ -20,16 +20,22 @@ func NewMonsterService(repo repository.MonsterRepository) MonsterUseCase {
 }
 
 // MonsterService Methods - 1 create
-func (s *MonsterService) CreateMonster(monster *entities.Monster) error {
+func (s *MonsterService) CreateMonster(monster *entities.Monster) (*entities.Monster, error) {
 	if err := s.repo.Save(monster); err != nil {
-		return err
+		return nil, err
+	}
+
+	monster_return, err := s.repo.FindByID(monster.ID.String())
+
+	if err != nil {
+		return nil, err
 	}
 
 	// Save to Redis cache
-	bytes, _ := json.Marshal(monster)
-	redisclient.Set("monster:"+monster.ID.String(), string(bytes), time.Minute*10)
+	bytes, _ := json.Marshal(monster_return)
+	redisclient.Set("monster:"+monster_return.ID.String(), string(bytes), time.Minute*10)
 
-	return nil
+	return monster_return, nil
 }
 
 // MonsterService Methods - 2 find all

@@ -69,8 +69,9 @@ func SetupDependencies(env string) (*gorm.DB, *redis.Client, *config.Config, err
 		&entities.ItemLevelStat{},
 		&entities.ItemType{},
 		&entities.LevelProgress{},
-		&entities.MonsterLoot{},
 		&entities.Monster{},
+		&entities.MonsterType{},
+		&entities.MonsterLoot{},
 		&entities.Rarity{},
 		&entities.Setting{},
 	); err != nil {

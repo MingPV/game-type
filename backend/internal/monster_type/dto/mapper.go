@@ -4,9 +4,8 @@ import "github.com/MingPV/clean-go-template/internal/entities"
 
 func ToMonsterTypeResponse(monsterType *entities.MonsterType) *MonsterTypeResponse {
 	return &MonsterTypeResponse{
-		ID:       monsterType.ID,
-		Name:     monsterType.Name,
-		Monsters: monsterType.Monsters, // Assuming Monsters is a slice of entities.Mon
+		ID:   monsterType.ID,
+		Name: monsterType.Name,
 	}
 }
 

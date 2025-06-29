@@ -2,6 +2,7 @@ package dto
 
 import (
 	"github.com/MingPV/clean-go-template/internal/entities"
+	monsterLootDTO "github.com/MingPV/clean-go-template/internal/monster_loot/dto"
 	"github.com/google/uuid"
 )
 
@@ -17,6 +18,6 @@ type MonsterResponse struct {
 	GoldReward    int       `json:"gold_reward"`
 	MonsterTypeID uuid.UUID `gorm:"type:uuid" json:"monster_type_id"`
 
-	MonsterType  entities.MonsterType   `json:"monster_type"`  // this.MonsterTypeID -> MonsterType.ID
-	MonsterLoots []entities.MonsterLoot `json:"monster_loots"` // many to many Monster, MonsterLoot
+	MonsterType  entities.MonsterType                 `json:"monster_type"`  // this.MonsterTypeID -> MonsterType.ID
+	MonsterLoots []monsterLootDTO.MonsterLootResponse `json:"monster_loots"` // many to many Monster, MonsterLoot
 }

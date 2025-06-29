@@ -298,15 +298,17 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	monsterGroup.Get("/:id", monsterHandler.FindMonsterByID)
 	monsterGroup.Post("/", monsterHandler.CreateMonster)
 	monsterGroup.Delete("/:id", monsterHandler.DeleteMonster)
-	// monsterGroup.Patch("/:id", monsterHandler.PatchMonster)
+	monsterGroup.Patch("/:id", monsterHandler.PatchMonster)
 
 	// MonsterLoot routes
 	monsterLootGroup := api.Group("/monsterLoots")
 	monsterLootGroup.Get("/", monsterLootHandler.FindAllMonsterLoots)
-	monsterLootGroup.Get("/:id", monsterLootHandler.FindMonsterLootByID)
+	monsterLootGroup.Get("/monsterID/:monsterID", monsterLootHandler.FindMonsterLootByMonsterID)
+	monsterLootGroup.Get("/itemID/:itemID", monsterLootHandler.FindMonsterLootByItemID)
+	monsterLootGroup.Get("/:monsterID/:itemID", monsterLootHandler.FindMonsterLootByMonsterIDAndItemID)
 	monsterLootGroup.Post("/", monsterLootHandler.CreateMonsterLoot)
-	monsterLootGroup.Delete("/:id", monsterLootHandler.DeleteMonsterLoot)
-	// monsterLootGroup.Patch("/:id", monsterLootHandler.PatchMonsterLoot)
+	monsterLootGroup.Delete("/:monsterID/:itemID", monsterLootHandler.DeleteMonsterLoot)
+	monsterLootGroup.Patch("/:monsterID/:itemID", monsterLootHandler.PatchMonsterLoot)
 
 	// MonsterType routes
 	monsterTypeGroup := api.Group("/monsterTypes")
@@ -314,7 +316,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	monsterTypeGroup.Get("/:id", monsterTypeHandler.FindMonsterTypeByID)
 	monsterTypeGroup.Post("/", monsterTypeHandler.CreateMonsterType)
 	monsterTypeGroup.Delete("/:id", monsterTypeHandler.DeleteMonsterType)
-	// monsterTypeGroup.Patch("/:id", monsterTypeHandler.PatchMonsterType)
+	monsterTypeGroup.Patch("/:id", monsterTypeHandler.PatchMonsterType)
 
 	// Setting routes
 	settingGroup := api.Group("/settings")

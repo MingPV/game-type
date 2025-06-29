@@ -18,7 +18,7 @@ type Monster struct {
 	MonsterTypeID uuid.UUID `gorm:"type:uuid" json:"monster_type_id"`
 
 	MonsterType  MonsterType   `gorm:"foreignKey:MonsterTypeID;references:ID" json:"monster_type"` // this.MonsterTypeID -> MonsterType.ID
-	MonsterLoots []MonsterLoot `gorm:"many2many:monster_loot_map" json:"monster_loots"`            // many to many Monster, MonsterLoot
+	MonsterLoots []MonsterLoot `gorm:"foreignKey:MonsterID" json:"monster_loots"`                  // MonsterLoot.MonsterID -> this.ID
 }
 
 func (m *Monster) BeforeCreate(tx *gorm.DB) (err error) {

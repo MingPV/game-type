@@ -44,11 +44,13 @@ func (h *HttpMonsterHandler) CreateMonster(c *fiber.Ctx) error {
 		MonsterTypeID: req.MonsterTypeID,
 	}
 
-	if err := h.monsterUseCase.CreateMonster(monster); err != nil {
+	monster_return, err := h.monsterUseCase.CreateMonster(monster)
+
+	if err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToMonsterResponse(monster))
+	return c.Status(fiber.StatusCreated).JSON(dto.ToMonsterResponse(monster_return))
 }
 
 // FindAllMonsters godoc

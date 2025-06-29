@@ -1,8 +1,17 @@
 package dto
 
-import "github.com/MingPV/clean-go-template/internal/entities"
+import (
+	"github.com/MingPV/clean-go-template/internal/entities"
+	monsterLootDTO "github.com/MingPV/clean-go-template/internal/monster_loot/dto"
+)
 
 func ToMonsterResponse(monster *entities.Monster) *MonsterResponse {
+
+	monster_loots := make([]monsterLootDTO.MonsterLootResponse, 0, len(monster.MonsterLoots))
+	for _, m := range monster.MonsterLoots {
+		monster_loots = append(monster_loots, monsterLootDTO.ToMonsterLootResponse2(m))
+	}
+
 	return &MonsterResponse{
 		ID:            monster.ID,
 		Name:          monster.Name,
@@ -15,7 +24,7 @@ func ToMonsterResponse(monster *entities.Monster) *MonsterResponse {
 		GoldReward:    monster.GoldReward,
 		MonsterTypeID: monster.MonsterTypeID,
 		MonsterType:   monster.MonsterType,
-		MonsterLoots:  monster.MonsterLoots,
+		MonsterLoots:  monster_loots,
 	}
 
 }
@@ -27,17 +36,3 @@ func ToMonsterResponseList(monsters []*entities.Monster) []*MonsterResponse {
 	}
 	return result
 }
-
-// type Monster struct {
-// 	ID            uuid.UUID `gorm:"type:uuid;primaryKey" json:"monster_id"`
-// 	Name          string    `json:"name"`
-// 	Description   string    `json:"description"`
-// 	MonsterTypeID    uuid.UUID `gorm:"type:uuid" json:"monster_type_id"`
-// 	RarityID      uuid.UUID `gorm:"type:uuid" json:"rarity_id"`
-// 	RequiredLevel int       `json:"required_level"`
-// 	MaxStack      int       `json:"max_stack"`
-
-// 	MonsterType  MonsterType        `gorm:"foreignKey:MonsterTypeID;references:ID" json:"monster_type"`   // this.MonsterTypeID -> MonsterType.ID
-// 	Rarity    Rarity          `gorm:"foreignKey:RarityID;references:ID" json:"rarity"`        // this.RarityID -> Rarity.ID
-// 	MonsterStats []MonsterLevelStat `gorm:"foreignKey:MonsterID;references:ID" json:"monster_level_stat"` // MonsterLevelStat.MonsterID -> this.ID
-// }

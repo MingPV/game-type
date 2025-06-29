@@ -19,7 +19,14 @@ func (r *GormMonsterRepository) Save(monster *entities.Monster) error {
 
 func (r *GormMonsterRepository) FindAll() ([]*entities.Monster, error) {
 	var monsterValues []entities.Monster
-	if err := r.db.Find(&monsterValues).Error; err != nil {
+	if err := r.db.
+		Preload("MonsterType").
+		Preload("MonsterLoots").
+		Preload("MonsterLoots.Item").
+		Preload("MonsterLoots.Item.ItemType").
+		Preload("MonsterLoots.Item.Rarity").
+		Preload("MonsterLoots.Item.ItemStats").
+		Find(&monsterValues).Error; err != nil {
 		return nil, err
 	}
 
@@ -32,7 +39,15 @@ func (r *GormMonsterRepository) FindAll() ([]*entities.Monster, error) {
 
 func (r *GormMonsterRepository) FindByID(id string) (*entities.Monster, error) {
 	var monster entities.Monster
-	if err := r.db.Where("id = ?", id).First(&monster).Error; err != nil {
+	if err := r.db.
+		Preload("MonsterType").
+		Preload("MonsterLoots").
+		Preload("MonsterLoots.Item").
+		Preload("MonsterLoots.Item.ItemType").
+		Preload("MonsterLoots.Item.Rarity").
+		Preload("MonsterLoots.Item.ItemStats").
+		Where("id = ?", id).
+		First(&monster).Error; err != nil {
 		return &entities.Monster{}, err
 	}
 	return &monster, nil
