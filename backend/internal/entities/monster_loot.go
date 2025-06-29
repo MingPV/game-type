@@ -12,3 +12,5 @@ type MonsterLoot struct {
 
 	Item Item `gorm:"foreignKey:ItemID;references:ID" json:"item"` // this.ItemID -> Item.ID
 }
+
+// Tested

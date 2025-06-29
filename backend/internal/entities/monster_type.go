@@ -16,3 +16,5 @@ func (m *MonsterType) BeforeCreate(tx *gorm.DB) (err error) {
 	m.ID = uuid.New()
 	return
 }
+
+// Tested
