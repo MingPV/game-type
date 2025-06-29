@@ -19,7 +19,13 @@ func (r *GormInventoryRepository) Save(inventory *entities.Inventory) error {
 
 func (r *GormInventoryRepository) FindAll() ([]*entities.Inventory, error) {
 	var inventoryValues []entities.Inventory
-	if err := r.db.Find(&inventoryValues).Error; err != nil {
+	if err := r.db.
+		Preload("ItemInstances").
+		Preload("ItemInstances.Item").
+		Preload("ItemInstances.Item.Rarity").
+		Preload("ItemInstances.Item.ItemType").
+		Preload("ItemInstances.Item.ItemStats").
+		Find(&inventoryValues).Error; err != nil {
 		return nil, err
 	}
 
@@ -32,7 +38,13 @@ func (r *GormInventoryRepository) FindAll() ([]*entities.Inventory, error) {
 
 func (r *GormInventoryRepository) FindByID(id string) (*entities.Inventory, error) {
 	var inventory entities.Inventory
-	if err := r.db.Where("id = ?", id).First(&inventory).Error; err != nil {
+	if err := r.db.Where("id = ?", id).
+		Preload("ItemInstances").
+		Preload("ItemInstances.Item").
+		Preload("ItemInstances.Item.Rarity").
+		Preload("ItemInstances.Item.ItemType").
+		Preload("ItemInstances.Item.ItemStats").
+		First(&inventory).Error; err != nil {
 		return &entities.Inventory{}, err
 	}
 	return &inventory, nil

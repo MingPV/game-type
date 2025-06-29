@@ -1,6 +1,9 @@
 package dto
 
-import "github.com/MingPV/clean-go-template/internal/entities"
+import (
+	"github.com/MingPV/clean-go-template/internal/entities"
+	itemInstanceDTO "github.com/MingPV/clean-go-template/internal/item_instance/dto"
+)
 
 func ToEquipmentSlotResponse(equipmentSlot *entities.EquipmentSlot) *EquipmentSlotResponse {
 	return &EquipmentSlotResponse{
@@ -9,7 +12,18 @@ func ToEquipmentSlotResponse(equipmentSlot *entities.EquipmentSlot) *EquipmentSl
 		SlotType:       equipmentSlot.SlotType,
 		ItemInstanceID: equipmentSlot.ItemInstanceID,
 
-		// ItemInstance: equipmentSlot.ItemInstance,
+		ItemInstance: *itemInstanceDTO.ToItemInstanceResponse(&equipmentSlot.ItemInstance),
+	}
+}
+
+func ToEquipmentSlotResponse2(equipmentSlot entities.EquipmentSlot) EquipmentSlotResponse {
+	return EquipmentSlotResponse{
+		ID:             equipmentSlot.ID,
+		CharacterID:    equipmentSlot.CharacterID,
+		SlotType:       equipmentSlot.SlotType,
+		ItemInstanceID: equipmentSlot.ItemInstanceID,
+
+		ItemInstance: *itemInstanceDTO.ToItemInstanceResponse(&equipmentSlot.ItemInstance),
 	}
 }
 
@@ -20,12 +34,3 @@ func ToEquipmentSlotResponseList(equipmentSlots []*entities.EquipmentSlot) []*Eq
 	}
 	return result
 }
-
-// type EquipmentSlot struct {
-// 	ID             uuid.UUID `gorm:"type:uuid;primaryKey" json:"equipment_slot_id"`
-// 	CharacterID    uuid.UUID `gorm:"type:uuid" json:"character_id"`
-// 	SlotType       string    `json:"slot_type"`
-// 	ItemInstanceID uuid.UUID `gorm:"type:uuid" json:"item_instance_id"`
-
-// 	ItemInstance ItemInstance `gorm:"foreignKey:ItemInstanceID;references:ID" json:"item_instance"` // this.ItemInstanceID -> ItemInstance.ID
-// }

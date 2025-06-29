@@ -19,7 +19,21 @@ func (r *GormCharacterRepository) Save(character *entities.Character) error {
 
 func (r *GormCharacterRepository) FindAll() ([]*entities.Character, error) {
 	var characterValues []entities.Character
-	if err := r.db.Preload("Class").Preload("Status").Preload("EquipmentSlots").Preload("Inventory").Preload("Inventory.ItemInstances").Find(&characterValues).Error; err != nil {
+	if err := r.db.
+		Preload("Class").
+		Preload("Status").
+		Preload("EquipmentSlots").
+		// Preload("Inventory").
+		// Preload("Inventory.ItemInstances").
+		// Preload("Inventory.ItemInstances.Item.Rarity").
+		// Preload("Inventory.ItemInstances.Item.ItemType").
+		// Preload("Inventory.ItemInstances.Item.ItemStats").
+		Preload("EquipmentSlots.ItemInstance").
+		Preload("EquipmentSlots.ItemInstance.Item").
+		Preload("EquipmentSlots.ItemInstance.Item.Rarity").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemType").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemStats").
+		Find(&characterValues).Error; err != nil {
 		return nil, err
 	}
 
@@ -36,8 +50,16 @@ func (r *GormCharacterRepository) FindByID(id string) (*entities.Character, erro
 		Preload("Class").
 		Preload("Status").
 		Preload("EquipmentSlots").
-		Preload("Inventory").
-		Preload("Inventory.ItemInstances").
+		// Preload("Inventory").
+		// Preload("Inventory.ItemInstances").
+		// Preload("Inventory.ItemInstances.Item.Rarity").
+		// Preload("Inventory.ItemInstances.Item.ItemType").
+		// Preload("Inventory.ItemInstances.Item.ItemStats").
+		Preload("EquipmentSlots.ItemInstance").
+		Preload("EquipmentSlots.ItemInstance.Item").
+		Preload("EquipmentSlots.ItemInstance.Item.Rarity").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemType").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemStats").
 		Where("id = ?", id).
 		First(&character).Error; err != nil {
 		return &entities.Character{}, err

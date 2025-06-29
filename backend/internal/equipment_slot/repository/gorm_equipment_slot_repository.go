@@ -19,7 +19,13 @@ func (r *GormEquipmentSlotRepository) Save(equipmentSlot *entities.EquipmentSlot
 
 func (r *GormEquipmentSlotRepository) FindAll() ([]*entities.EquipmentSlot, error) {
 	var equipmentSlotValues []entities.EquipmentSlot
-	if err := r.db.Find(&equipmentSlotValues).Error; err != nil {
+	if err := r.db.
+		Preload("ItemInstance").
+		Preload("ItemInstance.Item").
+		Preload("ItemInstance.Item.Rarity").
+		Preload("ItemInstance.Item.ItemType").
+		Preload("ItemInstance.Item.ItemStats").
+		Find(&equipmentSlotValues).Error; err != nil {
 		return nil, err
 	}
 
@@ -32,7 +38,14 @@ func (r *GormEquipmentSlotRepository) FindAll() ([]*entities.EquipmentSlot, erro
 
 func (r *GormEquipmentSlotRepository) FindByID(id string) (*entities.EquipmentSlot, error) {
 	var equipmentSlot entities.EquipmentSlot
-	if err := r.db.Where("id = ?", id).First(&equipmentSlot).Error; err != nil {
+	if err := r.db.
+		Preload("ItemInstance").
+		Preload("ItemInstance.Item").
+		Preload("ItemInstance.Item.Rarity").
+		Preload("ItemInstance.Item.ItemType").
+		Preload("ItemInstance.Item.ItemStats").
+		Where("id = ?", id).
+		First(&equipmentSlot).Error; err != nil {
 		return &entities.EquipmentSlot{}, err
 	}
 	return &equipmentSlot, nil
