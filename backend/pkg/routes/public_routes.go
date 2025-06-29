@@ -242,7 +242,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	equipmentSlotGroup.Get("/:id", equipmentSlotHandler.FindEquipmentSlotByID)
 	equipmentSlotGroup.Post("/", equipmentSlotHandler.CreateEquipmentSlot)
 	equipmentSlotGroup.Delete("/:id", equipmentSlotHandler.DeleteEquipmentSlot)
-	// equipmentSlotGroup.Patch("/:id", equipmentSlotHandler.PatchEquipmentSlot)
+	equipmentSlotGroup.Patch("/:id", equipmentSlotHandler.PatchEquipmentSlot)
 
 	// Item routes
 	itemGroup := api.Group("/items")
