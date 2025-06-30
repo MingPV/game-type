@@ -1,1 +1,12 @@
-@import "tailwindcss";
+/* @import "tailwindcss"; */
+
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@font-face {
+  font-family: 'GameFont';
+  src: url('/fonts/font1.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
