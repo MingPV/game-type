@@ -10,3 +10,18 @@
   font-weight: 400;
   font-style: normal;
 }
+
+@font-face {
+  font-family: 'pixel';
+  src: url('/fonts/PixelGame.otf') format('opentype');
+  font-weight: 400;
+  font-style: normal;
+}
+
+.text-stroke-home {
+  -webkit-text-stroke: 3px rgb(102, 166, 175); /* thickness and color */
+}
+
+.text-stroke-thin {
+  -webkit-text-stroke: 2px rgb(207, 207, 207); /* thickness and color */
+}

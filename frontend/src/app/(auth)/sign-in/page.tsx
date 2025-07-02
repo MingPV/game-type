@@ -7,6 +7,7 @@ import { useRouter } from "next/navigation";
 import { IoMdArrowRoundBack } from "react-icons/io";
 
 export default function Page() {
+  const [guestUsername, setGuestUsername] = useState("");
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
@@ -77,69 +78,112 @@ export default function Page() {
   };
 
   return (
-    <div className="flex flex-col justify-center items-center h-full w-full">
-      <div className="text-8xl font-bold text-stone-400 mb-10">GameName.io</div>
-      <div className="flex flex-row gap-2 w-[40vw]">
+    <div
+      className="w-full h-full flex flex-col justify-center items-center"
+      style={{
+        backgroundImage: "url('/images/game3.jpg')",
+        backgroundSize: "cover",
+        backgroundPosition: "center",
+        minHeight: "100vh",
+      }}
+    >
+      <div className="absolute inset-0 bg-black opacity-50 z-0" />
+      <div className="flex flex-col justify-center items-center h-full w-full z-10">
         <Link
-          className="mr-2 flex flex-row gap-2 items-center h-fit mt-2 text-stone-300/80 w-fit font-bold bg-white/20 hover:bg-white/10 transition-all duration-200 py-2 px-4 rounded-md"
+          className="fixed left-10 top-10 mr-2 flex items-center flex-row gap-2 h-fit mt-2 text-stone-300/80 w-fit font-bold bg-white/20 hover:bg-white/10 transition-all duration-200 py-2 px-4 rounded-md z-11"
           href={"/"}
         >
-          <span className="font-bold">
+          <span className="font-bold text-xl">
             <IoMdArrowRoundBack />
           </span>
-          Back{" "}
+          <span className="mt-1 text-xl">Back </span>
         </Link>
-        <div className="bg-white/20 p-10 flex flex-col items-center w-[25vw]">
-          <input
-            type="text"
-            placeholder="Email or username"
-            value={emailOrUsername}
-            onChange={(e) => setEmailOrUsername(e.target.value)}
-            className=" w-full pb-1 px-2 pt-2 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-400"
-          />
-          <input
-            type="password"
-            placeholder="Password"
-            value={password}
-            onChange={(e) => setPassword(e.target.value)}
-            className="w-full pb-1 px-2 pt-2 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-400"
-          />
-          <div className="flex flex-row w-full justify-between text-xs text-stone-900">
-            <div className="flex flex-row gap-1">
-              <input type="checkbox" />
-              <div>remember me</div>
+        <div className="bg-white/40 px-14 py-10 flex flex-row shadow-md shadow-stone-700 rounded-xl">
+          <div className="p-10 w-[30vw] flex flex-col border-r pr-20 border-stone-100 justify-center">
+            <div className="text-stone-800 text-4xl text-center">
+              Play as guest
             </div>
-            <div className="text-stone-900 text-xs border-b-1 border-stone-800 w-fit cursor-pointer hover:text-stone-400 hover:border-stone-400 transition-all duration-200">
-              forgot password?
+            {/* <div className="text-stone-400 text-xl mt-4">
+              Enter your username
+            </div> */}
+            <input
+              type="text"
+              placeholder="Enter your username"
+              value={guestUsername}
+              onChange={(e) => setGuestUsername(e.target.value)}
+              className=" w-full px-2 py-2 mt-8 mb-4 text-xl bg-white/10 placeholder:font-mono text-stone-100 text-center placeholder-black/40 placeholder:text-sm focus:ring-1 focus:ring-stone-600 focus:outline-none font-mono font-bold border border-transparent hover:border-stone-60 rounded-md"
+            />
+            <button
+              className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl mt-6 w-full border-r-4 border-b-4 border-stone-800 text-xl text-stone-800"
+              // onClick={handleSignIn}
+            >
+              {isSigningIn ? "Logging In" : "Play"}
+            </button>
+            <div className="text-start mt-2 text-white/80 text-lg">
+              ** Progress may be lost when playing as a guest.
             </div>
           </div>
-          <button
-            className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl mt-6 w-full"
-            onClick={handleSignIn}
-          >
-            {isSigningIn ? "Logging In" : "Play"}
-          </button>
-          {error && <div className="text-red-500 font-semibold">{error}</div>}
+          <div className=" p-10 flex flex-col items-center w-[30vw] pl-20">
+            <div className="text-stone-800 text-4xl text-center">
+              Play with account
+            </div>
+            <input
+              type="text"
+              placeholder="Email or username"
+              value={emailOrUsername}
+              onChange={(e) => setEmailOrUsername(e.target.value)}
+              className="w-full py-3 px-2 mt-6 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-sm"
+            />
+            <input
+              type="password"
+              placeholder="Password"
+              value={password}
+              onChange={(e) => setPassword(e.target.value)}
+              className="w-full py-3 px-2 mt-2 mb-4 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-sm"
+            />
+            <div className="flex flex-row w-full justify-between text-stone-800">
+              <div className="flex flex-row gap-1">
+                <input type="checkbox" />
+                <div>remember me</div>
+              </div>
+              <div className="text-stone-800 border-stone-800 w-fit cursor-pointer hover:underline transition-all duration-200">
+                forgot password?
+              </div>
+            </div>
+            <button
+              className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl mt-6 w-full border-r-4 border-b-4 border-stone-800 text-xl text-stone-800"
+              onClick={handleSignIn}
+            >
+              {isSigningIn ? "Logging In" : "Play"}
+            </button>
+            {error && <div className="text-red-500 font-semibold">{error}</div>}
+          </div>
         </div>
-        <div className="px-4 flex flex-row gap-2 items-center h-fit mt-2 text-transparent cursor-default">
-          <span className="font-bold">
-            <IoMdArrowRoundBack />
-          </span>
-          Back{" "}
-        </div>
+
+        {/* <div className="px-4 flex flex-row gap-2 items-center h-fit mt-2 text-transparent cursor-default">
+            <span className="font-bold">
+              <IoMdArrowRoundBack />
+            </span>
+            Back{" "}
+          </div> */}
 
         {/* <Link href={"/sign-up"} className="text-white/80">
           Sign up
-        </Link>
-        <Link href={"/"} className="text-white/80">
+        </Link> */}
+        {/* <Link href={"/"} className="text-white/80">
           Back to home
         </Link> */}
-      </div>
-      <div className="w-[25vw] mt-2 text-stone-100 text-sm flex flex-row gap-4 justify-center">
-        <div className="text-stone-100/30">{"Don't have an account?"}</div>
-        <Link href={"/sign-up"} className="text-white/80 text-sm">
-          Create an account
-        </Link>
+        <div className="w-[25vw] mt-2 text-stone-100 text-sm flex flex-row gap-4 justify-center">
+          <div className="text-stone-100/30 text-xl">
+            {"Don't have an account?"}
+          </div>
+          <Link
+            href={"/sign-up"}
+            className="text-white/80 text-xl hover:underline"
+          >
+            Create an account
+          </Link>
+        </div>
       </div>
     </div>
   );

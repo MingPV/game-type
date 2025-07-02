@@ -12,6 +12,7 @@ module.exports = {
     extend: {
       fontFamily: {
         gameFont: ["GameFont"],
+        pixel: ["pixel"],
       },
       colors: {
         brandBlue: "#1DA1F2",
