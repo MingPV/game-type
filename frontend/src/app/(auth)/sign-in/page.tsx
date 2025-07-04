@@ -103,9 +103,6 @@ export default function Page() {
             <div className="text-stone-800 text-4xl text-center">
               Play as guest
             </div>
-            {/* <div className="text-stone-400 text-xl mt-4">
-              Enter your username
-            </div> */}
             <input
               type="text"
               placeholder="Enter your username"
@@ -159,20 +156,6 @@ export default function Page() {
             {error && <div className="text-red-500 font-semibold">{error}</div>}
           </div>
         </div>
-
-        {/* <div className="px-4 flex flex-row gap-2 items-center h-fit mt-2 text-transparent cursor-default">
-            <span className="font-bold">
-              <IoMdArrowRoundBack />
-            </span>
-            Back{" "}
-          </div> */}
-
-        {/* <Link href={"/sign-up"} className="text-white/80">
-          Sign up
-        </Link> */}
-        {/* <Link href={"/"} className="text-white/80">
-          Back to home
-        </Link> */}
         <div className="w-[25vw] mt-2 text-stone-100 text-sm flex flex-row gap-4 justify-center">
           <div className="text-stone-100/30 text-xl">
             {"Don't have an account?"}
