@@ -86,6 +86,23 @@ func (h *HttpCharacterHandler) FindCharacterByID(c *fiber.Ctx) error {
 	return c.JSON(dto.ToCharacterResponse(character))
 }
 
+// FindAllCharacters godoc
+// @Summary Get character by userID
+// @Tags characters
+// @Produce json
+// @Success 200 {array} entities.Character
+// @Router /characters/userid/{userID} [get]
+func (h *HttpCharacterHandler) FindCharacterByUserID(c *fiber.Ctx) error {
+	user_id := c.Params("userID")
+
+	characters, err := h.characterUseCase.FindCharacterByUserID(user_id)
+	if err != nil {
+		return responses.Error(c, fiber.StatusInternalServerError, err.Error())
+	}
+
+	return c.JSON(dto.ToCharacterResponseList(characters))
+}
+
 // PatchCharacter godoc
 // @Summary Update an character partially
 // @Tags characters

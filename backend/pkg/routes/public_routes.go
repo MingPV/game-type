@@ -208,6 +208,7 @@ func RegisterPublicRoutes(app fiber.Router, db *gorm.DB) {
 	characterGroup := api.Group("/characters")
 	characterGroup.Get("/", characterHandler.FindAllCharacters)
 	characterGroup.Get("/:id", characterHandler.FindCharacterByID)
+	characterGroup.Get("/userid/:userID", characterHandler.FindCharacterByUserID)
 	characterGroup.Post("/", characterHandler.CreateCharacter)
 	characterGroup.Delete("/:id", characterHandler.DeleteCharacter)
 	characterGroup.Patch("/:id", characterHandler.PatchCharacter)

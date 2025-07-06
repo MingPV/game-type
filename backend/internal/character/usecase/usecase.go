@@ -83,7 +83,16 @@ func (s *CharacterService) FindAllCharacters() ([]*entities.Character, error) {
 	return characters, nil
 }
 
-// CharacterService Methods - 3 find by id
+// CharacterService Methods - 3 find by user_id
+func (s *CharacterService) FindCharacterByUserID(user_id string) ([]*entities.Character, error) {
+	characters, err := s.characterRepository.FindByUserID(user_id)
+	if err != nil {
+		return nil, err
+	}
+	return characters, nil
+}
+
+// CharacterService Methods - 4 find by id
 func (s *CharacterService) FindCharacterByID(id string) (*entities.Character, error) {
 
 	// Check if the character is in the cache
@@ -108,7 +117,7 @@ func (s *CharacterService) FindCharacterByID(id string) (*entities.Character, er
 	return character, nil
 }
 
-// CharacterService Methods - 4 patch
+// CharacterService Methods - 5 patch
 func (s *CharacterService) PatchCharacter(id string, character *entities.Character) error {
 
 	if err := s.characterRepository.Patch(id, character); err != nil {
@@ -125,7 +134,7 @@ func (s *CharacterService) PatchCharacter(id string, character *entities.Charact
 	return nil
 }
 
-// CharacterService Methods - 5 delete
+// CharacterService Methods - 6 delete
 func (s *CharacterService) DeleteCharacter(id string) error {
 	if err := s.characterRepository.Delete(id); err != nil {
 		return err

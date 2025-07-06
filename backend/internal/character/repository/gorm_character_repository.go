@@ -44,6 +44,34 @@ func (r *GormCharacterRepository) FindAll() ([]*entities.Character, error) {
 	return characters, nil
 }
 
+func (r *GormCharacterRepository) FindByUserID(user_id string) ([]*entities.Character, error) {
+	var characterValues []entities.Character
+	if err := r.db.
+		Preload("Class").
+		Preload("Status").
+		Preload("EquipmentSlots").
+		// Preload("Inventory").
+		// Preload("Inventory.ItemInstances").
+		// Preload("Inventory.ItemInstances.Item.Rarity").
+		// Preload("Inventory.ItemInstances.Item.ItemType").
+		// Preload("Inventory.ItemInstances.Item.ItemStats").
+		Preload("EquipmentSlots.ItemInstance").
+		Preload("EquipmentSlots.ItemInstance.Item").
+		Preload("EquipmentSlots.ItemInstance.Item.Rarity").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemType").
+		Preload("EquipmentSlots.ItemInstance.Item.ItemStats").
+		Where("user_id = ?", user_id).
+		Find(&characterValues).Error; err != nil {
+		return nil, err
+	}
+
+	characters := make([]*entities.Character, len(characterValues))
+	for i := range characterValues {
+		characters[i] = &characterValues[i]
+	}
+	return characters, nil
+}
+
 func (r *GormCharacterRepository) FindByID(id string) (*entities.Character, error) {
 	var character entities.Character
 	if err := r.db.

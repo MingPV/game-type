@@ -8,4 +8,5 @@ type CharacterUseCase interface {
 	PatchCharacter(id string, character *entities.Character) error
 	DeleteCharacter(id string) error
 	FindCharacterByID(id string) (*entities.Character, error)
+	FindCharacterByUserID(user_id string) ([]*entities.Character, error)
 }
