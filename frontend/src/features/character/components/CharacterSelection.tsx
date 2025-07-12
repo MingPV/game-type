@@ -87,7 +87,20 @@ export default function CharacterSelection({
               ) : null}
             </div>
 
-            {characters[i].name}
+            <span
+              className={`${
+                selectedIndex === i ? "text-white/70" : "text-white/40"
+              }`}
+            >
+              {characters[i].name}
+            </span>
+            <span
+              className={`${
+                selectedIndex === i ? "text-white/90" : "text-white/50"
+              }`}
+            >
+              Level {characters[i].level}
+            </span>
           </div>
         ))}
         {Array.from({ length: 6 - characters.length }, (_, i) => i).map(
