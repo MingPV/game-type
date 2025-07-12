@@ -36,13 +36,13 @@ func NewCharacterService(character_repo characterRepo.CharacterRepository, statu
 func (s *CharacterService) CreateCharacter(character *entities.Character) (*entities.Character, error) {
 
 	baseStatus := &entities.Status{
-		CharacterID: character.ID,
-		StatusPoint: constants.BASE_STATUS_POINTS,
-		Attack:      constants.ATTACK,
-		Defense:     constants.DEFENSE,
-		HP:          constants.HP,
-		MP:          constants.MP,
-		Critical:    constants.CRITICAL,
+		CharacterID:   character.ID,
+		StatusPoint:   constants.BASE_STATUS_POINTS,
+		AttackLevel:   constants.ATTACK_LEVEL,
+		DefenseLevel:  constants.DEFENSE_LEVEL,
+		HPLevel:       constants.HP_LEVEL,
+		MPLevel:       constants.MP_LEVEL,
+		CriticalLevel: constants.CRITICAL_LEVEL,
 	}
 
 	inventory := &entities.Inventory{

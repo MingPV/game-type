@@ -33,13 +33,13 @@ func (h *HttpStatusHandler) CreateStatus(c *fiber.Ctx) error {
 	}
 
 	status := &entities.Status{
-		CharacterID: req.CharacterID,
-		StatusPoint: req.StatusPoint,
-		Attack:      req.Attack,
-		Defense:     req.Defense,
-		HP:          req.HP,
-		MP:          req.MP,
-		Critical:    req.Critical,
+		CharacterID:   req.CharacterID,
+		StatusPoint:   req.StatusPoint,
+		AttackLevel:   req.AttackLevel,
+		DefenseLevel:  req.DefenseLevel,
+		HPLevel:       req.HPLevel,
+		MPLevel:       req.MPLevel,
+		CriticalLevel: req.CriticalLevel,
 	}
 
 	if err := h.statusUseCase.CreateStatus(status); err != nil {
@@ -100,12 +100,12 @@ func (h *HttpStatusHandler) PatchStatus(c *fiber.Ctx) error {
 	}
 
 	status := &entities.Status{
-		StatusPoint: req.StatusPoint,
-		Attack:      req.Attack,
-		Defense:     req.Defense,
-		HP:          req.HP,
-		MP:          req.MP,
-		Critical:    req.Critical,
+		StatusPoint:   req.StatusPoint,
+		AttackLevel:   req.AttackLevel,
+		DefenseLevel:  req.DefenseLevel,
+		HPLevel:       req.HPLevel,
+		MPLevel:       req.MPLevel,
+		CriticalLevel: req.CriticalLevel,
 	}
 	if err := h.statusUseCase.PatchStatus(character_id, status); err != nil {
 		return responses.Error(c, fiber.StatusInternalServerError, err.Error())

@@ -5,6 +5,7 @@ import (
 
 	"github.com/MingPV/clean-go-template/internal/entities"
 	equipmentSlotDTO "github.com/MingPV/clean-go-template/internal/equipment_slot/dto"
+	statusDTO "github.com/MingPV/clean-go-template/internal/status/dto"
 
 	// inventoryDTO "github.com/MingPV/clean-go-template/internal/inventory/dto"
 	"github.com/google/uuid"
@@ -21,7 +22,7 @@ type CharacterResponse struct {
 	InventoryID uuid.UUID `json:"inventory_id"`
 
 	Class          entities.Class                           `json:"class"`
-	Status         entities.Status                          `json:"status"`
+	Status         statusDTO.StatusResponse                 `json:"status"`
 	EquipmentSlots []equipmentSlotDTO.EquipmentSlotResponse `json:"equipment_slots"`
 	// Inventory      inventoryDTO.InventoryResponse           `json:"inventory"`
 }

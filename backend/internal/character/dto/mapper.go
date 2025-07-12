@@ -3,6 +3,7 @@ package dto
 import (
 	"github.com/MingPV/clean-go-template/internal/entities"
 	equipmentSlotDTO "github.com/MingPV/clean-go-template/internal/equipment_slot/dto"
+	statusDTO "github.com/MingPV/clean-go-template/internal/status/dto"
 	// inventoryDTO "github.com/MingPV/clean-go-template/internal/inventory/dto"
 )
 
@@ -24,7 +25,7 @@ func ToCharacterResponse(character *entities.Character) *CharacterResponse {
 		InventoryID: character.InventoryID,
 
 		Class:          character.Class,
-		Status:         character.Status,
+		Status:         *statusDTO.ToStatusResponse(&character.Status),
 		EquipmentSlots: equipment_slots,
 		// Inventory:      *inventoryDTO.ToInventoryResponse(&character.Inventory),
 	}
