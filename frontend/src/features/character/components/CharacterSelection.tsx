@@ -2,14 +2,17 @@
 
 import { Character } from "@/app/types/character";
 import React from "react";
+import Image from "next/image";
 
 type CharacterSelectionProps = {
+  isLoadingCharacters: boolean;
   characters: Character[];
   selectedIndex: number | null;
   setSelectedIndex: (index: number) => void;
 };
 
 export default function CharacterSelection({
+  isLoadingCharacters,
   characters,
   selectedIndex,
   setSelectedIndex,
@@ -23,14 +26,68 @@ export default function CharacterSelection({
         {characters.map((c, i) => (
           <div
             key={i}
-            className={`bg-black/50 border-2 border-stone-200/10  cursor-pointer flex justify-center items-center text-white/20 ${
+            className={`bg-black/50 border-2 border-stone-200/10  cursor-pointer flex flex-col justify-center items-center text-white/20 ${
               selectedIndex === i
                 ? "ring-1 ring-stone-200/50"
                 : "hover:bg-black/20"
             }`}
             onClick={() => setSelectedIndex(i)}
           >
-            {characters[i] ? `${characters[i].name}` : "empty"}
+            <div className="flex-1 flex justify-center items-center">
+              {c.class.name == "Swordman" ? (
+                <Image
+                  className={`h-fit ${
+                    selectedIndex === i ? "opacity-100" : "opacity-40"
+                  }`}
+                  src={"/images/swordmanCharacter.png"}
+                  alt="swordmanCharacter"
+                  width={150}
+                  height={150}
+                />
+              ) : c.class.name == "Magician" ? (
+                <Image
+                  className={`h-fit ${
+                    selectedIndex === i ? "opacity-100" : "opacity-40"
+                  }`}
+                  src={"/images/magicianCharacter.png"}
+                  alt="magicianCharacter"
+                  width={100}
+                  height={100}
+                />
+              ) : c.class.name == "Assassin" ? (
+                <Image
+                  className={`h-fit ${
+                    selectedIndex === i ? "opacity-100" : "opacity-40"
+                  }`}
+                  src={"/images/assassinCharacter.png"}
+                  alt="assassinCharacter"
+                  width={150}
+                  height={150}
+                />
+              ) : c.class.name == "Hunter" ? (
+                <Image
+                  className={`h-fit ${
+                    selectedIndex === i ? "opacity-100" : "opacity-40"
+                  }`}
+                  src={"/images/hunterCharacter.png"}
+                  alt="hunterCharacter"
+                  width={120}
+                  height={120}
+                />
+              ) : c.class.name == "Dark Knight" ? (
+                <Image
+                  className={`h-fit ${
+                    selectedIndex === i ? "opacity-100" : "opacity-40"
+                  }`}
+                  src={"/images/darkKnightCharacter.png"}
+                  alt="darkKnightCharacter"
+                  width={150}
+                  height={150}
+                />
+              ) : null}
+            </div>
+
+            {characters[i].name}
           </div>
         ))}
         {Array.from({ length: 6 - characters.length }, (_, i) => i).map(
@@ -44,7 +101,7 @@ export default function CharacterSelection({
               }`}
               onClick={() => setSelectedIndex(characters.length + i)}
             >
-              empty
+              {isLoadingCharacters ? "loading" : "empty"}
             </div>
           )
         )}

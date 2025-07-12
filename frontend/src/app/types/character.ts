@@ -12,12 +12,16 @@ export interface Character {
   };
   status: {
     status_point: number;
-    str: number;
-    agi: number;
-    int: number;
-    dex: number;
-    vit: number;
-    luk: number;
+    attack_level: number;
+    defense_level: number;
+    hp_level: number;
+    mp_level: number;
+    critical_level: number;
+    attack: number;
+    defense: number;
+    hp: number;
+    mp: number;
+    critical: number;
   };
   equipment_slots: string;
 }

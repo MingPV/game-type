@@ -5,6 +5,7 @@ import { Character } from "@/app/types/character";
 import Link from "next/link";
 import React, { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";
+import Image from "next/image";
 
 type CharacterDisplayProps = {
   character: Character;
@@ -45,7 +46,54 @@ export default function CharacterDisplay({
           <RiDeleteBin6Line />
         </span>
       </div>
-      <div className="bg-white/10 h-[40vh] w-[10vw] rounded-full mb-12"></div>
+      <div className="h-[400px] flex justify-center items-end">
+        <Image
+          className={`${
+            character.class.name != "Swordman" ? "hidden" : ""
+          } h-fit`}
+          src={"/images/swordmanCharacter.png"}
+          alt="swordmanCharacter"
+          width={350}
+          height={350}
+        />
+        <Image
+          className={`${
+            character.class.name != "Magician" ? "hidden" : ""
+          } h-fit`}
+          src={"/images/magicianCharacter.png"}
+          alt="swordmanCharacter"
+          width={220}
+          height={220}
+        />
+        <Image
+          className={`${
+            character.class.name != "Assassin" ? "hidden" : ""
+          } h-fit`}
+          src={"/images/assassinCharacter.png"}
+          alt="swordmanCharacter"
+          width={350}
+          height={350}
+        />
+        <Image
+          className={`${
+            character.class.name != "Hunter" ? "hidden" : ""
+          } h-fit`}
+          src={"/images/hunterCharacter.png"}
+          alt="swordmanCharacter"
+          width={270}
+          height={270}
+        />
+        <Image
+          className={`${
+            character.class.name != "Dark Knight" ? "hidden" : ""
+          } h-fit`}
+          src={"/images/darkKnightCharacter.png"}
+          alt="swordmanCharacter"
+          width={380}
+          height={380}
+        />
+      </div>
+
       <div className="text-3xl text-stone-200">{character.name}</div>
       <div className="text-stone-200/20 mb-4">{character.class.name}</div>
       <div className="text-stone-200/50">Level {character.level}</div>

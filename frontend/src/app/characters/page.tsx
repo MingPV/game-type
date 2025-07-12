@@ -16,7 +16,6 @@ export default function Page() {
   const { user } = useAuth();
   const [classes, setClasses] = useState([]);
   const [characterIndex, setCharacterIndex] = useState(-1);
-  const [hasCharacter, setHasCharacter] = useState(false);
   const [isLoadingClasses, setIsLoadingClasses] = useState(true);
   const [charcaters, setCharacters] = useState(Array<Character>);
   const [isLoadingCharacter, setIsLoadingCharacter] = useState(true);
@@ -27,7 +26,7 @@ export default function Page() {
         .then((data) => {
           setCharacters(data);
           if (data.length > 0) {
-            setHasCharacter(true);
+            setIsLoadingCharacter(false);
           }
         })
         .catch((err) => {
@@ -42,6 +41,7 @@ export default function Page() {
       .then((data) => {
         setClasses(data);
         setIsLoadingClasses(false);
+        console.log(isLoadingClasses);
         console.log(data);
       })
       .catch((err) => {
@@ -74,6 +74,7 @@ export default function Page() {
         </div>
         <div className="flex flex-row h-full w-full">
           <CharacterSelection
+            isLoadingCharacters={isLoadingCharacter}
             characters={charcaters}
             selectedIndex={characterIndex}
             setSelectedIndex={setCharacterIndex}

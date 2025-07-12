@@ -6,6 +6,7 @@ import { CharacterClass } from "@/app/types/characterClass";
 import { createCharacter } from "@/app/characters/action";
 import { useAuth } from "@/contexts/AuthContext";
 import { Character } from "@/app/types/character";
+import Image from "next/image";
 
 type CharacterCreateProps = {
   classes: CharacterClass[];
@@ -22,6 +23,7 @@ export default function CharacterCreate({
 }: CharacterCreateProps) {
   const { user } = useAuth();
   const [name, setName] = useState("");
+  const [selectedClassName, setSelectedClassName] = useState("");
   const [classID, setClassID] = useState("");
   const [isOpenForm, setIsOpenForm] = useState(false);
   const [error, setError] = useState("");
@@ -56,8 +58,52 @@ export default function CharacterCreate({
             isOpenForm ? "max-h-[70vh]" : "max-h-0"
           )}
         >
-          <div className="w-full flex justify-center my-8">
-            <div className="bg-white/30 rounded-full h-48 w-16"></div>
+          <div className="w-full flex flex-col justify-end h-[200px] items-center mt-8 ">
+            <Image
+              className={`${
+                selectedClassName != "Swordman" ? "hidden" : ""
+              } h-fit`}
+              src={"/images/swordmanCharacter.png"}
+              alt="swordmanCharacter"
+              width={200}
+              height={200}
+            />
+            <Image
+              className={`${
+                selectedClassName != "Magician" ? "hidden" : ""
+              } h-fit`}
+              src={"/images/magicianCharacter.png"}
+              alt="swordmanCharacter"
+              width={120}
+              height={120}
+            />
+            <Image
+              className={`${
+                selectedClassName != "Assassin" ? "hidden" : ""
+              } h-fit`}
+              src={"/images/assassinCharacter.png"}
+              alt="swordmanCharacter"
+              width={200}
+              height={200}
+            />
+            <Image
+              className={`${
+                selectedClassName != "Hunter" ? "hidden" : ""
+              } h-fit`}
+              src={"/images/hunterCharacter.png"}
+              alt="swordmanCharacter"
+              width={150}
+              height={150}
+            />
+            <Image
+              className={`${
+                selectedClassName != "Dark Knight" ? "hidden" : ""
+              } h-fit`}
+              src={"/images/darkKnightCharacter.png"}
+              alt="swordmanCharacter"
+              width={210}
+              height={210}
+            />
           </div>
           <div className="text-xl my-1">Name</div>
           <input
@@ -72,7 +118,10 @@ export default function CharacterCreate({
             {classes.map((c) => (
               <div
                 key={c.class_id}
-                onClick={() => setClassID(c.class_id)}
+                onClick={() => {
+                  setClassID(c.class_id);
+                  setSelectedClassName(c.name);
+                }}
                 className={`p-2 flex justify-center items-center rounded-md cursor-pointer hover:bg-white/40 ${
                   classID == c.class_id ? "bg-white/40" : "bg-white/20"
                 }`}
