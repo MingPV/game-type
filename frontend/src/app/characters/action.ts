@@ -32,7 +32,7 @@ export async function fetchClasses() {
   }
 }
 
-export async function CreateCharacter(
+export async function createCharacter(
   user_id: string,
   name: string,
   class_id: string
@@ -64,5 +64,30 @@ export async function CreateCharacter(
   } catch (err) {
     console.log(err);
     throw new Error("Failed to create character.");
+  }
+}
+
+export async function deleteCharacter(character_id: string) {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/characters/${character_id}`,
+      {
+        method: "DELETE",
+      }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to delete character");
+    }
+
+    // If the API returns a body, parse it; otherwise, return a success indicator
+    try {
+      return await res.json();
+    } catch {
+      return { success: true };
+    }
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to delete character.");
   }
 }

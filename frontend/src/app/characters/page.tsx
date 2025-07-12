@@ -79,7 +79,11 @@ export default function Page() {
             setSelectedIndex={setCharacterIndex}
           />
           {charcaters[characterIndex] ? (
-            <CharacterDisplay character={charcaters[characterIndex]} />
+            <CharacterDisplay
+              character={charcaters[characterIndex]}
+              characters={charcaters}
+              setCharacters={setCharacters}
+            />
           ) : (
             <CharacterCreate
               classes={classes}

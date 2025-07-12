@@ -3,7 +3,7 @@
 import React, { useState } from "react";
 import clsx from "clsx";
 import { CharacterClass } from "@/app/types/characterClass";
-import { CreateCharacter } from "@/app/characters/action";
+import { createCharacter } from "@/app/characters/action";
 import { useAuth } from "@/contexts/AuthContext";
 import { Character } from "@/app/types/character";
 
@@ -28,7 +28,7 @@ export default function CharacterCreate({
 
   const handleCreateCharacter = () => {
     if (user) {
-      CreateCharacter(user.id, name, classID)
+      createCharacter(user.id, name, classID)
         .then((data) => {
           setIsOpenForm(false);
           if (characters) {

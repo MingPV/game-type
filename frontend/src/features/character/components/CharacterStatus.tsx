@@ -29,7 +29,7 @@ export default function CharacterStatus({
           <div className="text-stone-200">1200</div>
         </div>
         <div className="p-2  flex flex-col items-center gap-1">
-          <div className="text-stone-200/70">Armor</div>
+          <div className="text-stone-200/70">Defense</div>
           <div className="border-b-1 border-stone-200/20 w-full"></div>
           <div className="text-stone-200">1200</div>
         </div>
