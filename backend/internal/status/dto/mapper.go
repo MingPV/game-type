@@ -6,12 +6,11 @@ func ToStatusResponse(status *entities.Status) *StatusResponse {
 	return &StatusResponse{
 		CharacterID: status.CharacterID,
 		StatusPoint: status.StatusPoint,
-		STR:         status.STR,
-		AGI:         status.AGI,
-		INT:         status.INT,
-		DEX:         status.DEX,
-		VIT:         status.VIT,
-		LUK:         status.LUK,
+		Attack:      status.Attack,
+		Defense:     status.Defense,
+		HP:          status.HP,
+		MP:          status.MP,
+		Critical:    status.Critical,
 	}
 }
 

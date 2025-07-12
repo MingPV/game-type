@@ -38,12 +38,11 @@ func (s *CharacterService) CreateCharacter(character *entities.Character) (*enti
 	baseStatus := &entities.Status{
 		CharacterID: character.ID,
 		StatusPoint: constants.BASE_STATUS_POINTS,
-		STR:         constants.STR,
-		AGI:         constants.AGI,
-		INT:         constants.INT,
-		DEX:         constants.DEX,
-		VIT:         constants.VIT,
-		LUK:         constants.LUK,
+		Attack:      constants.ATTACK,
+		Defense:     constants.DEFENSE,
+		HP:          constants.HP,
+		MP:          constants.MP,
+		Critical:    constants.CRITICAL,
 	}
 
 	inventory := &entities.Inventory{
