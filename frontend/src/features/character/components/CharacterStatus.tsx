@@ -80,12 +80,7 @@ export default function CharacterStatus({
         <div className="p-2  flex flex-col items-center gap-1">
           <div className="text-stone-200/70">Health</div>
           <div className="border-b-1 border-stone-200/20 w-full"></div>
-          <div className="text-stone-200">{character.status.attack}</div>
-        </div>
-        <div className="p-2  flex flex-col items-center gap-1">
-          <div className="text-stone-200/70">Defense</div>
-          <div className="border-b-1 border-stone-200/20 w-full"></div>
-          <div className="text-stone-200">{character.status.defense}</div>
+          <div className="text-stone-200">{character.status.hp}</div>
         </div>
         <div className="p-2  flex flex-col items-center gap-1">
           <div className="text-stone-200/70">Damage</div>
@@ -96,6 +91,11 @@ export default function CharacterStatus({
           <div className="text-stone-200/70">Mana</div>
           <div className="border-b-1 border-stone-200/20 w-full"></div>
           <div className="text-stone-200">{character.status.mp}</div>
+        </div>
+        <div className="p-2  flex flex-col items-center gap-1">
+          <div className="text-stone-200/70">Defense</div>
+          <div className="border-b-1 border-stone-200/20 w-full"></div>
+          <div className="text-stone-200">{character.status.defense}</div>
         </div>
       </div>
     </div>
