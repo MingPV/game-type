@@ -40,6 +40,7 @@ export const useCharacterAnimation = ({
     }
   };
 
+  // Update image
   const updateSprite = (direction: Direction | null, isMoving: boolean) => {
     const row = getRowByDirection(direction);
     let column = 0;
