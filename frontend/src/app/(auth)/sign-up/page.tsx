@@ -80,6 +80,7 @@ export default function Page() {
           body: JSON.stringify({
             email,
             password,
+            username,
           }),
         }
       );
@@ -87,11 +88,11 @@ export default function Page() {
       const data = await res.json();
 
       if (!res.ok) {
-        setError(data.message || "Sign-in failed. Please try again.");
+        setError(data.message || "Sign-up failed. Please try again.");
         setIsSigningUp(false);
         return;
       } else {
-        console.log("Sign-in success", data);
+        console.log("Sign-up success", data);
       }
     } catch (err) {
       console.error(err);
@@ -120,7 +121,7 @@ export default function Page() {
       <div className="absolute inset-0 bg-black opacity-50 z-0" />
       <div className="flex flex-col justify-center items-center h-full w-full z-10">
         <Link
-          className="fixed left-10 top-10 mr-2 flex items-center flex-row gap-2 h-fit mt-2 text-stone-300/80 w-fit font-bold bg-white/20 hover:bg-white/10 transition-all duration-200 py-2 px-4 rounded-md z-11"
+          className="fixed left-10 top-10 mr-2 flex items-center flex-row gap-2 h-fit mt-2 text-stone-700/80 w-fit font-bold bg-white/20 hover:bg-white/10 transition-all duration-200 py-2 px-4 rounded-md z-11"
           href={"/"}
         >
           <span className="font-bold text-xl">
@@ -138,15 +139,15 @@ export default function Page() {
               placeholder="Email"
               value={email}
               onChange={(e) => setEmail(e.target.value)}
-              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:outline-none rounded-sm"
+              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-300/30 my-2 text-stone-700 font-mono placeholder:text-sm placeholder:text-stone-600 font-bold pl-4 focus:outline-none rounded-sm"
             />
-            <div className="w-full flex flex-row bg-stone-700 my-2">
+            <div className="w-full flex flex-row bg-stone-300/30 my-2">
               <input
                 type="text"
                 placeholder="Username"
                 value={username}
                 onChange={(e) => setUsername(e.target.value)}
-                className="w-full px-2 py-3 border-b-1 border-black/20 bg-transparent text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-0 focus:outline-none rounded-sm"
+                className="w-full px-2 py-3 border-b-1 border-black/20 bg-transparent text-stone-700 font-mono placeholder:text-sm placeholder:text-stone-600 font-bold pl-4 focus:ring-0 focus:outline-none rounded-sm"
               />
               {username ? (
                 checkingUsername ? (
@@ -154,11 +155,11 @@ export default function Page() {
                     Checking
                   </span>
                 ) : isUsernameValid ? (
-                  <span className="mr-6 text-lime-400/50 text-center flex justify-center items-center">
+                  <span className="mr-6 text-lime-300 text-center flex justify-center items-center">
                     <FaCheck />
                   </span>
                 ) : (
-                  <span className="mr-6 text-red-600/50 text-center flex justify-center items-center">
+                  <span className="mr-6 text-red-600/80 text-center flex justify-center items-center">
                     <ImCross />
                   </span>
                 )
@@ -170,14 +171,14 @@ export default function Page() {
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:outline-none rounded-sm"
+              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-300/30 my-2 text-stone-700 font-mono placeholder:text-sm placeholder:text-stone-600 font-bold pl-4 focus:outline-none rounded-sm"
             />
             <input
               type="password"
               placeholder="Confirm Password"
               value={confirmPassword}
               onChange={(e) => setConfirmPassword(e.target.value)}
-              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:outline-none rounded-sm"
+              className="w-full py-3 px-2 border-b-1 border-black/20 bg-stone-300/30 my-2 text-stone-700 font-mono placeholder:text-sm placeholder:text-stone-600 font-bold pl-4 focus:outline-none rounded-sm"
             />
             <button
               className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl mt-6 w-full border-r-4 border-b-4 border-stone-800 text-xl text-stone-800"

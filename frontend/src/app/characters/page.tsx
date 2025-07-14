@@ -16,18 +16,17 @@ export default function Page() {
   const { user } = useAuth();
   const [classes, setClasses] = useState([]);
   const [characterIndex, setCharacterIndex] = useState(-1);
-  const [isLoadingClasses, setIsLoadingClasses] = useState(true);
+  // const [isLoadingClasses, setIsLoadingClasses] = useState(true);
   const [charcaters, setCharacters] = useState(Array<Character>);
   const [isLoadingCharacter, setIsLoadingCharacter] = useState(true);
 
   useEffect(() => {
+    console.log(user);
     if (user) {
       fetchCharacters(user.id)
         .then((data) => {
           setCharacters(data);
-          if (data.length > 0) {
-            setIsLoadingCharacter(false);
-          }
+          setIsLoadingCharacter(false);
         })
         .catch((err) => {
           console.error("Error fetching characters:", err);
@@ -40,8 +39,7 @@ export default function Page() {
     fetchClasses()
       .then((data) => {
         setClasses(data);
-        setIsLoadingClasses(false);
-        console.log(isLoadingClasses);
+        // setIsLoadingClasses(false);
         console.log(data);
       })
       .catch((err) => {

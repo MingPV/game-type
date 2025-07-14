@@ -37,7 +37,27 @@ func (h *HttpUserHandler) Register(c *fiber.Ctx) error {
 		return response.Error(c, fiber.StatusBadRequest, err.Error())
 	}
 
-	return c.Status(fiber.StatusCreated).JSON(dto.ToUserResponse(userEntity))
+	token, loginUserEntity, err := h.userUseCase.Login(req.Email, req.Password)
+	if err != nil {
+		return response.Error(c, fiber.StatusUnauthorized, "invalid email or password")
+	}
+
+	if loginUserEntity == nil {
+		return response.Error(c, fiber.StatusUnauthorized, "Login after register failed")
+	}
+
+	// Set JWT token in HTTP-only cookie
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    token,
+		HTTPOnly: true,
+		Secure:   false, // must be true on production
+		SameSite: "Strict",
+		Path:     "/",
+		Expires:  time.Now().Add(72 * time.Hour),
+	})
+
+	return c.Status(fiber.StatusCreated).JSON(dto.ToUserResponse(loginUserEntity))
 }
 
 // Login godoc
@@ -69,6 +89,8 @@ func (h *HttpUserHandler) Login(c *fiber.Ctx) error {
 		Path:     "/",
 		Expires:  time.Now().Add(72 * time.Hour),
 	})
+
+	fmt.Println(token)
 
 	return c.JSON(fiber.Map{
 		"user": dto.ToUserResponse(userEntity),
@@ -105,6 +127,9 @@ func (h *HttpUserHandler) LoginWithUsername(c *fiber.Ctx) error {
 		Expires:  time.Now().Add(72 * time.Hour),
 	})
 
+	fmt.Println(token)
+	fmt.Println("token user")
+
 	return c.JSON(fiber.Map{
 		"user": dto.ToUserResponse(userEntity),
 	})
@@ -123,6 +148,7 @@ func (h *HttpUserHandler) GetUser(c *fiber.Ctx) error {
 	}
 
 	fmt.Println(fmt.Sprint(userID))
+	fmt.Println("Ming")
 
 	userEntity, err := h.userUseCase.FindUserByID(fmt.Sprint(userID))
 	if err != nil {

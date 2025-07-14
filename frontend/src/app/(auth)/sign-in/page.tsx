@@ -3,23 +3,37 @@
 import React, { useEffect, useState } from "react";
 import { validateEmail } from "@/lib/utils/validateEmail";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
 import { IoMdArrowRoundBack } from "react-icons/io";
+import { faker } from "@faker-js/faker";
 
 export default function Page() {
-  const [guestUsername, setGuestUsername] = useState("");
   const [emailOrUsername, setEmailOrUsername] = useState("");
   const [password, setPassword] = useState("");
   const [isSigningIn, setIsSigningIn] = useState(false);
+  const [isSigningUp, setIsSigningUp] = useState(false);
   const [error, setError] = useState("");
+  const [guestError, setGuestError] = useState("");
+  const [isRemembered, setIsRemembered] = useState(false);
 
-  const router = useRouter();
-
-  useEffect(() => {}, []);
+  useEffect(() => {
+    if (
+      localStorage.getItem("rememberMe") &&
+      localStorage.getItem("rememberedUsername")
+    ) {
+      setIsRemembered(true);
+      setEmailOrUsername(localStorage.getItem("rememberedUsername") || "");
+    }
+  }, []);
 
   const handleSignIn = async () => {
     setError("");
     setIsSigningIn(true);
+
+    if (!emailOrUsername || !password) {
+      setError("Missing email or password.");
+      setIsSigningIn(false);
+      return;
+    }
 
     let isSignInWithEmail = true;
 
@@ -61,20 +75,77 @@ export default function Page() {
       const data = await res.json();
 
       if (!res.ok) {
+        setIsSigningIn(false);
         setError(data.message || "Sign-in failed. Please try again.");
+        return;
       } else {
         console.log("Sign-in success", data);
       }
     } catch (err) {
       console.error(err);
-      setError("Something went wrong. Please try again later.");
-    } finally {
       setIsSigningIn(false);
-      setEmailOrUsername("");
-      setPassword("");
+      setError("Something went wrong. Please try again later.");
+      return;
+    }
+    setIsSigningIn(false);
+    setEmailOrUsername("");
+    setPassword("");
+    window.location.href = "/characters";
+  };
+
+  const handleSignInWithGuest = async () => {
+    setGuestError("");
+    setIsSigningUp(true);
+
+    const guestLimitStr = localStorage.getItem("guestAccountLimit");
+    const guestLimit = guestLimitStr ? parseInt(guestLimitStr, 10) : 0;
+
+    if (guestLimit >= 3) {
+      setGuestError(
+        "Your account cannot be created because it has reached its limit."
+      );
+      setIsSigningUp(false);
+      return;
     }
 
-    router.push("/characters");
+    localStorage.setItem("guestAccountLimit", (guestLimit + 1).toString());
+
+    try {
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/signup`,
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            username: faker.internet.username(),
+            email: faker.internet.email(),
+            password: faker.internet.password({ length: 12 }),
+          }),
+          credentials: "include",
+        }
+      );
+
+      const data = await res.json();
+
+      if (!res.ok) {
+        setGuestError(
+          data.message || "Something went wrong. Please try again later."
+        );
+        setIsSigningUp(false);
+        return;
+      } else {
+        console.log("Sign-up success", data);
+      }
+    } catch (err) {
+      console.error(err);
+      setGuestError("Something went wrong. Please try again later.");
+      setIsSigningUp(false);
+      return;
+    }
+
+    setIsSigningUp(false);
+
+    window.location.href = "/characters";
   };
 
   return (
@@ -99,26 +170,30 @@ export default function Page() {
           <span className="mt-1 text-xl">Back </span>
         </Link>
         <div className="bg-white/40 px-14 py-10 flex flex-row shadow-md shadow-stone-700 rounded-xl">
-          <div className="p-10 w-[30vw] flex flex-col border-r pr-20 border-stone-100 justify-center">
+          <div className="p-10 w-[30vw] flex flex-col border-r pr-20 border-stone-100 justify-center items-center">
             <div className="text-stone-800 text-4xl text-center">
               Play as guest
             </div>
-            <input
+            {/* <input
               type="text"
               placeholder="Enter your username"
               value={guestUsername}
               onChange={(e) => setGuestUsername(e.target.value)}
               className=" w-full px-2 py-2 mt-8 mb-4 text-xl bg-white/10 placeholder:font-mono text-stone-100 text-center placeholder-black/40 placeholder:text-sm focus:ring-1 focus:ring-stone-600 focus:outline-none font-mono font-bold border border-transparent hover:border-stone-60 rounded-md"
-            />
+            /> */}
             <button
-              className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl mt-6 w-full border-r-4 border-b-4 border-stone-800 text-xl text-stone-800"
-              // onClick={handleSignIn}
+              className="p-2 bg-stone-300 cursor-pointer hover:bg-stone-100 rounded-xl my-2 w-full border-r-4 border-b-4 border-stone-800 text-xl text-stone-800"
+              onClick={handleSignInWithGuest}
             >
-              {isSigningIn ? "Logging In" : "Play"}
+              {isSigningUp ? "Logging In" : "Play"}
             </button>
-            <div className="text-start mt-2 text-white/80 text-lg">
+
+            <div className="text-start text-white/80 text-lg">
               ** Progress may be lost when playing as a guest.
             </div>
+            {guestError && (
+              <div className="text-red-600 my-1">{guestError}</div>
+            )}
           </div>
           <div className=" p-10 flex flex-col items-center w-[30vw] pl-20">
             <div className="text-stone-800 text-4xl text-center">
@@ -129,18 +204,35 @@ export default function Page() {
               placeholder="Email or username"
               value={emailOrUsername}
               onChange={(e) => setEmailOrUsername(e.target.value)}
-              className="w-full py-3 px-2 mt-6 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-sm"
+              className="w-full py-3 px-2 mt-6 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-md"
             />
             <input
               type="password"
               placeholder="Password"
               value={password}
               onChange={(e) => setPassword(e.target.value)}
-              className="w-full py-3 px-2 mt-2 mb-4 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-sm"
+              className="w-full py-3 px-2 mt-2 mb-4 border-b-1 border-black/20 bg-stone-700 my-2 text-stone-300 font-mono placeholder:text-sm placeholder:text-stone-500 font-bold pl-4 focus:ring-1 focus:ring-stone-300 focus:outline-none rounded-md"
             />
             <div className="flex flex-row w-full justify-between text-stone-800">
-              <div className="flex flex-row gap-1">
-                <input type="checkbox" />
+              <div className="flex flex-row gap-1 items-center">
+                <input
+                  type="checkbox"
+                  checked={isRemembered}
+                  onChange={(e) => {
+                    if (e.target.checked) {
+                      localStorage.setItem("rememberMe", "true");
+                      localStorage.setItem(
+                        "rememberedUsername",
+                        emailOrUsername
+                      );
+                      setIsRemembered(true);
+                    } else {
+                      localStorage.removeItem("rememberMe");
+                      localStorage.removeItem("rememberedUsername");
+                      setIsRemembered(false);
+                    }
+                  }}
+                />
                 <div>remember me</div>
               </div>
               <div className="text-stone-800 border-stone-800 w-fit cursor-pointer hover:underline transition-all duration-200">
@@ -153,7 +245,7 @@ export default function Page() {
             >
               {isSigningIn ? "Logging In" : "Play"}
             </button>
-            {error && <div className="text-red-500 font-semibold">{error}</div>}
+            {error && <div className="text-red-600">{error}</div>}
           </div>
         </div>
         <div className="w-[25vw] mt-2 text-stone-100 text-sm flex flex-row gap-4 justify-center">

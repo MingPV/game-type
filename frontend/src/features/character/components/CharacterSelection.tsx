@@ -33,7 +33,7 @@ export default function CharacterSelection({
             }`}
             onClick={() => setSelectedIndex(i)}
           >
-            <div className="flex-1 flex justify-center items-center">
+            <div className="flex justify-center items-center">
               {c.class.name == "Swordman" ? (
                 <Image
                   className={`h-fit ${
@@ -107,14 +107,21 @@ export default function CharacterSelection({
           (c, i) => (
             <div
               key={i}
-              className={`bg-black/50 border-2 border-stone-200/10  cursor-pointer flex justify-center items-center text-white/20 ${
+              className={`bg-black/50 border-2 border-stone-200/10  cursor-pointer flex flex-col justify-center items-center text-white/20 ${
                 selectedIndex === characters.length + i
                   ? "ring-1 ring-stone-200/50"
                   : "hover:bg-black/20"
               }`}
               onClick={() => setSelectedIndex(characters.length + i)}
             >
-              {isLoadingCharacters ? "loading" : "empty"}
+              <Image
+                className={`h-fit opacity-0`}
+                src={"/images/swordmanCharacterCharacter.png"}
+                alt="swordmanCharacterCharacter"
+                width={150}
+                height={150}
+              />
+              <div>{isLoadingCharacters ? "loading" : "empty"}</div>
             </div>
           )
         )}
