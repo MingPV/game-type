@@ -91,3 +91,26 @@ export async function deleteCharacter(character_id: string) {
     throw new Error("Failed to delete character.");
   }
 }
+
+export async function signOut() {
+  try {
+    const res = await fetch(
+      `${process.env.NEXT_PUBLIC_BACKEND_API_URL}/api/v1/auth/signout`,
+      { credentials: "include" }
+    );
+
+    if (!res.ok) {
+      throw new Error("Failed to sign out");
+    }
+
+    // If the API returns a body, parse it; otherwise, return a success indicator
+    try {
+      return await res.json();
+    } catch {
+      return { success: true };
+    }
+  } catch (err) {
+    console.log(err);
+    throw new Error("Failed to sign out.");
+  }
+}

@@ -235,3 +235,24 @@ func (h *HttpUserHandler) FindAllUsers(c *fiber.Ctx) error {
 
 	return c.JSON(dto.ToUserResponseList(users))
 }
+
+// Logout godoc
+// @Summary Logout user and remove token cookie
+// @Tags users
+// @Produce json
+// @Success 200 {string} string "Successfully logged out"
+// @Router /auth/logout [post]
+func (h *HttpUserHandler) Logout(c *fiber.Ctx) error {
+	c.Cookie(&fiber.Cookie{
+		Name:     "token",
+		Value:    "",
+		HTTPOnly: true,
+		Secure:   false, // must be true on production
+		SameSite: "Strict",
+		Path:     "/",
+		Expires:  time.Now().Add(-1 * time.Hour), // Expire the cookie
+	})
+	return c.JSON(fiber.Map{
+		"message": "Successfully logged out",
+	})
+}

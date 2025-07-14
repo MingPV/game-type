@@ -4,7 +4,7 @@ import Link from "next/link";
 import React, { useState, useEffect } from "react";
 
 import { useAuth } from "@/contexts/AuthContext";
-import { fetchCharacters, fetchClasses } from "./action";
+import { fetchCharacters, fetchClasses, signOut } from "./action";
 import CharacterDisplay from "@/features/character/components/CharacterDisplay";
 import CharacterSelection from "@/features/character/components/CharacterSelection";
 import CharacterStatus from "@/features/character/components/CharacterStatus";
@@ -68,7 +68,13 @@ export default function Page() {
             Back
           </Link>
           <div className="text-xl mt-2">TypeQuest</div>
-          <div className="mr-8 text-transparent cursor-default">Next</div>
+          <Link
+            href={"/"}
+            onClick={() => signOut()}
+            className="mr-8 px-4 py-2 bg-red-700/70 text-white rounded shadow cursor-pointer hover:underline"
+          >
+            Logout
+          </Link>
         </div>
         <div className="flex flex-row h-full w-full">
           <CharacterSelection

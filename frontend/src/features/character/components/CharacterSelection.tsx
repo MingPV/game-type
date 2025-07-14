@@ -116,8 +116,8 @@ export default function CharacterSelection({
             >
               <Image
                 className={`h-fit opacity-0`}
-                src={"/images/swordmanCharacterCharacter.png"}
-                alt="swordmanCharacterCharacter"
+                src={"/images/swordmanCharacter.png"}
+                alt="swordmanCharacter"
                 width={150}
                 height={150}
               />
