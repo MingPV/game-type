@@ -2,10 +2,10 @@
 
 import React, { useState } from "react";
 import clsx from "clsx";
-import { CharacterClass } from "@/app/types/characterClass";
+import { CharacterClass } from "@/types/characterClass";
 import { createCharacter } from "@/app/characters/action";
 import { useAuth } from "@/contexts/AuthContext";
-import { Character } from "@/app/types/character";
+import { Character } from "@/types/character";
 import Image from "next/image";
 
 type CharacterCreateProps = {

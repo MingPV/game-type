@@ -1,6 +1,6 @@
 "use client";
 
-import { Character } from "@/app/types/character";
+import { Character } from "@/types/character";
 import React from "react";
 
 type CharacterSelectionProps = {

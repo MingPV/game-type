@@ -1,7 +1,7 @@
 "use client";
 
 import { deleteCharacter } from "@/app/characters/action";
-import { Character } from "@/app/types/character";
+import { Character } from "@/types/character";
 import Link from "next/link";
 import React, { useState } from "react";
 import { RiDeleteBin6Line } from "react-icons/ri";

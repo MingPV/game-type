@@ -10,7 +10,7 @@ import CharacterSelection from "@/features/character/components/CharacterSelecti
 import CharacterStatus from "@/features/character/components/CharacterStatus";
 import CharacterCreate from "@/features/character/components/CharacterCreate";
 import ClassDetail from "@/features/character/components/ClassDetail";
-import { Character } from "../types/character";
+import { Character } from "../../types/character";
 
 export default function Page() {
   const { user } = useAuth();

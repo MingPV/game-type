@@ -1,7 +1,7 @@
 "use client";
 
 import React from "react";
-import { CharacterClass } from "@/app/types/characterClass";
+import { CharacterClass } from "@/types/characterClass";
 
 type ClassDetailProps = {
   classes: CharacterClass[];
