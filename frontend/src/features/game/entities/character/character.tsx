@@ -7,7 +7,7 @@ import {
   DEFAULT_X_POS,
   DEFAULT_Y_POS,
   MOVE_SPEED,
-} from "@/constants/gameWorld";
+} from "@/constants/gameConstants";
 import { useCharacterControls } from "./useCharacterControl";
 import { Texture } from "pixi.js";
 import {
@@ -47,11 +47,10 @@ export const Character = ({ texture, onMove }: ICharacterProps) => {
   // Function for set target
   const setNextTarget = useCallback((direction: Direction) => {
     if (targetPosition.current) return;
+
     const { x, y } = position.current;
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
-
-    console.log(newTarget);
 
     if (checkCanMove(newTarget)) {
       targetPosition.current = newTarget;
@@ -62,13 +61,11 @@ export const Character = ({ texture, onMove }: ICharacterProps) => {
   useTick((delta) => {
     const direction = getControlsDirection();
 
-    // Check direction if no direction just return
     if (direction) {
       isMoving.current = true;
       setNextTarget(direction);
     } else {
       isMoving.current = false;
-      return;
     }
 
     // If has target then move

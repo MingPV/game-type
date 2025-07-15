@@ -1,3 +1,4 @@
+import { MONSTER_MOVE_SPEED, MOVE_SPEED } from "@/constants/gameConstants";
 import { Direction, IPosition } from "@/types/gameWorld";
 
 export const calculateCanvasSize = () => {
@@ -15,24 +16,59 @@ export const calculateNewTarget = (
     x:
       x +
       (direction === "UP_LEFT" || direction === "DOWN_LEFT"
-        ? -0.7071
+        ? -0.7071 * MOVE_SPEED
         : direction === "UP_RIGHT" || direction === "DOWN_RIGHT"
-        ? 0.7071
+        ? 0.7071 * MOVE_SPEED
         : direction === "LEFT"
-        ? -1
+        ? -1 * MOVE_SPEED
         : direction === "RIGHT"
-        ? 1
+        ? 1 * MOVE_SPEED
         : 0),
     y:
       y +
       (direction === "UP_LEFT" || direction === "UP_RIGHT"
-        ? -0.7071
+        ? -0.7071 * MOVE_SPEED
         : direction === "DOWN_LEFT" || direction === "DOWN_RIGHT"
-        ? 0.7071
+        ? 0.7071 * MOVE_SPEED
         : direction === "DOWN"
-        ? 1
+        ? 1 * MOVE_SPEED
         : direction === "UP"
-        ? -1
+        ? -1 * MOVE_SPEED
+        : 0),
+  };
+};
+
+export const calculateNewMonsterTarget = (
+  x: number,
+  y: number,
+  playerPosition: IPosition
+): IPosition => {
+  return {
+    x:
+      x +
+      ((playerPosition.x < x && playerPosition.y > y) ||
+      (playerPosition.x < x && playerPosition.y < y)
+        ? -0.7071 * MONSTER_MOVE_SPEED
+        : (playerPosition.x > x && playerPosition.y < y) ||
+          (playerPosition.x > x && playerPosition.y > y)
+        ? 0.7071 * MONSTER_MOVE_SPEED
+        : playerPosition.x < x
+        ? -1 * MONSTER_MOVE_SPEED
+        : playerPosition.x > x
+        ? 1 * MONSTER_MOVE_SPEED
+        : 0),
+    y:
+      y +
+      ((playerPosition.x < x && playerPosition.y < y) ||
+      (playerPosition.x > x && playerPosition.y < y)
+        ? -0.7071 * MONSTER_MOVE_SPEED
+        : (playerPosition.x > x && playerPosition.y > y) ||
+          (playerPosition.x < x && playerPosition.y > y)
+        ? 0.7071 * MONSTER_MOVE_SPEED
+        : playerPosition.y > y
+        ? 1 * MONSTER_MOVE_SPEED
+        : playerPosition.y > y
+        ? -1 * MONSTER_MOVE_SPEED
         : 0),
   };
 };

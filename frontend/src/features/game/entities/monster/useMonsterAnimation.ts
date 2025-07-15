@@ -1,8 +1,5 @@
-"use client";
-
-import { useRef } from "react";
-import { TILE_SIZE } from "@/constants/gameConstants";
-import { Rectangle, Sprite, Texture } from "pixi.js";
+import { useState, useRef } from "react";
+import { Rectangle, Texture } from "pixi.js";
 import { Direction } from "@/types/gameWorld";
 
 interface UseSpriteAnimationProps {
@@ -13,18 +10,17 @@ interface UseSpriteAnimationProps {
   animationSpeed: number;
 }
 
-export const useCharacterAnimation = ({
+export const useMonsterAnimation = ({
   texture,
   frameWidth,
   frameHeight,
   totalFrames,
   animationSpeed,
 }: UseSpriteAnimationProps) => {
-  const spriteRef = useRef<Sprite | null>(null);
+  const [currentTexture, setCurrentTexture] = useState<Texture | null>(null);
   const frameRef = useRef(0);
   const elapsedTimeRef = useRef(0);
 
-  // Get row index for image
   const getRowByDirection = (direction: Direction | null) => {
     switch (direction) {
       case "UP":
@@ -40,7 +36,6 @@ export const useCharacterAnimation = ({
     }
   };
 
-  // Update image
   const updateSprite = (direction: Direction | null, isMoving: boolean) => {
     const row = getRowByDirection(direction);
     let column = 0;
@@ -66,15 +61,9 @@ export const useCharacterAnimation = ({
       )
     );
 
-    if (!spriteRef.current) {
-      const newSprite = new Sprite(frameTexture);
-      newSprite.width = TILE_SIZE;
-      newSprite.height = TILE_SIZE;
-      spriteRef.current = newSprite;
-    } else {
-      spriteRef.current.texture = frameTexture;
-    }
+    // ✅ tell React to re-render
+    setCurrentTexture(frameTexture);
   };
 
-  return { sprite: spriteRef.current, updateSprite };
+  return { texture: currentTexture, updateSprite };
 };

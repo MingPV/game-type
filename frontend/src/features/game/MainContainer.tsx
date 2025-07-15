@@ -8,6 +8,7 @@ import { Map1 } from "./maps/map1";
 import { Camera } from "./Camera";
 import backgroundAsset from "@/gameAssets/black.jpg";
 import characterAsset from "@/gameAssets/hero.png";
+import { Monster } from "./entities/monster/monster";
 
 interface IMainContainerProps {
   canvasSize: { width: number; height: number };
@@ -19,7 +20,6 @@ export const MainContainer = ({
 }: PropsWithChildren<IMainContainerProps>) => {
   const [characterPosition, setCharacterPosition] = useState({ x: 0, y: 0 });
   const updateCharacterPosition = useCallback((x: number, y: number) => {
-    console.log(x, y);
     setCharacterPosition({
       x: Math.floor(x),
       y: Math.floor(y),
@@ -27,6 +27,7 @@ export const MainContainer = ({
   }, []);
 
   const characterTexture = useMemo(() => Texture.from(characterAsset.src), []);
+  const monsterTexture = useMemo(() => Texture.from(characterAsset.src), []);
   // const coinTextureRed = useMemo(() => Texture.from(coinRedAsset), [])
   // const coinTextureGold = useMemo(() => Texture.from(coinGoldAsset), [])
   const backgroundTexture = useMemo(
@@ -44,6 +45,21 @@ export const MainContainer = ({
       {children}
       <Camera characterPosition={characterPosition} canvasSize={canvasSize}>
         <Map1 />
+        <Monster
+          texture={monsterTexture}
+          characterPosition={characterPosition}
+          monsterPosition={{ x: 150, y: 150 }}
+        />
+        <Monster
+          texture={monsterTexture}
+          characterPosition={characterPosition}
+          monsterPosition={{ x: 250, y: 250 }}
+        />
+        <Monster
+          texture={monsterTexture}
+          characterPosition={characterPosition}
+          monsterPosition={{ x: 150, y: 350 }}
+        />
         <Character
           texture={characterTexture}
           onMove={updateCharacterPosition}

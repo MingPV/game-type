@@ -3,7 +3,7 @@
 import { useRef, PropsWithChildren } from "react";
 import { Container, useTick } from "@pixi/react";
 import { Graphics as PIXIGraphics } from "pixi.js";
-import { ZOOM } from "@/constants/gameWorld";
+import { ZOOM } from "@/constants/gameConstants";
 
 interface ICameraProps {
   characterPosition: { x: number; y: number };

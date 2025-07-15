@@ -5,7 +5,7 @@ import {
   GAME_WIDTH,
   OFFSET_X,
   OFFSET_Y,
-} from "@/constants/gameWorld";
+} from "@/constants/gameConstants";
 import { Sprite } from "@pixi/react";
 import mapAsset from "@/gameAssets/tilemap.png";
 
