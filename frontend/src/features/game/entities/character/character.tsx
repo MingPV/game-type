@@ -21,9 +21,14 @@ import { Direction } from "@/types/gameWorld";
 interface ICharacterProps {
   texture: Texture;
   onMove: (gridX: number, gridY: number) => void;
+  isTypingMode: boolean;
 }
 
-export const Character = ({ texture, onMove }: ICharacterProps) => {
+export const Character = ({
+  texture,
+  onMove,
+  isTypingMode,
+}: ICharacterProps) => {
   const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS });
   const targetPosition = useRef<{ x: number; y: number } | null>(null);
   const currentDirection = useRef<Direction | null>(null);
@@ -61,7 +66,7 @@ export const Character = ({ texture, onMove }: ICharacterProps) => {
   useTick((delta) => {
     const direction = getControlsDirection();
 
-    if (direction) {
+    if (direction && !isTypingMode) {
       isMoving.current = true;
       setNextTarget(direction);
     } else {

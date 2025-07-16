@@ -1,9 +1,13 @@
 import { useState, useRef } from "react";
 import { Rectangle, Texture } from "pixi.js";
 import { Direction } from "@/types/gameWorld";
+import { Monster as MonsterT } from "@/types/monster";
 
 interface UseSpriteAnimationProps {
   texture: Texture;
+  hpTexture: Texture;
+  monster: MonsterT;
+  currentHp: number;
   frameWidth: number;
   frameHeight: number;
   totalFrames: number;
@@ -12,12 +16,18 @@ interface UseSpriteAnimationProps {
 
 export const useMonsterAnimation = ({
   texture,
+  hpTexture,
+  monster,
+  currentHp,
   frameWidth,
   frameHeight,
   totalFrames,
   animationSpeed,
 }: UseSpriteAnimationProps) => {
   const [currentTexture, setCurrentTexture] = useState<Texture | null>(null);
+  const [currrentHPTexture, setCurrentHPTexture] = useState<Texture | null>(
+    null
+  );
   const frameRef = useRef(0);
   const elapsedTimeRef = useRef(0);
 
@@ -61,9 +71,19 @@ export const useMonsterAnimation = ({
       )
     );
 
+    const frameTextureHP = new Texture(
+      hpTexture.baseTexture,
+      new Rectangle(0, 0, 50 * (currentHp / monster.hp), 5)
+    );
+
     // ✅ tell React to re-render
     setCurrentTexture(frameTexture);
+    setCurrentHPTexture(frameTextureHP);
   };
 
-  return { texture: currentTexture, updateSprite };
+  return {
+    texture: currentTexture,
+    hpTexture: currrentHPTexture,
+    updateSprite,
+  };
 };

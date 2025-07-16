@@ -8,7 +8,11 @@ import { Map1 } from "./maps/map1";
 import { Camera } from "./Camera";
 import backgroundAsset from "@/gameAssets/black.jpg";
 import characterAsset from "@/gameAssets/hero.png";
-import { Monster } from "./entities/monster/monster";
+import redHpAsset from "@/gameAssets/redHp50.png";
+import { Monster as MonsterEntity } from "./entities/monster/monster";
+import { Monster } from "@/types/monster";
+import { CommandBox } from "./entities/inputBox/inputBox";
+import { useTyping } from "./useTyping";
 
 interface IMainContainerProps {
   canvasSize: { width: number; height: number };
@@ -26,14 +30,40 @@ export const MainContainer = ({
     });
   }, []);
 
+  // Texture
   const characterTexture = useMemo(() => Texture.from(characterAsset.src), []);
   const monsterTexture = useMemo(() => Texture.from(characterAsset.src), []);
-  // const coinTextureRed = useMemo(() => Texture.from(coinRedAsset), [])
-  // const coinTextureGold = useMemo(() => Texture.from(coinGoldAsset), [])
+  const monsterHPTexture = useMemo(() => Texture.from(redHpAsset.src), []);
   const backgroundTexture = useMemo(
     () => Texture.from(backgroundAsset.src),
     []
   );
+
+  // MockData
+  const mockMonster: Monster = {
+    monster_id: "54d9c43d-d5a0-43b8-b1e7-4315d8d2e99d",
+    name: "Noob slime",
+    description: "weak slime",
+    level: 1,
+    hp: 10,
+    attack: 1,
+    defense: 1,
+    exp_reward: 10,
+    gold_reward: 5,
+    monster_type_id: "96faefde-0794-4f62-be5d-4e7e3bf28855",
+    monster_type: {
+      monster_type_id: "96faefde-0794-4f62-be5d-4e7e3bf28855",
+      name: "Slime",
+    },
+    monster_loots: [],
+  };
+
+  // Handle Typing
+  const { isTypingMode, command } = useTyping((cmd) => {
+    document.dispatchEvent(
+      new CustomEvent("player-attack", { detail: { word: cmd } })
+    );
+  });
 
   return (
     <Container>
@@ -45,27 +75,35 @@ export const MainContainer = ({
       {children}
       <Camera characterPosition={characterPosition} canvasSize={canvasSize}>
         <Map1 />
-        <Monster
+        <MonsterEntity
           texture={monsterTexture}
+          hpTexture={monsterHPTexture}
           characterPosition={characterPosition}
           monsterPosition={{ x: 150, y: 150 }}
+          monsterData={mockMonster}
         />
-        <Monster
+        <MonsterEntity
           texture={monsterTexture}
+          hpTexture={monsterHPTexture}
           characterPosition={characterPosition}
           monsterPosition={{ x: 250, y: 250 }}
+          monsterData={mockMonster}
         />
-        <Monster
+        <MonsterEntity
           texture={monsterTexture}
+          hpTexture={monsterHPTexture}
           characterPosition={characterPosition}
           monsterPosition={{ x: 150, y: 350 }}
+          monsterData={mockMonster}
         />
         <Character
           texture={characterTexture}
           onMove={updateCharacterPosition}
+          isTypingMode={isTypingMode}
         />
-        {/* <Coin texture={coinTextureRed} x={5} y={10} />
-        <Coin texture={coinTextureGold} x={6} y={11} /> */}
+        {isTypingMode && (
+          <CommandBox command={command} characterPosition={characterPosition} />
+        )}
       </Camera>
     </Container>
   );

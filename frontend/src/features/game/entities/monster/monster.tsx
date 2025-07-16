@@ -1,7 +1,8 @@
 "use client";
 
-import { useRef, useCallback, useEffect } from "react";
-import { Sprite, Container, useTick } from "@pixi/react";
+import { useRef, useCallback, useEffect, useState } from "react";
+import { Sprite, Text, Container, useTick } from "@pixi/react";
+
 import {
   ANIMATION_SPEED,
   MONSTER_MOVE_SPEED,
@@ -15,17 +16,24 @@ import {
 } from "@/lib/utils/gameUtils";
 import { useMonsterAnimation } from "./useMonsterAnimation";
 import { Direction, IPosition } from "@/types/gameWorld";
+import { Monster as MonsterT } from "@/types/monster";
+import { getRandomWordByDifficulty } from "../../words/words";
+import { TextStyle } from "pixi.js";
 
 interface IMonsterProps {
   texture: Texture;
+  hpTexture: Texture;
   characterPosition: { x: number; y: number };
   monsterPosition: { x: number; y: number };
+  monsterData: MonsterT;
 }
 
 export const Monster = ({
   texture,
+  hpTexture,
   characterPosition,
   monsterPosition,
+  monsterData,
 }: IMonsterProps) => {
   const position = useRef({
     x: monsterPosition.x,
@@ -33,11 +41,22 @@ export const Monster = ({
   });
   const targetPosition = useRef<{ x: number; y: number } | null>(null);
   const currentDirection = useRef<Direction | null>(null);
-  // const { getControlsDirection } = useMonsterControls();
+  const [currentWord, setCurrentWord] = useState(
+    getRandomWordByDifficulty("easy")
+  );
   const isMoving = useRef(false);
+  const currentHp = useRef<number>(monsterData.hp);
+
   // Animation
-  const { texture: monsterFrameTexture, updateSprite } = useMonsterAnimation({
+  const {
+    texture: monsterFrameTexture,
+    hpTexture: monsterHpFrameTexture,
+    updateSprite,
+  } = useMonsterAnimation({
     texture,
+    hpTexture,
+    monster: monsterData,
+    currentHp: currentHp.current,
     frameWidth: 64,
     frameHeight: 64,
     totalFrames: 9,
@@ -66,8 +85,6 @@ export const Monster = ({
       ) {
         return;
       }
-
-      console.log(newTarget, charcaterPos);
 
       if (checkCanMove(newTarget)) {
         targetPosition.current = newTarget;
@@ -121,16 +138,70 @@ export const Monster = ({
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Listening to player attack
+  useEffect(() => {
+    const onPlayerAttack = (e: Event) => {
+      const customEvent = e as CustomEvent;
+      const detail = customEvent.detail;
+      const inputWord = detail?.word;
+      console.log("Received attack word:", inputWord);
+
+      // calculate range to be hit
+
+      const isInRange = true;
+      if (isInRange && inputWord == currentWord.word) {
+        currentHp.current -= 3;
+        console.log(`Monster got hit! Current HP: ${currentHp.current}`);
+
+        setCurrentWord(getRandomWordByDifficulty("easy"));
+
+        if (currentHp.current <= 0) {
+          console.log("Monster is dead!");
+          // Respawn monster at spawn point
+          position.current.x = 70;
+          position.current.y = 30;
+          currentHp.current = monsterData.hp;
+        }
+      }
+    };
+
+    document.addEventListener("player-attack", onPlayerAttack);
+    return () => document.removeEventListener("player-attack", onPlayerAttack);
+  }, [characterPosition, currentWord, monsterData.hp]);
+
   return (
     <Container>
-      {monsterFrameTexture && (
-        <Sprite
-          texture={monsterFrameTexture}
-          x={position.current.x}
-          y={position.current.y}
-          scale={0.5}
-          anchor={[0, 0.4]}
-        />
+      {monsterFrameTexture && monsterHpFrameTexture && (
+        <>
+          <Sprite
+            texture={monsterFrameTexture}
+            x={position.current.x}
+            y={position.current.y}
+            scale={0.5}
+            anchor={[0, 0.4]}
+          />
+          <Sprite
+            texture={monsterHpFrameTexture}
+            x={position.current.x + 3}
+            y={position.current.y - 10}
+            scale={0.5}
+            anchor={[0, 0.4]}
+          />
+          <Text
+            text={currentWord.word}
+            x={position.current.x}
+            y={position.current.y - 30}
+            style={
+              new TextStyle({
+                fill: "white",
+                fontSize: 16,
+                fontWeight: "bold",
+                align: "center",
+                fontFamily: "Arial",
+              })
+            }
+          />
+        </>
       )}
     </Container>
   );
