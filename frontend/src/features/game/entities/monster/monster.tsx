@@ -1,7 +1,7 @@
 "use client";
 
 import { useRef, useCallback, useEffect, useState } from "react";
-import { Sprite, Text, Container, useTick } from "@pixi/react";
+import { Sprite, Container, useTick } from "@pixi/react";
 
 import {
   ANIMATION_SPEED,
@@ -18,7 +18,8 @@ import { useMonsterAnimation } from "./useMonsterAnimation";
 import { Direction, IPosition } from "@/types/gameWorld";
 import { Monster as MonsterT } from "@/types/monster";
 import { getRandomWordByDifficulty } from "../../words/words";
-import { TextStyle } from "pixi.js";
+import { TextWithBackground } from "../textBox/textWithBackground";
+import { Character as CharacterT } from "@/types/character";
 
 interface IMonsterProps {
   texture: Texture;
@@ -26,6 +27,7 @@ interface IMonsterProps {
   characterPosition: { x: number; y: number };
   monsterPosition: { x: number; y: number };
   monsterData: MonsterT;
+  monsterPositions: boolean[][];
 }
 
 export const Monster = ({
@@ -34,6 +36,7 @@ export const Monster = ({
   characterPosition,
   monsterPosition,
   monsterData,
+  monsterPositions,
 }: IMonsterProps) => {
   const position = useRef({
     x: monsterPosition.x,
@@ -64,8 +67,15 @@ export const Monster = ({
   });
 
   const onMove = (x: number, y: number) => {
+    // clear previous position
+    // monsterPositions[Math.floor(position.current.x)][
+    //   Math.floor(position.current.y)
+    // ] = false;
+    // change monster position
     position.current.x = x;
     position.current.y = y;
+    // set new position
+    // monsterPositions[Math.floor(x)][Math.floor(y)] = true;
   };
 
   // Function for set target
@@ -83,14 +93,20 @@ export const Monster = ({
         Math.abs(newTarget.x - charcaterPos.x) < PLAYER_MONSTER_DISTANCE &&
         Math.abs(newTarget.y - charcaterPos.y) < PLAYER_MONSTER_DISTANCE
       ) {
+        document.dispatchEvent(new CustomEvent("monster-attack"));
         return;
       }
 
-      if (checkCanMove(newTarget)) {
+      // const floorCurrentX = Math.floor(x);
+      // const floorCurrentY = Math.floor(x);
+      // const floorNextX = Math.floor(newTarget.x);
+      // const floorNextY = Math.floor(newTarget.y);
+
+      if (checkCanMove(monsterPositions, position.current, newTarget)) {
         targetPosition.current = newTarget;
       }
     },
-    []
+    [monsterPositions]
   );
 
   // Listening game loop
@@ -143,14 +159,16 @@ export const Monster = ({
     const onPlayerAttack = (e: Event) => {
       const customEvent = e as CustomEvent;
       const detail = customEvent.detail;
+      console.log(detail);
       const inputWord = detail?.word;
+      const characterData = detail?.character as CharacterT;
       console.log("Received attack word:", inputWord);
 
       // calculate range to be hit
 
       const isInRange = true;
       if (isInRange && inputWord == currentWord.word) {
-        currentHp.current -= 3;
+        currentHp.current -= characterData.status.attack;
         console.log(`Monster got hit! Current HP: ${currentHp.current}`);
 
         setCurrentWord(getRandomWordByDifficulty("easy"));
@@ -187,19 +205,10 @@ export const Monster = ({
             scale={0.5}
             anchor={[0, 0.4]}
           />
-          <Text
+          <TextWithBackground
             text={currentWord.word}
-            x={position.current.x}
+            x={position.current.x + 15}
             y={position.current.y - 30}
-            style={
-              new TextStyle({
-                fill: "white",
-                fontSize: 16,
-                fontWeight: "bold",
-                align: "center",
-                fontFamily: "Arial",
-              })
-            }
           />
         </>
       )}

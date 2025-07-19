@@ -73,10 +73,65 @@ export const calculateNewMonsterTarget = (
   };
 };
 
-export const checkCanMove = (target: IPosition) => {
-  if (!target) {
-    return false;
+// export const checkCanMove = (
+//   positionGrid: boolean[][],
+//   currentPosition: IPosition,
+//   nextPosition: IPosition
+// ) => {
+//   const floorCurrentX = Math.floor(currentPosition.x);
+//   const floorCurrentY = Math.floor(currentPosition.x);
+//   const floorNextX = Math.floor(nextPosition.x);
+//   const floorNextY = Math.floor(nextPosition.y);
+
+//   if (
+//     floorCurrentX != floorNextX &&
+//     floorCurrentY != floorCurrentY &&
+//     positionGrid[floorNextX][floorNextY]
+//   ) {
+//     return false;
+//   }
+//   return true;
+// };
+export const checkCanMove = (
+  positionGrid: boolean[][],
+  currentPosition: IPosition,
+  nextPosition: IPosition
+) => {
+  const floorCurrentX = Math.floor(currentPosition.x);
+  const floorCurrentY = Math.floor(currentPosition.x);
+  const floorNextX = Math.floor(nextPosition.x);
+  const floorNextY = Math.floor(nextPosition.y);
+  if (floorCurrentX == floorNextX && floorCurrentY == floorNextY) {
+    return true;
   }
+
+  const directions = [-3, -2, -1, 0, 1, 2, 3];
+
+  // console.log(currentPosition, nextPosition);
+
+  for (const dx of directions) {
+    for (const dy of directions) {
+      const x = floorNextX + dx;
+      const y = floorNextY + dy;
+
+      if (x == floorCurrentX && y == floorCurrentY) {
+        continue;
+      }
+
+      if (
+        x >= 0 &&
+        y >= 0 &&
+        x < positionGrid.length &&
+        y < positionGrid[0].length
+      ) {
+        if (positionGrid[x][y]) {
+          // console.log(x, y);
+          return false; // มีสิ่งกีดขวางรอบตำแหน่งเป้าหมาย
+        }
+      }
+    }
+  }
+
   return true;
 };
 

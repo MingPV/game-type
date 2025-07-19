@@ -1,12 +1,16 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useState } from "react";
 import { TILE_SIZE } from "@/constants/gameConstants";
 import { Rectangle, Sprite, Texture } from "pixi.js";
 import { Direction } from "@/types/gameWorld";
+import { Character as CharacterT } from "@/types/character";
 
 interface UseSpriteAnimationProps {
   texture: Texture;
+  hpTexture: Texture;
+  character: CharacterT;
+  currentHp: number;
   frameWidth: number;
   frameHeight: number;
   totalFrames: number;
@@ -15,6 +19,9 @@ interface UseSpriteAnimationProps {
 
 export const useCharacterAnimation = ({
   texture,
+  hpTexture,
+  character,
+  currentHp,
   frameWidth,
   frameHeight,
   totalFrames,
@@ -22,6 +29,9 @@ export const useCharacterAnimation = ({
 }: UseSpriteAnimationProps) => {
   const spriteRef = useRef<Sprite | null>(null);
   const frameRef = useRef(0);
+  const [currrentHPTexture, setCurrentHPTexture] = useState<Texture | null>(
+    null
+  );
   const elapsedTimeRef = useRef(0);
 
   // Get row index for image
@@ -74,7 +84,18 @@ export const useCharacterAnimation = ({
     } else {
       spriteRef.current.texture = frameTexture;
     }
+
+    const frameTextureHP = new Texture(
+      hpTexture.baseTexture,
+      new Rectangle(0, 0, 50 * (currentHp / character.status.hp), 5)
+    );
+
+    setCurrentHPTexture(frameTextureHP);
   };
 
-  return { sprite: spriteRef.current, updateSprite };
+  return {
+    sprite: spriteRef.current,
+    hpTexture: currrentHPTexture,
+    updateSprite,
+  };
 };

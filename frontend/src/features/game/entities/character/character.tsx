@@ -10,34 +10,44 @@ import {
 } from "@/constants/gameConstants";
 import { useCharacterControls } from "./useCharacterControl";
 import { Texture } from "pixi.js";
-import {
-  calculateNewTarget,
-  checkCanMove,
-  handleMovement,
-} from "@/lib/utils/gameUtils";
+import { calculateNewTarget, handleMovement } from "@/lib/utils/gameUtils";
 import { useCharacterAnimation } from "./useCharacterAnimation";
 import { Direction } from "@/types/gameWorld";
+import { Character as CharacterT } from "@/types/character";
 
 interface ICharacterProps {
   texture: Texture;
+  hpTexture: Texture;
   onMove: (gridX: number, gridY: number) => void;
   isTypingMode: boolean;
+  characterData: CharacterT;
 }
 
 export const Character = ({
   texture,
+  hpTexture,
   onMove,
   isTypingMode,
+  characterData,
 }: ICharacterProps) => {
+  const character = useRef(characterData);
   const position = useRef({ x: DEFAULT_X_POS, y: DEFAULT_Y_POS });
   const targetPosition = useRef<{ x: number; y: number } | null>(null);
   const currentDirection = useRef<Direction | null>(null);
   const { getControlsDirection } = useCharacterControls();
   const isMoving = useRef(false);
+  const currentHp = useRef<number>(characterData.status.hp);
 
   // Animation
-  const { sprite, updateSprite } = useCharacterAnimation({
+  const {
+    sprite,
+    hpTexture: monsterHpFrameTexture,
+    updateSprite,
+  } = useCharacterAnimation({
     texture,
+    hpTexture,
+    character: character.current,
+    currentHp: currentHp.current,
     frameWidth: 64,
     frameHeight: 64,
     totalFrames: 9,
@@ -57,7 +67,10 @@ export const Character = ({
     currentDirection.current = direction;
     const newTarget = calculateNewTarget(x, y, direction);
 
-    if (checkCanMove(newTarget)) {
+    // if (checkCanMove(newTarget)) {
+    //   targetPosition.current = newTarget;
+    // }
+    if (true) {
       targetPosition.current = newTarget;
     }
   }, []);
@@ -96,6 +109,21 @@ export const Character = ({
     updateSprite(currentDirection.current!, isMoving.current);
   });
 
+  // Listening to monster attack
+  useEffect(() => {
+    const onMonsterAttack = () => {
+      currentHp.current -= 1;
+
+      if (currentHp.current <= 0) {
+        console.log("Game over!");
+      }
+    };
+
+    document.addEventListener("monster-attack", onMonsterAttack);
+    return () =>
+      document.removeEventListener("monster-attack", onMonsterAttack);
+  }, []);
+
   useEffect(() => {
     // call onMove when game started
     onMove(position.current.x, position.current.y);
@@ -107,14 +135,23 @@ export const Character = ({
 
   return (
     <Container>
-      {sprite && (
-        <Sprite
-          texture={sprite.texture}
-          x={position.current.x}
-          y={position.current.y}
-          scale={0.5}
-          anchor={[0, 0.4]}
-        />
+      {sprite && monsterHpFrameTexture && (
+        <>
+          <Sprite
+            texture={sprite.texture}
+            x={position.current.x}
+            y={position.current.y}
+            scale={0.5}
+            anchor={[0, 0.4]}
+          />
+          <Sprite
+            texture={monsterHpFrameTexture}
+            x={position.current.x + 3}
+            y={position.current.y - 10}
+            scale={0.5}
+            anchor={[0, 0.4]}
+          />
+        </>
       )}
     </Container>
   );
