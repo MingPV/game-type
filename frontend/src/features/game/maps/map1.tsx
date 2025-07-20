@@ -7,7 +7,7 @@ import {
   OFFSET_Y,
 } from "@/constants/gameConstants";
 import { Sprite } from "@pixi/react";
-import mapAsset from "@/gameAssets/tilemap.png";
+import mapAsset from "@/gameAssets/dungeonMap.png";
 
 export const Map1 = () => {
   return (

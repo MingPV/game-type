@@ -20,6 +20,14 @@ import { Monster as MonsterT } from "@/types/monster";
 import { getRandomWordByDifficulty } from "../../words/words";
 import { TextWithBackground } from "../textBox/textWithBackground";
 import { Character as CharacterT } from "@/types/character";
+import {
+  DEFAULT_MONSTER_X_POS_CENTER,
+  DEFAULT_MONSTER_Y_POS_CENTER,
+  DEFAULT_MONSTER_X_POS_LEFT,
+  DEFAULT_MONSTER_Y_POS_LEFT,
+  DEFAULT_MONSTER_X_POS_RIGHT,
+  DEFAULT_MONSTER_Y_POS_RIGHT,
+} from "@/constants/gameConstants";
 
 interface IMonsterProps {
   texture: Texture;
@@ -28,6 +36,7 @@ interface IMonsterProps {
   monsterPosition: { x: number; y: number };
   monsterData: MonsterT;
   monsterPositions: boolean[][];
+  addPoint: (addPoint: number) => void;
 }
 
 export const Monster = ({
@@ -37,6 +46,7 @@ export const Monster = ({
   monsterPosition,
   monsterData,
   monsterPositions,
+  addPoint,
 }: IMonsterProps) => {
   const position = useRef({
     x: monsterPosition.x,
@@ -60,9 +70,9 @@ export const Monster = ({
     hpTexture,
     monster: monsterData,
     currentHp: currentHp.current,
-    frameWidth: 64,
-    frameHeight: 64,
-    totalFrames: 9,
+    frameWidth: 80,
+    frameHeight: 71,
+    totalFrames: 4,
     animationSpeed: ANIMATION_SPEED,
   });
 
@@ -115,7 +125,11 @@ export const Monster = ({
 
     // Check direction
     if (direction) {
-      setNextTarget(direction, characterPosition);
+      const adjustCharacterPosition = {
+        x: characterPosition.x - 12, // Adjusted for monster position
+        y: characterPosition.y,
+      };
+      setNextTarget(direction, adjustCharacterPosition);
     }
 
     // If has target then move
@@ -175,17 +189,66 @@ export const Monster = ({
 
         if (currentHp.current <= 0) {
           console.log("Monster is dead!");
-          // Respawn monster at spawn point
-          position.current.x = 70;
-          position.current.y = 30;
-          currentHp.current = monsterData.hp;
+
+          addPoint(12);
+
+          // Store the real respawn position
+          const spawnPositions = [
+            {
+              x: DEFAULT_MONSTER_X_POS_CENTER,
+              y: DEFAULT_MONSTER_Y_POS_CENTER,
+            },
+            { x: DEFAULT_MONSTER_X_POS_LEFT, y: DEFAULT_MONSTER_Y_POS_LEFT },
+            { x: DEFAULT_MONSTER_X_POS_RIGHT, y: DEFAULT_MONSTER_Y_POS_RIGHT },
+          ];
+          const randomIndex = Math.floor(Math.random() * spawnPositions.length);
+          const respawnPos = spawnPositions[randomIndex];
+
+          // Hide monster at (0,0)
+          position.current.x = 0;
+          position.current.y = 0;
+
+          setTimeout(() => {
+            position.current.x = respawnPos.x;
+            position.current.y = respawnPos.y;
+            currentHp.current = monsterData.hp;
+          }, 2000);
         }
       }
     };
 
     document.addEventListener("player-attack", onPlayerAttack);
     return () => document.removeEventListener("player-attack", onPlayerAttack);
-  }, [characterPosition, currentWord, monsterData.hp]);
+  }, [characterPosition, currentWord, monsterData.hp, addPoint]);
+
+  // Listening to restart game
+  useEffect(() => {
+    const onRestart = () => {
+      const spawnPositions = [
+        {
+          x: DEFAULT_MONSTER_X_POS_CENTER,
+          y: DEFAULT_MONSTER_Y_POS_CENTER,
+        },
+        { x: DEFAULT_MONSTER_X_POS_LEFT, y: DEFAULT_MONSTER_Y_POS_LEFT },
+        { x: DEFAULT_MONSTER_X_POS_RIGHT, y: DEFAULT_MONSTER_Y_POS_RIGHT },
+      ];
+      const randomIndex = Math.floor(Math.random() * spawnPositions.length);
+      const respawnPos = spawnPositions[randomIndex];
+
+      // Hide monster at (0,0)
+      position.current.x = 0;
+      position.current.y = 0;
+
+      setTimeout(() => {
+        position.current.x = respawnPos.x;
+        position.current.y = respawnPos.y;
+        currentHp.current = monsterData.hp;
+      }, 2000);
+    };
+
+    document.addEventListener("restart-game", onRestart);
+    return () => document.removeEventListener("restart-game", onRestart);
+  });
 
   return (
     <Container>

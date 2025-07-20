@@ -31,23 +31,24 @@ export const useMonsterAnimation = ({
   const frameRef = useRef(0);
   const elapsedTimeRef = useRef(0);
 
-  const getRowByDirection = (direction: Direction | null) => {
-    switch (direction) {
-      case "UP":
-        return 8;
-      case "LEFT":
-        return 9;
-      case "DOWN":
-        return 10;
-      case "RIGHT":
-        return 11;
-      default:
-        return 10;
-    }
-  };
+  // const getRowByDirection = (direction: Direction | null) => {
+  //   switch (direction) {
+  //     case "UP":
+  //       return 8;
+  //     case "LEFT":
+  //       return 9;
+  //     case "DOWN":
+  //       return 10;
+  //     case "RIGHT":
+  //       return 11;
+  //     default:
+  //       return 10;
+  //   }
+  // };
 
   const updateSprite = (direction: Direction | null, isMoving: boolean) => {
-    const row = getRowByDirection(direction);
+    // const row = getRowByDirection(direction);
+    const row = 0;
     let column = 0;
 
     if (isMoving) {

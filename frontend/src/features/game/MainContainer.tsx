@@ -6,14 +6,17 @@ import {
   PropsWithChildren,
   useCallback,
   useRef,
+  useEffect,
 } from "react";
-import { Texture } from "pixi.js";
-import { Container, Sprite } from "@pixi/react";
+import { TextStyle, Texture } from "pixi.js";
+import { Container, Sprite, Text } from "@pixi/react";
 import { Character } from "./entities/character/character";
 import { Map1 } from "./maps/map1";
 import { Camera } from "./Camera";
 import backgroundAsset from "@/gameAssets/black.jpg";
-import characterAsset from "@/gameAssets/hero.png";
+// import characterAsset from "@/gameAssets/hero.png";
+import characterAsset from "@/gameAssets/swordman/idle_up.png";
+import demonBatAsset from "@/gameAssets/demonBat/idle.png";
 import redHpAsset from "@/gameAssets/redHp50.png";
 import hpAsset from "@/gameAssets/hp50.png";
 import { Monster as MonsterEntity } from "./entities/monster/monster";
@@ -21,6 +24,14 @@ import { Monster } from "@/types/monster";
 import { CommandBox } from "./entities/textBox/inputBox";
 import { useTyping } from "./useTyping";
 import { Character as CharacterT } from "@/types/character";
+import {
+  DEFAULT_MONSTER_X_POS_LEFT,
+  DEFAULT_MONSTER_Y_POS_LEFT,
+  DEFAULT_MONSTER_X_POS_RIGHT,
+  DEFAULT_MONSTER_Y_POS_RIGHT,
+  DEFAULT_MONSTER_X_POS_CENTER,
+  DEFAULT_MONSTER_Y_POS_CENTER,
+} from "@/constants/gameConstants";
 
 interface IMainContainerProps {
   canvasSize: { width: number; height: number };
@@ -31,6 +42,7 @@ export const MainContainer = ({
   children,
 }: PropsWithChildren<IMainContainerProps>) => {
   const [characterPosition, setCharacterPosition] = useState({ x: 0, y: 0 });
+  const [point, setPoint] = useState(0);
   // const monsterPositions = useRef<IPosition[] | []>([]);
   const monsterPositions = useRef<boolean[][]>(
     Array.from({ length: 1000 }, () => Array(1000).fill(false))
@@ -42,9 +54,13 @@ export const MainContainer = ({
     });
   }, []);
 
+  const addPoint = useCallback((addPoint: number) => {
+    setPoint((prevPoint) => prevPoint + addPoint);
+  }, []);
+
   // Texture
   const characterTexture = useMemo(() => Texture.from(characterAsset.src), []);
-  const monsterTexture = useMemo(() => Texture.from(characterAsset.src), []);
+  const monsterTexture = useMemo(() => Texture.from(demonBatAsset.src), []);
   const playerHPTexture = useMemo(() => Texture.from(hpAsset.src), []);
   const monsterHPTexture = useMemo(() => Texture.from(redHpAsset.src), []);
   const backgroundTexture = useMemo(
@@ -108,52 +124,92 @@ export const MainContainer = ({
     );
   });
 
+  // Listening to restart game
+  useEffect(() => {
+    const onRestart = () => {
+      setPoint(0);
+    };
+
+    document.addEventListener("restart-game", onRestart);
+    return () => document.removeEventListener("restart-game", onRestart);
+  });
+
   return (
-    <Container>
-      <Sprite
-        texture={backgroundTexture}
-        width={canvasSize.width}
-        height={canvasSize.height}
-      />
-      {children}
-      <Camera characterPosition={characterPosition} canvasSize={canvasSize}>
-        <Map1 />
-        <MonsterEntity
-          texture={monsterTexture}
-          hpTexture={monsterHPTexture}
-          characterPosition={characterPosition}
-          monsterPosition={{ x: 150, y: 150 }}
-          monsterData={mockMonster}
-          monsterPositions={monsterPositions.current}
+    <>
+      <Container>
+        <Sprite
+          texture={backgroundTexture}
+          width={canvasSize.width}
+          height={canvasSize.height}
         />
-        <MonsterEntity
-          texture={monsterTexture}
-          hpTexture={monsterHPTexture}
-          characterPosition={characterPosition}
-          monsterPosition={{ x: 250, y: 250 }}
-          monsterData={mockMonster}
-          monsterPositions={monsterPositions.current}
+        {children}
+        <Camera characterPosition={characterPosition} canvasSize={canvasSize}>
+          <Map1 />
+          <MonsterEntity
+            texture={monsterTexture}
+            hpTexture={monsterHPTexture}
+            characterPosition={characterPosition}
+            monsterPosition={{
+              x: DEFAULT_MONSTER_X_POS_LEFT,
+              y: DEFAULT_MONSTER_Y_POS_LEFT,
+            }}
+            monsterData={mockMonster}
+            monsterPositions={monsterPositions.current}
+            addPoint={addPoint}
+          />
+          <MonsterEntity
+            texture={monsterTexture}
+            hpTexture={monsterHPTexture}
+            characterPosition={characterPosition}
+            monsterPosition={{
+              x: DEFAULT_MONSTER_X_POS_RIGHT,
+              y: DEFAULT_MONSTER_Y_POS_RIGHT,
+            }}
+            monsterData={mockMonster}
+            monsterPositions={monsterPositions.current}
+            addPoint={addPoint}
+          />
+          <MonsterEntity
+            texture={monsterTexture}
+            hpTexture={monsterHPTexture}
+            characterPosition={characterPosition}
+            monsterPosition={{
+              x: DEFAULT_MONSTER_X_POS_CENTER,
+              y: DEFAULT_MONSTER_Y_POS_CENTER,
+            }}
+            monsterData={mockMonster}
+            monsterPositions={monsterPositions.current}
+            addPoint={addPoint}
+          />
+          <Character
+            texture={characterTexture}
+            hpTexture={playerHPTexture}
+            onMove={updateCharacterPosition}
+            isTypingMode={isTypingMode}
+            characterData={mockCharacter}
+          />
+          {isTypingMode && (
+            <CommandBox
+              command={command}
+              characterPosition={characterPosition}
+            />
+          )}
+        </Camera>
+        <Text
+          text={`Point: ${point}`}
+          style={
+            new TextStyle({
+              fill: "#ffffff",
+              fontSize: 16,
+              fontWeight: "bold",
+              fontFamily: "Arial",
+            })
+          }
+          x={canvasSize.width / 2 - 15}
+          y={canvasSize.height - 50}
         />
-        <MonsterEntity
-          texture={monsterTexture}
-          hpTexture={monsterHPTexture}
-          characterPosition={characterPosition}
-          monsterPosition={{ x: 150, y: 350 }}
-          monsterData={mockMonster}
-          monsterPositions={monsterPositions.current}
-        />
-        <Character
-          texture={characterTexture}
-          hpTexture={playerHPTexture}
-          onMove={updateCharacterPosition}
-          isTypingMode={isTypingMode}
-          characterData={mockCharacter}
-        />
-        {isTypingMode && (
-          <CommandBox command={command} characterPosition={characterPosition} />
-        )}
-      </Camera>
-    </Container>
+      </Container>
+    </>
   );
 };
 

@@ -22,15 +22,16 @@ export const Camera = ({
   const containerRef = useRef<PIXIGraphics>(null);
 
   const cameraPosition = useRef<{ x: number; y: number }>({
-    x: canvasSize.width / 2,
-    y: canvasSize.height / 2,
+    x: canvasSize.width / 2 - characterPosition.x * ZOOM,
+    y: canvasSize.height / 2 - characterPosition.y * ZOOM,
   });
 
   // Listening to game loop
   useTick(() => {
     if (containerRef.current) {
       const targetX = canvasSize.width / 2 - characterPosition.x * ZOOM;
-      const targetY = canvasSize.height / 2 - characterPosition.y * ZOOM;
+      //   const targetY = canvasSize.height / 2 - characterPosition.y * ZOOM;
+      const targetY = canvasSize.height - characterPosition.y * ZOOM - 150;
 
       cameraPosition.current.x = lerp(cameraPosition.current.x, targetX);
       cameraPosition.current.y = lerp(cameraPosition.current.y, targetY);
