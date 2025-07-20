@@ -16,7 +16,7 @@ export const Map1 = () => {
         image={mapAsset.src}
         width={GAME_WIDTH}
         height={GAME_HEIGHT + OFFSET_Y}
-        scale={1}
+        scale={0.38}
         x={OFFSET_X}
         y={OFFSET_Y}
       />

@@ -10,9 +10,9 @@ interface ICameraProps {
   canvasSize: { width: number; height: number };
 }
 
-const lerp = (start: number, end: number) => {
-  return start + (end - start) * 0.03;
-};
+// const lerp = (start: number, end: number) => {
+//   return start + (end - start) * 0.02;
+// };
 
 export const Camera = ({
   characterPosition,
@@ -33,8 +33,10 @@ export const Camera = ({
       //   const targetY = canvasSize.height / 2 - characterPosition.y * ZOOM;
       const targetY = canvasSize.height - characterPosition.y * ZOOM - 150;
 
-      cameraPosition.current.x = lerp(cameraPosition.current.x, targetX);
-      cameraPosition.current.y = lerp(cameraPosition.current.y, targetY);
+      //   cameraPosition.current.x = lerp(cameraPosition.current.x, targetX);
+      //   cameraPosition.current.y = lerp(cameraPosition.current.y, targetY);
+      cameraPosition.current.x = targetX;
+      cameraPosition.current.y = targetY;
 
       containerRef.current.x = cameraPosition.current.x;
       containerRef.current.y = cameraPosition.current.y;

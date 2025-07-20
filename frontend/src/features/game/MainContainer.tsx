@@ -31,6 +31,8 @@ import {
   DEFAULT_MONSTER_Y_POS_RIGHT,
   DEFAULT_MONSTER_X_POS_CENTER,
   DEFAULT_MONSTER_Y_POS_CENTER,
+  DEFAULT_X_POS,
+  DEFAULT_Y_POS,
 } from "@/constants/gameConstants";
 
 interface IMainContainerProps {
@@ -41,7 +43,10 @@ export const MainContainer = ({
   canvasSize,
   children,
 }: PropsWithChildren<IMainContainerProps>) => {
-  const [characterPosition, setCharacterPosition] = useState({ x: 0, y: 0 });
+  const [characterPosition, setCharacterPosition] = useState({
+    x: DEFAULT_X_POS,
+    y: DEFAULT_Y_POS,
+  });
   const [point, setPoint] = useState(0);
   // const monsterPositions = useRef<IPosition[] | []>([]);
   const monsterPositions = useRef<boolean[][]>(

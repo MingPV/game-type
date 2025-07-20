@@ -8,7 +8,7 @@ import { calculateCanvasSize } from "@/lib/utils/gameUtils";
 export const GameCanvas = () => {
   const [canvasSize, setCanvasSize] = useState<Screen>({ width: 0, height: 0 });
 
-  // Update canvas size
+  // Update canvas
   const updateCanvasSize = useCallback(() => {
     setCanvasSize(calculateCanvasSize());
   }, []);
