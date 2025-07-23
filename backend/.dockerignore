@@ -1,0 +1,31 @@
+# ป้องกันไม่ให้ไฟล์ env เข้า image
+.env
+
+# ไฟล์และโฟลเดอร์ของระบบเวอร์ชันคอนโทรล (git)
+.git
+.gitignore
+
+# ไฟล์ binary ที่ build แล้ว
+bin/
+build/
+server
+
+# ไฟล์และโฟลเดอร์ของ IDE/editor
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# ไฟล์ log ต่างๆ
+*.log
+
+# โฟลเดอร์ vendor (ถ้าใช้ go modules อาจไม่จำเป็น)
+vendor/
+
+# ไฟล์ทดสอบหรือไฟล์ชั่วคราวอื่นๆ
+*.tmp
+*.temp
+
+# ไฟล์ที่อาจสร้างขึ้นโดยระบบปฏิบัติการ
+.DS_Store
+Thumbs.db

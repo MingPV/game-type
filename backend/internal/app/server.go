@@ -11,7 +11,7 @@ import (
 func Start() {
 
 	// Setup dependencies: database, Redis, and configuration
-	db, _, cfg, err := SetupDependencies("dev")
+	db, _, cfg, err := SetupDependencies("production")
 	if err != nil {
 		log.Fatalf("❌ Failed to setup dependencies: %v", err)
 	}

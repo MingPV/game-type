@@ -12,6 +12,7 @@ services:
       - "${DB_PORT}:5432"
     restart: unless-stopped
 
+  # Uncomment the following section if you want to use pgAdmin for database management
   pgadmin:
     image: dpage/pgadmin4:latest
     container_name: gametype_pgadmin
@@ -28,9 +29,23 @@ services:
     image: redis:7-alpine
     container_name: gametype_redis
     env_file:
-      - ./backend/.env.dev
+      - ./backend/.env.production
     ports:
       - "6379:6379"
+    restart: unless-stopped
+  
+  backend:
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    image: mingpv/gametype_backend:latest
+    env_file:
+      - ./backend/.env.production
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - redis
     restart: unless-stopped
 
 volumes:

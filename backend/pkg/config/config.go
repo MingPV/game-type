@@ -34,13 +34,16 @@ type Config struct {
 
 func LoadConfig(env string) *Config {
 
-	envFile := ".env"
-	if env != "" {
-		envFile = ".env." + env
-	}
+	// Production don't need to load .env file
+	if env != "production" {
+		envFile := ".env"
+		if env != "" {
+			envFile = ".env." + env
+		}
 
-	if err := godotenv.Load(envFile); err != nil {
-		log.Println("No .env file found, using system env", err)
+		if err := godotenv.Load(envFile); err != nil {
+			log.Println("No .env file found, using system env", err)
+		}
 	}
 
 	jwtExp := getEnvAsInt("JWT_EXPIRATION", 3600)
